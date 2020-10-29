@@ -20,5 +20,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.users = require("../models/user.js")(db);
+db.roles = require("../models/role.js")(db);
+db.acls = require("../models/acl.js")(db);
 
 module.exports = db;

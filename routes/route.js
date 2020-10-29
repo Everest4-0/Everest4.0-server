@@ -1,8 +1,8 @@
 var router = require('express').Router();
 
-//var task = require('../routes/task.route');
+//let task = ;
 
-//router.use('/tasks', task);
+router.use('/users', require('../routes/user.route'));
 
 // Export API routes
 module.exports = router;
