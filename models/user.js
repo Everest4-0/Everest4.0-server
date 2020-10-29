@@ -1,12 +1,15 @@
 
-const { uuid: uuidV4 } = require('uuid');
+const { v4: uuid } = require('uuid')
+
+
 module.exports = ({ sequelize, Sequelize }) => {
 
   const User = sequelize.define("user", {
     id: {
-      allowNull: false,
+      
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
+      default: Sequelize.UUIDV4
     },
     username: {
       type: Sequelize.STRING,
@@ -15,7 +18,16 @@ module.exports = ({ sequelize, Sequelize }) => {
     code: {
       type: Sequelize.STRING
     },
-    name: {
+    firstName: {
+      type: Sequelize.STRING
+    },
+    lastName: {
+      type: Sequelize.STRING
+    },
+    othersName: {
+      type: Sequelize.STRING
+    },
+    fullName: {
       type: Sequelize.STRING
     },
     email: {
@@ -23,23 +35,39 @@ module.exports = ({ sequelize, Sequelize }) => {
       unique: true
     },
     apikey: {
-      type: Sequelize.BOOLEAN,
-      unique: true
-    },
-    roleId:{
       type: Sequelize.STRING,
+      unique: true
     },
     isActive: {
       type: Sequelize.BOOLEAN,
-      defoult: true
+      default: true
     },
     // Timestamps
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
+  }, {
+    indexes: [
+        {
+            fields: ['id', 'roleId']
+        }
+    ]
+},{
+    classMethods: {
+      associate(models) {
+        // associations can be defined here
+        User.belongsTo(models.Role, { foreignKey: 'roleId', });
+      },
+    },
   });
-  User.associate =(models)=>{
-    User.belongsTo(models.Role,{as:'role',foreignKey:'roleId'})
+  User.associate = (models) => {
+    
+    User.belongsTo(models.Role, { foreignKey: 'roleId' })
   }
-  User.beforeCreate(user => user.id = uuid());
-  return User;
+
+  User.associate = (models) => {
+    // associations can be defined here
+    User.belongsTo(models.Role, { foreignKey: 'roleId' });
 };
+  User.beforeCreate(user => user.id = uuid())
+  return User
+}

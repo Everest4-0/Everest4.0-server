@@ -19,8 +19,13 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require("../models/user.js")(db);
-db.roles = require("../models/role.js")(db);
-db.acls = require("../models/acl.js")(db);
+db.User = require("../models/user.js")(db);
+db.Role = require("../models/role.js")(db);
+db.ACL = require("../models/acl.js")(db);
 
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 module.exports = db;
