@@ -11,6 +11,8 @@ const fs = require('fs');
 const TOKEN_PATH = '../config/token.json';
 //sect the mongoo connection string from config
 
+const db = require("../models/models");
+db.sequelize.sync();
 
 // Init App
 var app = express();
