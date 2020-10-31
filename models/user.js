@@ -34,6 +34,10 @@ module.exports = ({ sequelize, Sequelize }) => {
       type: Sequelize.STRING,
       unique: true
     },
+    photoUrl: {
+      type: Sequelize.STRING,
+      unique: true
+    },
     apikey: {
       type: Sequelize.STRING,
       unique: true
@@ -69,5 +73,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     User.belongsTo(models.Role, { foreignKey: 'roleId' });
 };
   User.beforeCreate(user => user.id = uuid())
+  User.beforeCreate(user => user.roleId = user.roleId || 'FREE')
+  //User.beforeCreate(user => user.code = User.findAll({'roleId':user.roleId}).slice(-1).pop().code)
   return User
 }

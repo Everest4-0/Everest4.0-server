@@ -1,12 +1,8 @@
-var {User, Role} = require('../models/models');
+var { User, Role } = require('../models/models');
 
 exports.create = async (req, res) => {
     let user = await User.create(req.body);
-    res.json({
-        status: 200,
-        message: "success",
-        data: user
-    })
+    res.json(user)
 }
 
 exports.update = async (req, res) => {
@@ -24,7 +20,7 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let user = User.destroy({})
+    let user = User.destroy({ where: { id: req.params.id } })
     res.json({
         status: 200,
         message: "sucess",
@@ -34,23 +30,36 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let user = await User.findByPk(req.params.id,{
-        include:[
+    let user = await User.findByPk(req.params.id, {
+        include: [
             {
-                model:Role,
+                model: Role,
             }
         ]
     });
     res.json(user)
 }
 
+exports.authenticate = async (req, res) => {
+
+    let user = await User.findOne({ where: { email: req.body.email } }, {
+        include: [
+            {
+                model: Role,
+            }
+        ]
+    });
+    if (!user)
+        user = await User.create(req.body);
+    res.json(user)
+}
 exports.allBy = async (req, res) => {
 
     let users = await User.findAll({
-        include:[
+        include: [
             {
-                model:Role,
-                as:'role'
+                model: Role,
+                as: 'role'
             }
         ]
     });
