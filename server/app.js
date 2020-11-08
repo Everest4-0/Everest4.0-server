@@ -14,21 +14,27 @@ const TOKEN_PATH = '../config/token.json';
 const db = require("../models/models");
 db.sequelize.sync({force:false});
 
+const options = {
+    key: fs.readFileSync('server/ssl/key.pem'),
+    cert: fs.readFileSync('server/ssl/cert.pem')
+  };
 // Init App
 var app = express();
-var server = require("http").Server(app);
+//var server = require("http").Server(app);
+var server = require("https").createServer(options,app);
 
 app.use(cors())
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
 app.use(bodyParser.json());
 app.use(express.static('public'))
-
+app.use('/static', express.static('public'))
 
 app.use('/api/v1/', middleware.checkToken, routes);
 app.get('/', function (req, res) {
     res.send('Everes 4.0 - sc!');
 });
+
 app.set('port', (process.env.PORT || 9800));
 app.set('address', '0.0.0.0');
 server.listen(app.get('port'), app.get('address'), function () {

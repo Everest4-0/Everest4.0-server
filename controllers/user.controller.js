@@ -1,22 +1,28 @@
 var { User, Role } = require('../models/models');
+//var { LOCAL_PROVIDER } = require('../models/constants.js')
 
 exports.create = async (req, res) => {
-    let user = await User.create(req.body);
+    let user = await User.create(req.body).catch((e,user)=>{
+        res.status(400).json(e||user)
+    });
     res.json(user)
 }
 
 exports.update = async (req, res) => {
 
-    let user = User.update({ lastName: "Doe" }, {
+    await User.update(req.body, {
         where: {
-            lastName: null
+            id: req.body.id
         }
     });
-    res.json({
-        status: 200,
-        message: "sucess",
-        data: user
+    let user = await User.findByPk(req.body.id, {
+        include: [
+            {
+                model: Role,
+            }
+        ]
     });
+    res.json(user);
 }
 
 exports.delete = async (req, res) => {
@@ -49,8 +55,17 @@ exports.authenticate = async (req, res) => {
             }
         ]
     });
-    if (!user)
+
+    
+    if (!user && req.body.provider !== 'LOCAL')
         user = await User.create(req.body);
+    else if (!user)
+        res.status(404)
+    else if ( req.body.id || User.validatePassword(user,req.body.password)) 
+        res.status(200)
+    else 
+        res.status(401)
+        
     res.json(user)
 }
 exports.allBy = async (req, res) => {
