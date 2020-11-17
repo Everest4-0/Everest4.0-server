@@ -34,6 +34,9 @@ module.exports = ({ sequelize, Sequelize }) => {
       type: Sequelize.STRING,
       unique: true
     },
+    telePhone: {
+      type: Sequelize.STRING
+    },
     photoUrl: {
       type: Sequelize.STRING,
       unique: true
@@ -73,26 +76,13 @@ module.exports = ({ sequelize, Sequelize }) => {
         fields: ['id', 'roleId']
       }
     ]
-  }, {
-    classMethods: {
-      associate(models) {
-        // associations can be defined here
-        User.belongsTo(models.Role, { foreignKey: 'roleId', });
-        User.hasMany(models.UserEvaluation, { foreignKey: 'evaluatorId', });
-        User.hasMany(models.UserEvaluation, { foreignKey: 'userId', });
-      },
-    },
   });
   User.associate = (models) => {
-    User.belongsTo(models.Role, { foreignKey: 'roleId' })
-    User.hasMany(models.UserEvaluation, { foreignKey: 'evaluatorId', });
-    User.hasMany(models.UserEvaluation, { foreignKey: 'userId', });
+    User.belongsTo(models.Role, { as:'role',foreignKey: 'roleId' })
+    User.hasMany(models.UserEvaluation, { as: 'evaluations', foreignKey: 'evaluatorId', });
+    User.hasMany(models.UserEvaluation, { as: 'requested', foreignKey: 'userId', });
   }
 
-  User.associate = (models) => {
-    // associations can be defined here
-    User.belongsTo(models.Role, { foreignKey: 'roleId' });
-  };
   User.validatePassword = (user, password) => {
     let p= user.password() ;
     let q= User.encryptPassword(password, user.salt())

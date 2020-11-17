@@ -20,8 +20,8 @@ const options = {
   };
 // Init App
 var app = express();
-//var server = require("http").Server(app);
-var server = require("https").createServer(options,app);
+var server = require("http").Server(app);
+//var server = require("https").createServer(options,app);
 
 app.use(cors())
 app.use(bodyParser.json({ limit: '10mb', extended: true }))

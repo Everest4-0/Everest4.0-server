@@ -24,7 +24,8 @@ db.Role = require("../models/role.js")(db);
 db.ACL = require("../models/acl.js")(db);
 db.Evaluation = require("./evaluation")(db);
 db.UserEvaluation = require("./user-evaluation")(db);
-
+db.EvaluationRequest = require("./evaluation-request")(db);
+db.Op = Sequelize.Op;
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);

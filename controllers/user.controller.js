@@ -1,15 +1,17 @@
-var { User, Role } = require('../models/models');
+var { User, Role, Op } = require('../models/models');
+
 //var { LOCAL_PROVIDER } = require('../models/constants.js')
 
 exports.create = async (req, res) => {
-    let user = await User.create(req.body).catch((e,user)=>{
-        res.status(400).json(e||user)
+    let user = await User.create(req.body).catch((e, user) => {
+        res.status(400).json(e || user)
     });
     res.json(user)
 }
 
 exports.update = async (req, res) => {
 
+    req.body.isActive = true;
     await User.update(req.body, {
         where: {
             id: req.body.id
@@ -21,6 +23,9 @@ exports.update = async (req, res) => {
                 model: Role,
             }
         ]
+    }).catch(e => {
+
+        let i = e
     });
     res.json(user);
 }
@@ -56,27 +61,41 @@ exports.authenticate = async (req, res) => {
         ]
     });
 
-    
+
     if (!user && req.body.provider !== 'LOCAL')
         user = await User.create(req.body);
+    else if (user && req.body.provider !== 'LOCAL')
+        res.status(200)
     else if (!user)
         res.status(404)
-    else if ( req.body.id || User.validatePassword(user,req.body.password)) 
+    else if (req.body.id || User.validatePassword(user, req.body.password))
         res.status(200)
-    else 
+    else
         res.status(401)
-        
+
     res.json(user)
 }
 exports.allBy = async (req, res) => {
 
+    let filter = {}
+
+    if (req.query['$filter']) {
+        filter={
+                 email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' } 
+        }
+    }
+
+
     let users = await User.findAll({
+        where: filter,
         include: [
             {
                 model: Role,
                 as: 'role'
             }
         ]
+    }).catch((e,r)=>{
+        let u=e
     });
     //res.statusCode = 401
     res.json(users)

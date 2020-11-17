@@ -1,4 +1,4 @@
-var {UserEvaluation} = require('../models/models');
+var {UserEvaluation, User, Evaluation} = require('../models/models');
 
 exports.create = async (req, res) => {
 
@@ -51,7 +51,23 @@ exports.allBy = async (req, res) => {
         let i=e;
     })
      });*/
-    let userEvaluations = await UserEvaluation.findAll()
+    let userEvaluations = await UserEvaluation.findAll({
+        where:req.query,
+        include: [
+            {
+                model: User,
+                as: 'requester'
+            },
+            {
+                model: User,
+                as: 'requested'
+            },
+            {
+                model: Evaluation,
+                as: 'evaluation'
+            }
+        ]
+    })
 
     
     res.json(userEvaluations)

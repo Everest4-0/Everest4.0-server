@@ -16,7 +16,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     },
     isActive: {
       type: Sequelize.BOOLEAN,
-      defoult: true
+      default: true
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
@@ -26,21 +26,12 @@ module.exports = ({ sequelize, Sequelize }) => {
         fields: ['id', 'evaluationId', 'userId', 'evaluatorId']
       }
     ]
-  }, {
-    classMethods: {
-      associate(models) {
-        // associations can be defined here
-        UserEvaluation.belongsTo(models.Evaluation, { foreignKey: 'evaluationId', });
-        UserEvaluation.belongsTo(models.User, { foreignKey: 'userId', });
-        UserEvaluation.belongsTo(models.User, { foreignKey: 'evaluatorId', });
-      },
-    },
   });
   UserEvaluation.associate = (models) => {
 
     UserEvaluation.belongsTo(models.Evaluation, { foreignKey: 'evaluationId', });
-    UserEvaluation.belongsTo(models.User, { foreignKey: 'userId', });
-    UserEvaluation.belongsTo(models.User, { foreignKey: 'evaluatorId', });
+    UserEvaluation.belongsTo(models.User, { as:'requester', foreignKey: 'userId', });
+    UserEvaluation.belongsTo(models.User, { as:'requested',foreignKey: 'evaluatorId', });
   }
   UserEvaluation.beforeCreate(evaluation => {
     evaluation.id = uuid();

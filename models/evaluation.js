@@ -24,7 +24,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     },
     isActive: {
       type: Sequelize.BOOLEAN,
-      defoult: true
+      default: true
     },
     // Timestamps
     createdAt: Sequelize.DATE,
@@ -33,7 +33,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     classMethods: {
       associate(models) {
         // associations can be defined here
-        Evaluation.hasMany(models.UserEvaluation, { foreignKey: 'evaluationId', });
+     //   Evaluation.hasMany(models.UserEvaluation, { foreignKey: 'evaluationId', });
       },
     },
   });
