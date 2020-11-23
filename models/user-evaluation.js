@@ -14,6 +14,9 @@ module.exports = ({ sequelize, Sequelize }) => {
     descriptions: {
       type: Sequelize.STRING,
     },
+   /* requestId: {
+      type: Sequelize.STRING,
+    },*/
     isActive: {
       type: Sequelize.BOOLEAN,
       default: true
@@ -23,15 +26,16 @@ module.exports = ({ sequelize, Sequelize }) => {
   }, {
     indexes: [
       {
-        fields: ['id', 'evaluationId', 'userId', 'evaluatorId']
+        fields: ['evaluationId', 'userId', 'requestedId','requestId']
       }
     ]
   });
   UserEvaluation.associate = (models) => {
 
-    UserEvaluation.belongsTo(models.Evaluation, { foreignKey: 'evaluationId', });
+    UserEvaluation.belongsTo(models.Evaluation, { as:'evaluation', foreignKey: 'evaluationId', });
     UserEvaluation.belongsTo(models.User, { as:'requester', foreignKey: 'userId', });
-    UserEvaluation.belongsTo(models.User, { as:'requested',foreignKey: 'evaluatorId', });
+    UserEvaluation.belongsTo(models.User, { as:'requested',foreignKey: 'requestedId', });
+    UserEvaluation.belongsTo(models.EvaluationRequest, { as:'request',foreignKey: 'requestId', });
   }
   UserEvaluation.beforeCreate(evaluation => {
     evaluation.id = uuid();

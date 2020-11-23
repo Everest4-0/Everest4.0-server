@@ -1,10 +1,11 @@
-var {UserEvaluation, User, Evaluation} = require('../models/models');
+var {UserEvaluation, User, Evaluation, EvaluationRequest} = require('../models/models');
 
 exports.create = async (req, res) => {
 
-    req.body.userId=req.body.user.id
-    req.body.evaluatorId=req.body.evaluator.id
+    req.body.userId=req.body.requester.id
+    req.body.requestedId=req.body.requested.id
     req.body.evaluationId=req.body.evaluation.id
+    req.body.requestId=req.body.request.id
     let userEvaluations = await UserEvaluation.create(req.body);
     res.json(userEvaluations)
 }
@@ -65,6 +66,10 @@ exports.allBy = async (req, res) => {
             {
                 model: Evaluation,
                 as: 'evaluation'
+            },
+            {
+                model: EvaluationRequest,
+                as: 'request'
             }
         ]
     })

@@ -11,6 +11,13 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
+    var base64Data = req.body.photoUrl.split('base64,')[1];
+    if (base64Data !== undefined) {
+        req.body.photoUrl = '/avatar/costum/avatar-' + req.body.email + '.' + req.body.photoUrl.split(';')[0].split('/')[1];
+        require("fs").writeFile('public' + req.body.photoUrl, base64Data, 'base64', function (err) {
+            console.log(err);
+        });
+    }
     req.body.isActive = true;
     await User.update(req.body, {
         where: {
@@ -21,6 +28,7 @@ exports.update = async (req, res) => {
         include: [
             {
                 model: Role,
+                as: 'role'
             }
         ]
     }).catch(e => {
@@ -80,8 +88,8 @@ exports.allBy = async (req, res) => {
     let filter = {}
 
     if (req.query['$filter']) {
-        filter={
-                 email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' } 
+        filter = {
+            email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
         }
     }
 
@@ -94,8 +102,8 @@ exports.allBy = async (req, res) => {
                 as: 'role'
             }
         ]
-    }).catch((e,r)=>{
-        let u=e
+    }).catch((e, r) => {
+        let u = e
     });
     //res.statusCode = 401
     res.json(users)

@@ -39,7 +39,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     },
     photoUrl: {
       type: Sequelize.STRING,
-      unique: true
+      default:"/avatar/default/unknow.jpg",
     },
     apikey: {
       type: Sequelize.STRING,
@@ -80,7 +80,9 @@ module.exports = ({ sequelize, Sequelize }) => {
   User.associate = (models) => {
     User.belongsTo(models.Role, { as:'role',foreignKey: 'roleId' })
     User.hasMany(models.UserEvaluation, { as: 'evaluations', foreignKey: 'evaluatorId', });
-    User.hasMany(models.UserEvaluation, { as: 'requested', foreignKey: 'userId', });
+    User.hasMany(models.UserEvaluation, { as: 'requester', foreignKey: 'userId', });
+    User.hasMany(models.UserEvaluation, { as: 'requested', foreignKey: 'requestedId', });
+    
   }
 
   User.validatePassword = (user, password) => {

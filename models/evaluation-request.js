@@ -20,42 +20,30 @@ module.exports = ({ sequelize, Sequelize }) => {
       type: Sequelize.INTEGER,
       default: 1
     },
-    evaluationId: {
-      type: Sequelize.STRING,
-      default: 1
-    },
-    requestedId: {
+ /*   requestedId: {
       type: Sequelize.STRING,
       default: 1
     },
     requesterId: {
       type: Sequelize.STRING,
       default: 1
-    },
+    },*/
     // Timestamps
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
   }, {
-    /*indexes: [
+    indexes: [
       {
-        fields: ['id', 'requesterId', 'requestedId', 'evaluationId', 'relationId']
+        fields: ['requesterId', 'requestedId']
       }
-    ]*/
-  }, {
-    classMethods: {
-      associate(models) {
-        EvaluationRequest.belongsTo(models.User, {  as: 'requested', foreignKey: 'requesterId' })
-        EvaluationRequest.belongsTo(models.User, {  as: 'requester', foreignKey: 'requestedId' })
-        EvaluationRequest.belongsTo(models.Evaluation, {  as: 'evaluation', foreignKey: 'evaluationId' })
-      },
-    },
+    ]
   });
 
   EvaluationRequest.associate = (models) => {
     // associations can be defined here
-    EvaluationRequest.belongsTo(models.User, {  as: 'requested', foreignKey: 'requesterId' })
-    EvaluationRequest.belongsTo(models.User, {  as: 'requester', foreignKey: 'requestedId' })
-    EvaluationRequest.belongsTo(models.Evaluation, {  as: 'evaluation', foreignKey: 'evaluationId' })
+    EvaluationRequest.belongsTo(models.User, { as: 'requested', foreignKey: 'requestedId' })
+    EvaluationRequest.belongsTo(models.User, { as: 'requester', foreignKey: 'requesterId' })
+    EvaluationRequest.hasMany(models.UserEvaluation, { as: 'evaluations', foreignKey: 'requestId' })
   };
   EvaluationRequest.beforeCreate(evaluation => {
     evaluation.id = uuid();

@@ -1,9 +1,11 @@
-var {EvaluationRequest, Evaluation, User, Op} = require('../models/models');
+var { EvaluationRequest, Evaluation, User, Op, UserEvaluation } = require('../models/models');
 
 exports.create = async (req, res) => {
-    req.body.requesterId=req.body.requester.id
-    req.body.requestedId=req.body.requested.id
-    let evaluations = await EvaluationRequest.create(req.body);
+    req.body.requesterId = req.body.requester.id
+    req.body.requestedId = req.body.requested.id
+    let evaluations = await EvaluationRequest.create(req.body).catch((e, r) => {
+        let h = e;
+    });
     res.json(evaluations)
 }
 
@@ -43,35 +45,46 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-   
-    let filter = {}
+    /*
+     let filter = {}
+ 
+     if (req.query['$filter']) {
+         filter=[
+             {requestedId: req.query['$filter']},
+             {requesterId: req.query['$filter']}
+         ]
+     }*/
 
-    if (req.query['$filter']) {
-        filter=[
-            {requestedId: req.query['$filter']},
-            {requesterId: req.query['$filter']}
-        ]
-    }
 
-
-    let  evaluations = await EvaluationRequest.findAll({
-        where:{[Op.or]:filter},
+    let evaluations = await EvaluationRequest.findAll({
+        where: req.query,
         include: [
-            {
-                model: User,
-                as: 'requested'
-            },
             {
                 model: User,
                 as: 'requester'
             },
             {
-                model: Evaluation,
-                as: 'evaluation'
+                model: User,
+                as: 'requested'
+            },
+            {
+                model: UserEvaluation,
+                as: 'evaluations',
+                include: [
+
+                    {
+                        model: Evaluation,
+                        as: 'evaluation'
+                    },
+                    {
+                        model: EvaluationRequest,
+                        as: 'request'
+                    }
+                ]
             }
         ]
-    }).catch((e,r)=>{
-        let u=e
+    }).catch((e, r) => {
+        let u = e
     });
     res.json(evaluations)
 }
