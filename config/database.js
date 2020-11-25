@@ -1,4 +1,8 @@
+
+const fs = require('fs');
+
 module.exports = {
+  dev: {
     HOST: "localhost",
     USER: "dev",
     PASSWORD: "qasw",
@@ -10,15 +14,25 @@ module.exports = {
       acquire: 30000,
       idle: 10000
     }
-  };  
-  /*{HOST: "localhost",
-    USER: "QA",
-    PASSWORD: "everest40server-mysqldbserver",
-    DB: "everest_QA",
+  },
+  qa: {
+    HOST: "everest40db.mysql.database.azure.com",
+    USER: "qa@everest40db",
+    PASSWORD: "2wsxZAQ!",
+    DB: "everest_qa",
     dialect: "mysql",
+
+    dialectOptions: {
+      ssl: {
+        require: true,
+        ca: fs.readFileSync(__dirname + '/../server/ssl/crt.pem')
+      }
+    },
     pool: {
       max: 5,
       min: 0,
       acquire: 30000,
       idle: 10000
-    }}*/
+    }
+  }
+};
