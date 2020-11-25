@@ -115,7 +115,7 @@ module.exports = ({ sequelize, Sequelize }) => {
   User.beforeCreate(user => user.firstName = user.firstName || user.email.split('@')[0].toUpperCase())
   User.beforeCreate(user => user.provider = user.provider || 'LOCAL')
 
-  User.beforeCreate(user => user.photoUrl = user.photoUrl || 'https://localhost:9800/default/unknow.jpg')
+  User.beforeCreate(user => user.photoUrl = user.photoUrl || "/avatar/default/unknow.jpg")
   //User.beforeCreate(user => user.code = User.findAll({'roleId':user.roleId}).slice(-1).pop().code)
   return User
 }
