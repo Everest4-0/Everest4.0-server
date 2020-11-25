@@ -3,6 +3,7 @@ var { User, Role, Op } = require('../models/models');
 //var { LOCAL_PROVIDER } = require('../models/constants.js')
 
 exports.create = async (req, res) => {
+    console.log(req.body)
     let user = await User.create(req.body).catch((e, user) => {
         res.status(400).json(e || user)
     });
