@@ -4,3 +4,5 @@
 /public
 /public/
 /public/*
+/.deployment/
+/.vscode/
