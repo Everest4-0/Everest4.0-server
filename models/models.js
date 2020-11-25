@@ -1,4 +1,4 @@
-const dbConfig = require("../config/database.js");
+const dbConfig = require("../config/database.js").dev;
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -19,12 +19,15 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.User = require("../models/user.js")(db);
-db.Role = require("../models/role.js")(db);
-db.ACL = require("../models/acl.js")(db);
-db.Evaluation = require("./evaluation")(db);
-db.UserEvaluation = require("./user-evaluation")(db);
-db.EvaluationRequest = require("./evaluation-request")(db);
+db.User = require("./user.js")(db);
+db.Role = require("./role.js")(db);
+db.ACL = require("./acl.js")(db);
+//Diagnostics
+db.Evaluation = require("./diagnostic/evaluation")(db);
+db.UserEvaluation = require("./diagnostic/user-evaluation")(db);
+db.EvaluationRequest = require("./diagnostic/evaluation-request")(db);
+
+
 db.Op = Sequelize.Op;
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
