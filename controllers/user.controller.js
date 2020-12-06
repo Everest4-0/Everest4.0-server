@@ -73,8 +73,20 @@ exports.authenticate = async (req, res) => {
 
     if (!user && req.body.provider !== 'LOCAL')
         user = await User.create(req.body);
-    else if (user && req.body.provider !== 'LOCAL')
+    else if (user && req.body.provider !== 'LOCAL') {
+        if (!user.isActive)
+            user = await User.update(req.body, {
+                where: { email: req.body.email }
+            })
+            user = await User.findOne({ where: { email: req.body.email } }, {
+                include: [
+                    {
+                        model: Role,
+                    }
+                ]
+            });
         res.status(200)
+    }
     else if (!user)
         res.status(404)
     else if (req.body.id || User.validatePassword(user, req.body.password))
