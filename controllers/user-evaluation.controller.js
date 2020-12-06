@@ -19,7 +19,7 @@ exports.update = async (req, res) => {
     });
     res.json({
         status: 200,
-        message: "sucess",
+        message: "success",
         data: userEvaluations
     });
 }
