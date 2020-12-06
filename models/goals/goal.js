@@ -1,12 +1,24 @@
+
+const { v4: uuid } = require('uuid')
+
 module.exports = ({ sequelize, Sequelize }) => {
 
     const Goal = sequelize.define("goals", {
         id: {
-            allowNull: false,
             primaryKey: true,
-            type: Sequelize.STRING
+            type: Sequelize.UUID,
+            default: Sequelize.UUIDV4
         },
         code: {
+            type: Sequelize.STRING,
+        },
+        group: {
+            type: Sequelize.STRING,
+        },
+        objectives: {
+            type: Sequelize.STRING,
+        },
+        kpi: {
             type: Sequelize.STRING,
         },
         descriptions: {
@@ -28,6 +40,8 @@ module.exports = ({ sequelize, Sequelize }) => {
     });
     Goal.associate = (models) => {
         Goal.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
+        Goal.hasMany(models.PartialGoal, { as: 'partials', foreignKey: 'goalId' })
+        Goal.hasMany(models.Task, { as: 'tasks', foreignKey: 'goalId' })
     }
 
     Goal.beforeCreate(goal => goal.id = uuid())
