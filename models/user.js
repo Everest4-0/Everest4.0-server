@@ -6,7 +6,6 @@ module.exports = ({ sequelize, Sequelize }) => {
 
   const User = sequelize.define("user", {
     id: {
-
       primaryKey: true,
       type: Sequelize.UUID,
       default: Sequelize.UUIDV4
@@ -45,7 +44,6 @@ module.exports = ({ sequelize, Sequelize }) => {
       type: Sequelize.STRING,
       unique: true
     },
-
     password: {
       type: Sequelize.STRING,
       get() {
@@ -58,7 +56,6 @@ module.exports = ({ sequelize, Sequelize }) => {
         return () => this.getDataValue('salt')
       }
     },
-
     isActive: {
       type: Sequelize.BOOLEAN,
       default: true
@@ -77,12 +74,13 @@ module.exports = ({ sequelize, Sequelize }) => {
       }
     ]
   });
+
   User.associate = (models) => {
     User.belongsTo(models.Role, { as:'role',foreignKey: 'roleId' })
     User.hasMany(models.UserEvaluation, { as: 'evaluations', foreignKey: 'evaluatorId', });
     User.hasMany(models.UserEvaluation, { as: 'requester', foreignKey: 'userId', });
     User.hasMany(models.UserEvaluation, { as: 'requested', foreignKey: 'requestedId', });
-    
+    User.hasMany(models.ToDo, { as: 'todos', foreignKey: 'userId', });
   }
 
   User.validatePassword = (user, password) => {
