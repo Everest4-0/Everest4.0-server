@@ -27,6 +27,13 @@ db.Evaluation = require("./diagnostic/evaluation")(db);
 db.UserEvaluation = require("./diagnostic/user-evaluation")(db);
 db.EvaluationRequest = require("./diagnostic/evaluation-request")(db);
 
+//Goals
+db.Goal = require("./goals/goal")(db);
+db.Task = require("./goals/task")(db);
+db.Budget = require("./goals/budget")(db);
+db.ToDo = require("./goals/todo")(db);
+db.PartialGoal = require("./goals/partial-goal")(db);
+
 
 db.Op = Sequelize.Op;
 Object.keys(db).forEach(modelName => {
