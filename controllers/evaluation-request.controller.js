@@ -1,8 +1,28 @@
-var { EvaluationRequest, Evaluation, User, Op, UserEvaluation } = require('../models/models');
+const Email = require('../application/mail/mail');
+var { EvaluationRequest, Evaluation, User,  UserEvaluation } = require('../models/models');
 
 exports.create = async (req, res) => {
     req.body.requesterId = req.body.requester.id
     req.body.requestedId = req.body.requested.id
+    if(req.body.requestedId===undefined){
+//        let requested=await User.create({email:req.body.requested.email})
+        let requested=await User.findAll({where:{email:req.body.requested.email}})
+        req.body.requestedId=requested.id;
+        let email=new Email({
+            to:req.body.requested.email,
+            subject:'Evaluation Request',
+            template:'evaluation_request',
+            data:{
+                from:req.body.requester,
+                to:requested
+            }
+        })
+        email.send((e,s)=>{
+
+            let t=e
+        })
+    }
+
     let evaluations = await EvaluationRequest.create(req.body).catch((e, r) => {
         let h = e;
     });
@@ -18,7 +38,7 @@ exports.update = async (req, res) => {
     });
     res.json({
         status: 200,
-        message: "sucess",
+        message: "success",
         data: evaluations
     });
 }
