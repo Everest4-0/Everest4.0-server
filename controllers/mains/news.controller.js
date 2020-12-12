@@ -1,4 +1,4 @@
-var { Role } = require('../models/models');
+var { Role } = require('../../models/models');
 const request = require('request');
 const axios = require('axios');
 exports.create = async (req, res) => {

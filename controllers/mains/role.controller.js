@@ -1,17 +1,17 @@
-var {ACL} = require('../models/models');
+var {Role} = require('../../models/models');
 
 exports.create = async (req, res) => {
-    let acl = await ACL.create(req.body);
+    let role = await Role.create(req.body);
     res.json({
         status: 200,
         message: "success",
-        data: acl
+        data: role
     })
 }
 
 exports.update = async (req, res) => {
 
-    let acl = ACL.update({ lastName: "Doe" }, {
+    let role = Role.update({ lastName: "Doe" }, {
         where: {
             lastName: null
         }
@@ -19,33 +19,33 @@ exports.update = async (req, res) => {
     res.json({
         status: 200,
         message: "sucess",
-        data: acl
+        data: role
     });
 }
 
 exports.delete = async (req, res) => {
-    let acl = ACL.destroy({})
+    let role = Role.destroy({})
     res.json({
         status: 200,
         message: "sucess",
-        data: acl
+        data: role
     });
 }
 
 exports.one = async (req, res) => {
 
-    let acl = await ACL.findOne();
+    let role = await Role.findOne();
     res.json({
         status: 200,
         message: "sucess",
-        data: acl
+        data: role
     })
 
 }
 
 exports.allBy = async (req, res) => {
 
-    let acls = await ACL.findAll({});
+    let roles = await Role.findAll({});
     //res.statusCode = 401
-    res.json(acls)
+    res.json(roles)
 }

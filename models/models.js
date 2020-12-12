@@ -18,10 +18,19 @@ const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+//Datas
+db.ProfessionalExperience = require("./data/professional-experience")(db);
+db.WorkSituation = require("./data/work-situation")(db);
+db.AcademicLevel = require("./data/academic-level")(db);
 
-db.User = require("./user.js")(db);
-db.Role = require("./role.js")(db);
-db.ACL = require("./acl.js")(db);
+//MAINS
+db.Role = require("./main/role.js")(db);
+db.PersonalData = require("./main/personal-data")(db);
+db.PersonalSettings = require("./main/personal-settings")(db);
+db.User = require("./main/user.js")(db);
+db.ProfessionalExperienceData = require("./main/professional-experience-data")(db);
+db.ACL = require("./main/acl.js")(db);
+
 //Diagnostics
 db.Evaluation = require("./diagnostic/evaluation")(db);
 db.UserEvaluation = require("./diagnostic/user-evaluation")(db);

@@ -1,5 +1,5 @@
 var router = require('express').Router();
-let controller = require('../controllers/user-evaluation.controller');
+let controller = require('../../controllers/datas/academic-level.controller');
 
 // Export API routes
 module.exports = router;

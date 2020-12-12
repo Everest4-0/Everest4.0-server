@@ -1,5 +1,5 @@
 var router = require('express').Router();
-let controller = require('../controllers/role.controller');
+let controller = require('../../controllers/diagnostics/evaluation.controller');
 
 // Export API routes
 module.exports = router;

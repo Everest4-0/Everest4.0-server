@@ -1,5 +1,5 @@
 var router = require('express').Router();
-let controller = require('../controllers/evaluation-request.controller');
+let controller = require('../../controllers/mains/news.controller');
 
 // Export API routes
 module.exports = router;

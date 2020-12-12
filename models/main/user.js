@@ -1,9 +1,10 @@
 
 const { v4: uuid } = require('uuid')
-const crypto = require('crypto')
+const crypto = require('crypto');
+const { PersonalSettings, PersonalData } = require('../models');
 
-module.exports = ({ sequelize, Sequelize }) => {
-
+module.exports = (db) => {
+  let { sequelize, Sequelize, PersonalSettings, PersonalData } = db
   const User = sequelize.define("user", {
     id: {
       primaryKey: true,
@@ -17,18 +18,6 @@ module.exports = ({ sequelize, Sequelize }) => {
     code: {
       type: Sequelize.STRING
     },
-    firstName: {
-      type: Sequelize.STRING
-    },
-    lastName: {
-      type: Sequelize.STRING
-    },
-    othersName: {
-      type: Sequelize.STRING
-    },
-    fullName: {
-      type: Sequelize.STRING
-    },
     email: {
       type: Sequelize.STRING,
       unique: true
@@ -38,8 +27,9 @@ module.exports = ({ sequelize, Sequelize }) => {
     },
     photoUrl: {
       type: Sequelize.STRING,
-      default:"/avatar/default/unknow.jpg",
+      default: "/avatar/default/unknow.jpg",
     },
+
     apikey: {
       type: Sequelize.STRING,
       unique: true
@@ -70,13 +60,17 @@ module.exports = ({ sequelize, Sequelize }) => {
   }, {
     indexes: [
       {
-        fields: ['id', 'roleId']
+        fields: ['id', 'roleId', 'settingId', 'dataId']
       }
     ]
   });
 
+
   User.associate = (models) => {
-    User.belongsTo(models.Role, { as:'role',foreignKey: 'roleId' })
+    User.belongsTo(models.Role, { as: 'role', foreignKey: 'roleId' })
+    User.belongsTo(models.PersonalData, { as: 'datas', foreignKey: 'dataId' });
+    User.belongsTo(models.PersonalSettings, { as: 'settings', foreignKey: 'settingId' });
+
     User.hasMany(models.UserEvaluation, { as: 'evaluations', foreignKey: 'evaluatorId', });
     User.hasMany(models.UserEvaluation, { as: 'requester', foreignKey: 'userId', });
     User.hasMany(models.UserEvaluation, { as: 'requested', foreignKey: 'requestedId', });
@@ -84,9 +78,9 @@ module.exports = ({ sequelize, Sequelize }) => {
   }
 
   User.validatePassword = (user, password) => {
-    let p= user.password() ;
-    let q= User.encryptPassword(password, user.salt())
-    let r= user.password() === User.encryptPassword(password, user.salt())
+    let p = user.password();
+    let q = User.encryptPassword(password, user.salt())
+    let r = user.password() === User.encryptPassword(password, user.salt())
     return r;
   }
   User.generateSalt = function () {
@@ -95,7 +89,7 @@ module.exports = ({ sequelize, Sequelize }) => {
   User.encryptPassword = function (plainText, salt) {
     return crypto
       .createHash('RSA-SHA256')
-      .update(plainText||'SomePrivateAndSecRetStrINg')
+      .update(plainText || 'SomePrivateAndSecRetStrINg')
       .update(salt)
       .digest('hex')
   }
@@ -110,8 +104,19 @@ module.exports = ({ sequelize, Sequelize }) => {
   User.beforeUpdate(setSaltAndPassword)
   User.beforeCreate(user => user.id = uuid())
   User.beforeCreate(user => user.roleId = user.roleId || 'FREE')
-  User.beforeCreate(user => user.firstName = user.firstName || user.email.split('@')[0].toUpperCase())
+  //User.beforeCreate(user => user.firstName = user.firstName || user.email.split('@')[0].toUpperCase())
   User.beforeCreate(user => user.provider = user.provider || 'LOCAL')
+
+  User.afterCreate(async user => {
+    /*try {
+      user.settings = await PersonalSettings.create({ id: user.id });
+      user.datas = await PersonalData.create({ id: user.id });
+      let y = await User.update({ dataId: user.id, settingId: user.id }, { where: { id: user.id } })
+    } catch (e) {
+      let u = e;
+    }
+*/
+  });
 
   User.beforeCreate(user => user.photoUrl = user.photoUrl || "/avatar/default/unknow.jpg")
   //User.beforeCreate(user => user.code = User.findAll({'roleId':user.roleId}).slice(-1).pop().code)
