@@ -147,7 +147,7 @@ exports.allBy = async (req, res) => {
             },
             {
                 model: PersonalData,
-                as: 'personalData'
+                as: 'datas'
             }
         ]
     }).catch((e, r) => {

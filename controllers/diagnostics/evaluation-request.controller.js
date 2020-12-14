@@ -1,5 +1,5 @@
 const Email = require('../../application/mail/mail');
-var { EvaluationRequest, Evaluation, User,  UserEvaluation } = require('../../models/models');
+var { EvaluationRequest, Evaluation, User,  UserEvaluation, PersonalData } = require('../../models/models');
 
 exports.create = async (req, res) => {
     req.body.requesterId = req.body.requester.id
@@ -81,11 +81,23 @@ exports.allBy = async (req, res) => {
         include: [
             {
                 model: User,
-                as: 'requester'
+                as: 'requester',
+                include: [
+
+                    {
+                        model: PersonalData,
+                        as: 'datas'
+                    }]
             },
             {
                 model: User,
-                as: 'requested'
+                as: 'requested',
+                include: [
+
+                    {
+                        model: PersonalData,
+                        as: 'datas'
+                    }]
             },
             {
                 model: UserEvaluation,
