@@ -2,6 +2,7 @@ var { BudgetCategory, Role, Op, PartialGoal, User, Goal, Budget } = require('../
 
 exports.create = async (req, res) => {
         
+    let y;
     let category = await BudgetCategory.create(req.body).catch((e, category) => {
         res.status(400).json(e || category)
     });
