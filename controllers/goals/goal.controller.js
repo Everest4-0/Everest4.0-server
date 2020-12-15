@@ -1,4 +1,4 @@
-var { Goal, Role, Op, PartialGoal, User, Task, Budget } = require('../../models/models');
+var { Goal, Role, Op, PartialGoal, User, Task, Budget, BudgetCategory } = require('../../models/models');
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
@@ -85,7 +85,12 @@ exports.allBy = async (req, res) => {
                 include:[
                     {
                         model: Budget,
-                        as: 'budgets'
+                        as: 'budgets',
+                        include:[
+                            {
+                                model: BudgetCategory,
+                                as: 'category'
+                            }]
                     }
                 ]
             }
