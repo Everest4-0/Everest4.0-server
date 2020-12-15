@@ -13,7 +13,7 @@ exports.create = async (req, res) => {
             let u = e;
         });
     });
-    res.json(Goal)
+    res.json(goal)
 }
 
 exports.update = async (req, res) => {
@@ -67,7 +67,7 @@ exports.allBy = async (req, res) => {
 
     let filter = req.query
 
-    let Goals = await Goal.findAll({
+    let goals = await Goal.findAll({
         where: filter,
         include: [
 
@@ -94,6 +94,6 @@ exports.allBy = async (req, res) => {
         let u = e
     });
 
-    res.json(Goals)
+    res.json(goals)
 }
 

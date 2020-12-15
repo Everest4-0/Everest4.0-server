@@ -42,6 +42,7 @@ db.Task = require("./goals/task")(db);
 db.Budget = require("./goals/budget")(db);
 db.ToDo = require("./goals/todo")(db);
 db.PartialGoal = require("./goals/partial-goal")(db);
+db.BudgetCategory = require("./goals/budget-category")(db);
 
 
 db.Op = Sequelize.Op;

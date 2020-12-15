@@ -31,16 +31,12 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    let evaluations = EvaluationRequest.update({ lastName: "Doe" }, {
+    let evaluations = EvaluationRequest.update(req.body, {
         where: {
-            lastName: null
+            id:req.body.id
         }
     });
-    res.json({
-        status: 200,
-        message: "success",
-        data: evaluations
-    });
+    res.json(evaluations);
 }
 
 exports.delete = async (req, res) => {
