@@ -32,7 +32,6 @@ module.exports = (db) => {
     roles: {
       type: Sequelize.STRING,
       get() {
-        debugger
         let roles = this.getDataValue('roles');
         if (roles === undefined || roles === null || roles.length === 0) return ['FREE'];
 
