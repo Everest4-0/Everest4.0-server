@@ -147,7 +147,14 @@ exports.allBy = async (req, res) => {
 
     if (req.query['$filter']) {
         filter = {
-            email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+            [Op.or]: [
+                {
+                    email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+                },
+                {
+                    telePhone: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+                }
+              ]
         }
     }
 
