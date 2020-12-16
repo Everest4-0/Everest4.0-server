@@ -1,12 +1,26 @@
-var { User, Role, PersonalData, Op, PersonalSettings, AcademicLevel, WorkSituation, ProfessionalExperience } = require('../../models/models');
+var { 
+    User
+    , Role
+    , PersonalData
+    , Op
+    , PersonalSettings
+    , AcademicLevel
+    , WorkSituation
+    , ProfessionalExperience 
+} = require('../../models/models');
 
-//var { LOCAL_PROVIDER } = require('../models/constants.js')
 
 exports.create = async (req, res) => {
     console.log(req.body)
     let user = await User.create(req.body).catch((e, user) => {
         res.status(400).json(e || user)
     });
+
+    req.body.datas = {...{id:user.id},...req.body.datas }
+    user.settings = await PersonalSettings.create(req.body.datas);
+    user.datas = await PersonalData.create(req.body.datas);
+    let y = await User.update({ dataId: user.id, settingId: user.id }, { where: { id: user.id } })
+
     res.json(user)
 }
 
@@ -133,7 +147,14 @@ exports.allBy = async (req, res) => {
 
     if (req.query['$filter']) {
         filter = {
-            email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+            [Op.or]: [
+                {
+                    email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+                },
+                {
+                    telePhone: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+                }
+              ]
         }
     }
 

@@ -10,10 +10,10 @@ module.exports = ({ sequelize, Sequelize }) => {
             default: Sequelize.UUIDV4
         },
         revenue: {
-            type:  Sequelize.DECIMAL(10,2),
+            type: Sequelize.DECIMAL(10, 2),
         },
         expenses: {
-            type: Sequelize.DECIMAL(10,2),
+            type: Sequelize.DECIMAL(10, 2),
         },
         descriptions: {
             type: Sequelize.STRING,
@@ -24,7 +24,13 @@ module.exports = ({ sequelize, Sequelize }) => {
         state: {
             type: Sequelize.INTEGER,
         },
-        dueDate: Sequelize.DATE,
+        duration: {
+            type: Sequelize.INTEGER,
+            default: 0
+        },
+        dueDate: {
+           type: Sequelize.DATE,
+        },
         isActive: {
             type: Sequelize.BOOLEAN,
             default: true

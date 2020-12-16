@@ -3,7 +3,7 @@ const { v4: uuid } = require('uuid')
 
 module.exports = ({ sequelize, Sequelize }) => {
 
-    const Budget = sequelize.define("budgets", {
+    const BudgetCategory = sequelize.define("budget-categories", {
         id: {
             primaryKey: true,
             type: Sequelize.UUID,
@@ -12,8 +12,8 @@ module.exports = ({ sequelize, Sequelize }) => {
         code: {
             type: Sequelize.STRING,
         },
-        value: {
-            type: Sequelize.DECIMAL(32, 2),
+        name: {
+            type: Sequelize.STRING,
         },
         direction: {
             type: Sequelize.BOOLEAN,
@@ -31,16 +31,14 @@ module.exports = ({ sequelize, Sequelize }) => {
     }, {
         indexes: [
             {
-                fields: ['id', 'taskId','categoryId']
+                fields: ['id']
             }
         ]
     });
-    Budget.associate = (models) => {
-        Budget.belongsTo(models.Task, { as: 'task', foreignKey: 'taskId' })
-        Budget.belongsTo(models.BudgetCategory, { as: 'category', foreignKey: 'categoryId' })
+    BudgetCategory.associate = (models) => {
+        BudgetCategory.hasMany(models.Budget, { as: 'budgets', foreignKey: 'categoryId' })
     }
 
-    Budget.beforeCreate(budget => budget.id = uuid())
-    
-    return Budget;
+    BudgetCategory.beforeCreate(category => category.id = uuid())
+    return BudgetCategory;
 };

@@ -1,10 +1,10 @@
 
 const { v4: uuid } = require('uuid')
 const crypto = require('crypto');
-const { PersonalSettings, PersonalData } = require('../models');
+//const { PersonalSettings, PersonalData, Role } = require('../models');
 
 module.exports = (db) => {
-  let { sequelize, Sequelize, PersonalSettings, PersonalData } = db
+  let { sequelize, Sequelize, PersonalSettings, PersonalData, Role } = db
   const User = sequelize.define("user", {
     id: {
       primaryKey: true,
@@ -29,7 +29,16 @@ module.exports = (db) => {
       type: Sequelize.STRING,
       default: "/avatar/default/unknow.jpg",
     },
+    roles: {
+      type: Sequelize.STRING,
+      get() {
+        debugger
+        let roles = this.getDataValue('roles');
+        if (roles === undefined || roles === null || roles.length === 0) return ['FREE'];
 
+        return roles.split('_');
+      }
+    },
     apikey: {
       type: Sequelize.STRING,
       unique: true
@@ -62,7 +71,21 @@ module.exports = (db) => {
       {
         fields: ['id', 'roleId', 'settingId', 'dataId']
       }
-    ]
+    ],
+    defaultScope: {
+      include: [{
+        model: Role,
+        as: 'role'
+      },
+      {
+        model: PersonalData,
+        as: 'datas'
+      },
+      {
+        model: PersonalSettings,
+        as: 'settings'
+      }]
+    },
   });
 
 

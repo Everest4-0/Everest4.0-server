@@ -1,4 +1,4 @@
-var { Goal, Role, Op, PartialGoal, User, Task, Budget } = require('../../models/models');
+var { Goal, Role, Op, PartialGoal, User, Task, Budget, BudgetCategory } = require('../../models/models');
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
@@ -13,7 +13,7 @@ exports.create = async (req, res) => {
             let u = e;
         });
     });
-    res.json(Goal)
+    res.json(goal)
 }
 
 exports.update = async (req, res) => {
@@ -67,7 +67,7 @@ exports.allBy = async (req, res) => {
 
     let filter = req.query
 
-    let Goals = await Goal.findAll({
+    let goals = await Goal.findAll({
         where: filter,
         include: [
 
@@ -85,7 +85,12 @@ exports.allBy = async (req, res) => {
                 include:[
                     {
                         model: Budget,
-                        as: 'budgets'
+                        as: 'budgets',
+                        include:[
+                            {
+                                model: BudgetCategory,
+                                as: 'category'
+                            }]
                     }
                 ]
             }
@@ -94,6 +99,6 @@ exports.allBy = async (req, res) => {
         let u = e
     });
 
-    res.json(Goals)
+    res.json(goals)
 }
 

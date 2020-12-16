@@ -16,6 +16,7 @@ router.use('/user-evaluations', require('./diagnostics/user-evaluation.route'));
 router.use('/goals', require('./goals/goal.route'));
 router.use('/tasks', require('./goals/task.route'));
 router.use('/budgets', require('./goals/budget.route'));
+router.use('/budget-categories', require('./goals/budget-category.route'));
 router.use('/todos', require('./goals/todo.route'));
 
 // Export API routes
