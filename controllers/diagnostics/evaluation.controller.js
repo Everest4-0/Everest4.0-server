@@ -11,16 +11,12 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    let evaluations = Evaluation.update({ lastName: "Doe" }, {
+    let evaluation = Evaluation.update(req.body, {
         where: {
-            lastName: null
+            id:req.body.id
         }
     });
-    res.json({
-        status: 200,
-        message: "sucess",
-        data: evaluations
-    });
+    res.json( evaluation );
 }
 
 exports.delete = async (req, res) => {
@@ -34,12 +30,8 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let evaluations = await Evaluation.findOne();
-    res.json({
-        status: 200,
-        message: "sucess",
-        data: evaluations
-    })
+    let evaluations = await Evaluation.findByPk(req.params.id);
+    res.json(evaluations)
 
 }
 
