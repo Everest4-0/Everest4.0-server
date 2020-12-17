@@ -44,7 +44,7 @@ module.exports = (db) => {
         return roles;
       },
       set(values){
-        this.setDataValue(values.join('_'))
+        this.setDataValue('roles',values.join('_'))
       }
     },
     apikey: {
