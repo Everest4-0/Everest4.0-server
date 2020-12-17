@@ -32,10 +32,19 @@ module.exports = (db) => {
     roles: {
       type: Sequelize.STRING,
       get() {
-        let roles = this.getDataValue('roles');
-        if (roles === undefined || roles === null || roles.length === 0) return ['FREE'];
+        let roles;
+        try {
+          roles = this.getDataValue('roles');
+          if (roles === undefined || roles === null || roles.length === 0) return ['FREE'];
 
-        return roles.split('_');
+          roles = roles.split('_');
+        } catch (e) {
+
+        }
+        return roles;
+      },
+      set(values){
+        this.setDataValue(values.join('_'))
       }
     },
     apikey: {
