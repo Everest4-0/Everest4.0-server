@@ -3,7 +3,7 @@ const { v4: uuid } = require('uuid')
 
 module.exports = ({ sequelize, Sequelize }) => {
 
-    const BudgetCategory = sequelize.define("budget-categories", {
+    const BudgetCategory = sequelize.define("budget_categories", {
         id: {
             primaryKey: true,
             type: Sequelize.UUID,

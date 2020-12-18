@@ -128,7 +128,11 @@ exports.authenticate = async (req, res) => {
         if (!user.isActive)
             user = await User.update(req.body, {
                 where: { email: req.body.email }
-            })
+            },(e,r)=>{
+                let u=e;
+            })/*.catch(e){
+                let r=e
+            }*/
         user = await User.findOne({ where: { email: req.body.email } });
         res.status(200)
     }
