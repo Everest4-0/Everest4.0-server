@@ -1,6 +1,7 @@
 
 const { v4: uuid } = require('uuid')
 const crypto = require('crypto');
+const ModelHelper = require('../../application/datas/model.helper');
 //const { PersonalSettings, PersonalData, Role } = require('../models');
 
 module.exports = (db) => {
@@ -43,8 +44,8 @@ module.exports = (db) => {
         }
         return roles;
       },
-      set(values){
-        this.setDataValue('roles',values.join('_'))
+      set(values) {
+        this.setDataValue('roles', values.join('_'))
       }
     },
     apikey: {
@@ -150,6 +151,7 @@ module.exports = (db) => {
   });
 
   User.beforeCreate(user => user.photoUrl = user.photoUrl || "/avatar/default/unknow.jpg")
+  User.beforeCreate(async user => user.code = await ModelHelper.nextCode(User))
   //User.beforeCreate(user => user.code = User.findAll({'roleId':user.roleId}).slice(-1).pop().code)
   return User
 }

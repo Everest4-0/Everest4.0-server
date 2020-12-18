@@ -14,7 +14,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     fullName: {
       type: Sequelize.STRING,
       get() {
-        return this.getDataValue('firstName') + this.getDataValue('othersName') ? ' ' + this.getDataValue('othersName') : '' + ' ' + this.getDataValue('lastName')
+        return this.getDataValue('firstName') + (this.getDataValue('othersName') ? ' ' + this.getDataValue('othersName') : '' )+ ' ' + this.getDataValue('lastName')
       }
     },
     firstName: {
