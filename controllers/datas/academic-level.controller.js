@@ -1,4 +1,4 @@
-var {AcademicLevel} = require('../../models/models');
+var { AcademicLevel } = require('../../models/models');
 const { v4: uuid } = require('uuid')
 exports.create = async (req, res) => {
     let academicLevel = await AcademicLevel.create(req.body);
@@ -7,9 +7,9 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    let academicLevel = AcademicLevel.update({ lastName: "Doe" }, {
+    let academicLevel = AcademicLevel.update(req.body, {
         where: {
-            lastName: null
+            id: req.body.id
         }
     });
     res.json(academicLevel);
@@ -34,6 +34,6 @@ exports.one = async (req, res) => {
 exports.allBy = async (req, res) => {
 
     let academicLevels = await AcademicLevel.findAll({});
-    
+
     res.json(academicLevels)
 }
