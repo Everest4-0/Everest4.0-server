@@ -18,6 +18,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
+            "port": 9800,
             "program": "${workspaceFolder}/server/app.js"
         },{
             "type": "node",

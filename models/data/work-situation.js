@@ -3,9 +3,9 @@ module.exports = ({sequelize, Sequelize}) => {
 
     const WorkSituation = sequelize.define("work_situation", {
       id: {
-        allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        default: Sequelize.UUIDV4
       },
       name: {
         type: Sequelize.STRING,

@@ -3,10 +3,10 @@ module.exports = ({sequelize, Sequelize}) => {
 
     const AcademicLevel = sequelize.define("academic_level", {
       id: {
-        allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
-        default: uuid()
+        default: Sequelize.UUIDV4
+        
       },
       name: {
         type: Sequelize.STRING,
