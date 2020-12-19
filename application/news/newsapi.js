@@ -30,9 +30,9 @@ class NewsApi {
         sports: 'sports',
         technology: 'technology'
     }
-    domains = 'bbc.co.uk, techcrunch.com, engadget.com, google.com, bing.com';
+    domains = 'bbc.co.uk,techcrunch.com,engadget.com, google.com, bing.com';
     sources = "";
-    endpoint = "https://newsapi.org/v2/everything?from=" + (new Date()).getFullYear() + "-" + ((new Date()).getMonth() - 1) + "-15&sortBy=publishedAt"
+    endpoint = "https://newsapi.org/v2/everything?language=pt&sortBy=publishedAt&apiKey="+this.apiKey//+'&domains='+this.domains
 
 
 
@@ -42,8 +42,12 @@ class NewsApi {
 
     constructor(callback) {
         let host = this.endpoint + '&q=angola'
+        console.log(host)
         axios.get(host, {})
             .then(callback)
             .catch(callback);
     }
 }
+
+
+module.exports = NewsApi

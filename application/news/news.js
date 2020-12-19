@@ -1,4 +1,4 @@
-class NewsApi{
+class News{
 
     
     #sources=[

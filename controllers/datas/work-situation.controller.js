@@ -7,9 +7,9 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    let workSituation = WorkSituation.update({ lastName: "Doe" }, {
+    let workSituation = WorkSituation.update(req.body, {
         where: {
-            lastName: null
+            id: req.body.id
         }
     });
     res.json(workSituation);
@@ -34,6 +34,6 @@ exports.one = async (req, res) => {
 exports.allBy = async (req, res) => {
 
     let workSituations = await WorkSituation.findAll({});
-    
+
     res.json(workSituations)
 }
