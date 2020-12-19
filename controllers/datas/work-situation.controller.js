@@ -26,7 +26,7 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let workSituation = await WorkSituation.findOne();
+    let workSituation = await WorkSituation.findByPk(req.params.id);
     res.json(workSituation)
 
 }

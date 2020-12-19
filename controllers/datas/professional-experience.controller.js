@@ -26,7 +26,7 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let professionalExperience = await ProfessionalExperience.findOne();
+    let professionalExperience = await ProfessionalExperience.findByPk(req.params.id);
     res.json(professionalExperience)
 
 }

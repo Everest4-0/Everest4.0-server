@@ -26,7 +26,7 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let academicLevel = await AcademicLevel.findOne();
+    let academicLevel = await AcademicLevel.findByPk(req.params.id);
     res.json(academicLevel)
 
 }
