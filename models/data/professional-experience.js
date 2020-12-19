@@ -3,9 +3,9 @@ module.exports = ({ sequelize, Sequelize }) => {
 
   const ProfessionalExperience = sequelize.define("professional_experience", {
     id: {
-      allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
+      default: Sequelize.UUIDV4
     },
 
     name: {
