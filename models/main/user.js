@@ -107,6 +107,8 @@ module.exports = (db) => {
     User.hasMany(models.UserEvaluation, { as: 'requester', foreignKey: 'userId', });
     User.hasMany(models.UserEvaluation, { as: 'requested', foreignKey: 'requestedId', });
     User.hasMany(models.ToDo, { as: 'todos', foreignKey: 'userId', });
+
+    User.belongsToMany(models.Answer,{as:'answers',through: "user_answers",foreignKey:'answerId'})
   }
 
   User.validatePassword = (user, password) => {

@@ -2,7 +2,7 @@ const { v4: uuid } = require('uuid');
 
 module.exports = ({ sequelize, Sequelize }) => {
 
-    const AttemptedResponse = sequelize.define("attemptedResponses", {
+    const AttemptedResponse = sequelize.define("attempted_responses", {
         id: {
             primaryKey: true,
             type: Sequelize.UUID,
