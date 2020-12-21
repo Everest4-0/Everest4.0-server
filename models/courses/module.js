@@ -1,6 +1,7 @@
+
 module.exports = ({ sequelize, Sequelize }) => {
 
-  const Course = sequelize.define("courses", {
+  const Module = sequelize.define("modules", {
     id: {
       primaryKey: true,
       type: Sequelize.UUID,
@@ -25,15 +26,21 @@ module.exports = ({ sequelize, Sequelize }) => {
     // Timestamps
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
+  }, {
+    indexes: [
+      {
+        fields: ['id', 'courseId']
+      }
+    ]
   });
 
-
-  Course.associate = (models) => {
-    Course.hasMany(models.Module, { as: 'modules', foreignKey: 'courseId' })
+  Module.associate = (models) => {
+    Module.hasMany(models.Topic, { as: 'topics', foreignKey: 'moduleId' })
+    Module.belongsTo(models.Course, { as: 'course', foreignKey: 'courseId' })
   }
-  
-  Course.beforeCreate(course => course.id = uuid())
-  Course.beforeCreate(async course => course.code = await ModelHelper.nextCode(Course))
 
-  return Course;
+  Module.beforeCreate(course => course.id = uuid())
+  Module.beforeCreate(async course => course.code = await ModelHelper.nextCode(Module))
+
+  return Module;
 };
