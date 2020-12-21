@@ -1,4 +1,4 @@
-var { Quiz, Answer } = require('../../models/quizes/user-quiz/quiz');
+var { Quiz, Answer } = require('../../models/models');
 var {User} = require("../../models/main/user");
 
 exports.create = async (req, res) => {
@@ -8,6 +8,8 @@ exports.create = async (req, res) => {
         res.status(400).json(e || Answer)
     });
     res.json(answer)
+
+    console.log(answer)
 }
 
 exports.update = async (req, res) => {

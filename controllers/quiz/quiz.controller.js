@@ -1,5 +1,5 @@
-var { Quiz } = require('../../models/quizes/user-quiz/quiz');
-var {User} = require("../../models/main/user")
+var { Quiz, Answer } = require('../../models/models');
+var {User} = require("../../models/main/user");
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
@@ -12,13 +12,13 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    await Quiz.update(req.body, {
+    let quiz=await Quiz.update(req.body, {
         where: {
             id: req.body.id
         }
     });
 
-    res.json(Quiz);
+    res.json(quiz);
 }
 
 exports.delete = async (req, res) => {
@@ -37,6 +37,10 @@ exports.one = async (req, res) => {
             {
                 model: User,
                 as: 'user'
+            },
+            {
+                model: Answer,
+                as: 'answers'
             }
         ]
     });
@@ -53,6 +57,10 @@ exports.allBy = async (req, res) => {
             {
                 model: User,
                 as: 'user'
+            },
+            {
+                model: Answer,
+                as: 'answers'
             }
         ]
     }).catch((e, r) => {
