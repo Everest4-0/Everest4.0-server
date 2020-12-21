@@ -7,9 +7,9 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    let professionalExperience = ProfessionalExperience.update({ lastName: "Doe" }, {
+    let professionalExperience = ProfessionalExperience.update(req.body, {
         where: {
-            lastName: null
+            id: req.body.id
         }
     });
     res.json(professionalExperience);
@@ -26,7 +26,7 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let professionalExperience = await ProfessionalExperience.findOne();
+    let professionalExperience = await ProfessionalExperience.findByPk(req.params.id);
     res.json(professionalExperience)
 
 }
