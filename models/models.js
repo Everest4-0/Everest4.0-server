@@ -44,6 +44,10 @@ db.ToDo = require("./goals/todo")(db);
 db.PartialGoal = require("./goals/partial-goal")(db);
 db.BudgetCategory = require("./goals/budget-category")(db);
 
+//Quiz
+db.Quiz = require("./quizes/user-quiz/quiz");
+db.Answer = require("./quizes/user-quiz/answer");
+db.AttemptedResponse = require("./quizes/user-quiz/attempted-response");
 
 db.Op = Sequelize.Op;
 Object.keys(db).forEach(modelName => {
