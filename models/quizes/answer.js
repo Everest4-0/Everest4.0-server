@@ -28,7 +28,7 @@ module.exports = ({ sequelize, Sequelize }) => {
         Answer.associate = (models) => {
             Answer.belongsTo(models.Quiz, { as: 'quiz', foreignKey: 'quizId' });
            // Answer.hasMany(models.AttemptedResponse,{as:'attempts',foreignKey:'answerId'});
-            Answer.belongsToMany(models.User,{as:'users',through: "user_answers",foreignKey:'userId'})
+            Answer.belongsToMany(models.User,{as:'user',through: "users_answers",foreignKey:'userId'})
     }
 
     Answer.beforeCreate(answer => answer.id = uuid())

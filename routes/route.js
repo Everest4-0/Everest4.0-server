@@ -20,9 +20,9 @@ router.use('/budget-categories', require('./goals/budget-category.route'));
 router.use('/todos', require('./goals/todo.route'));
 
 //User quiz
-router.use('/quizes', require("./user-quiz/quiz.route"));
-router.use('/answers', require("./user-quiz/answer.route"));
-router.use('/attempted-responses', require("./user-quiz/attempted-response.route"));
+router.use('/quizes', require("./quiz/quiz.route"));
+router.use('/answers', require("./quiz/answer.route"));
+//router.use('/attempted-responses', require("./user-quiz/attempted-response.route"));
 
 // Export API routes
 module.exports = router;

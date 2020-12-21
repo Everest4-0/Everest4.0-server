@@ -1,5 +1,5 @@
 var router = require('express').Router();
-let controller = require('../../controllers/user-quiz/quiz.controller');
+let controller = require('../../controllers/quiz/answer.controllers');
 
 // Export API routes
 module.exports = router;
