@@ -47,7 +47,13 @@ db.BudgetCategory = require("./goals/budget-category")(db);
 //Quiz
 db.Quiz = require("./quizes/quiz")(db);
 db.Answer = require("./quizes/answer")(db);
-//db.AttemptedResponse = require("./quizes/user-quiz/attempted-response")(db);
+
+//Course
+db.Course = require("./courses/course")(db);
+db.Module = require("./courses/module")(db);
+db.Topic = require("./courses/topic")(db);
+db.Activity = require("./courses/activity")(db);
+
 
 db.Op = Sequelize.Op;
 Object.keys(db).forEach(modelName => {

@@ -1,5 +1,5 @@
-var { Quiz, Answer } = require('../../models/models');
-var {User} = require("../../models/main/user");
+var {User, Quiz, Answer } = require('../../models/models');
+
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code

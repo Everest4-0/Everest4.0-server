@@ -14,7 +14,7 @@ module.exports = ({ sequelize, Sequelize }) => {
         descriptions: {
             type: Sequelize.STRING,
         },
-        userId: Sequelize.STRING,
+      //  userId: Sequelize.STRING,
         // Timestamps
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
@@ -28,7 +28,7 @@ module.exports = ({ sequelize, Sequelize }) => {
   
     Quiz.associate = (models) => {
         Quiz.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
-        //Quiz.hasMany(models.Answer, {as:'answers',foreignKey:'quizId'})
+        Quiz.hasMany(models.Answer, {as:'answers',foreignKey:'quizId'})
     }
 
     Quiz.beforeCreate(quiz => quiz.id = uuid())
