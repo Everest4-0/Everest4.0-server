@@ -6,7 +6,7 @@ const ModelHelper = require('../../application/datas/model.helper');
 
 module.exports = ({ sequelize, Sequelize }) => {
 
-  const Topic = sequelize.define("topics", {
+  const Enrollment = sequelize.define("enrollments", {
     id: {
       primaryKey: true,
       type: Sequelize.UUID,
@@ -15,14 +15,8 @@ module.exports = ({ sequelize, Sequelize }) => {
     code: {
       type: Sequelize.STRING,
     },
-    title: {
-      type: Sequelize.STRING,
-    },
     descriptions: {
       type: Sequelize.STRING,
-    },
-    duration: {
-      type: Sequelize.INTEGER,
     },
     isActive: {
       type: Sequelize.BOOLEAN,
@@ -34,19 +28,20 @@ module.exports = ({ sequelize, Sequelize }) => {
   }, {
     indexes: [
       {
-        fields: ['id', 'moduleId']
+        fields: ['id', 'userId','courseId','activityId']
       }
     ]
   });
 
 
-  Topic.associate = (models) => {
-    Topic.hasMany(models.Activity, { as: 'activities', foreignKey: 'topicId' })
-    Topic.belongsTo(models.Module, { as: 'module', foreignKey: 'moduleId' })
+  Enrollment.associate = (models) => {
+    Enrollment.belongsTo(models.Activity, { as: 'lastActivity', foreignKey: 'activityId' })
+    Enrollment.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
+    Enrollment.belongsTo(models.Course, { as: 'course', foreignKey: 'courseId' })
   }
 
-  Topic.beforeCreate(course => course.id = uuid())
-  Topic.beforeCreate(async course => course.code = await ModelHelper.nextCode(Topic))
+  Enrollment.beforeCreate(enrollment => enrollment.id = uuid())
+  Enrollment.beforeCreate(async enrollment => enrollment.code = await ModelHelper.nextCode(Enrollment, enrollment.course.code))
 
-  return Topic;
+  return Enrollment;
 };
