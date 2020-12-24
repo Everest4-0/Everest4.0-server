@@ -41,7 +41,7 @@ module.exports = ({ sequelize, Sequelize }) => {
   }
 
   Enrollment.beforeCreate(enrollment => enrollment.id = uuid())
-  Enrollment.beforeCreate(async enrollment => enrollment.code = await ModelHelper.nextCode(Enrollment, enrollment.course.code))
+  Enrollment.beforeCreate(async enrollment => enrollment.code = await ModelHelper.nextCode(Enrollment/*, enrollment.course.code*/))
 
   return Enrollment;
 };

@@ -127,14 +127,15 @@ exports.allBy = async (req, res) => {
         filter = {
             [Op.or]: [
                 {
-                    email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+                    title: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
                 },
                 {
-                    telePhone: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+                    descriptions: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
                 }
             ]
         }
     }
+
 
 
     let courses = await Course.findAll({
@@ -157,6 +158,37 @@ exports.allBy = async (req, res) => {
         let u = e
     });
 
+    if (req.query['$filter']) {
+        let realteds = await Course.findAll({
+            include: [
+                {
+                    model: Module,
+                    as: 'modules'
+                },
+                {
+                    model: User,
+                    as: 'user'
+                },
+                {
+                    model: Evaluation,
+                    as: 'evaluations',
+                    where: {
+                        name: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+
+                    }, include: [
+                        {
+                            model: Course,
+                            as: 'courses'
+                        }
+                    ]
+
+                }
+            ]
+        }).catch((e, r) => {
+            let u = e
+        });
+        courses = courses.concat(realteds)
+    }
     res.json(courses)
 }
 

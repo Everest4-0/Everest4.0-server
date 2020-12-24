@@ -24,7 +24,8 @@ router.use('/quizes', require("./quiz/quiz.route"));
 router.use('/answers', require("./quiz/answer.route"));
 
 //User quiz
-router.use('/courses/course', require("./courses/course.route"));
+router.use('/courses/courses', require("./courses/course.route"));
+router.use('/courses/enrollments', require("./courses/enrollment.route"));
 //router.use('/answers', require("./quiz/answer.route"));
 
 // Export API routes

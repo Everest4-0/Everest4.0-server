@@ -42,26 +42,7 @@ module.exports = ({ sequelize, Sequelize }) => {
 
     Evaluation.belongsToMany(models.Course,{as:'courses',through: "course_evaluations",foreignKey:'courseId'})
   }
-  Evaluation.consts = [
-    { name: 'Carreira', group: 'Pofissional' },
-    { name: 'Finanças', group: 'Pofissional' },
-    { name: 'Contribuição', group: 'Pofissional' },
 
-    { name: 'Intelectual', group: 'Pessoal' },
-    { name: 'Emocional', group: 'Pessoal' },
-    { name: 'Feliciadade', group: 'Pessoal' },
-
-    { name: 'Família', group: 'Relacionamentos' },
-    { name: 'Amor', group: 'Relacionamentos' },
-    { name: 'Social', group: 'Relacionamentos' },
-
-    { name: 'Espiritualidade', group: 'Qualidade de vida' },
-    { name: 'Saúde', group: 'Qualidade de vida' },
-    { name: 'lazer', group: 'Qualidade de vida' }
-  ]
-  Evaluation.beforeCreate(evaluation =>{ 
-    evaluation.id = uuid();
-    let yU=0;
-  })
+  Evaluation.beforeCreate(evaluation =>evaluation.id = uuid())
   return Evaluation;
 };
