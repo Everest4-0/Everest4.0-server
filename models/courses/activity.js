@@ -5,7 +5,7 @@ const ModelHelper = require('../../application/datas/model.helper');
 
 module.exports = ({ sequelize, Sequelize }) => {
 
-  const Activity = sequelize.define("activitis", {
+  const Activity = sequelize.define("activities", {
     id: {
       primaryKey: true,
       type: Sequelize.UUID,
@@ -18,7 +18,7 @@ module.exports = ({ sequelize, Sequelize }) => {
       type: Sequelize.STRING,
     },
     descriptions: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
     },
     duration: {
       type: Sequelize.INTEGER,
@@ -33,13 +33,13 @@ module.exports = ({ sequelize, Sequelize }) => {
   }, {
     indexes: [
       {
-        fields: ['id', 'topicId']
+        fields: ['id', 'moduleId']
       }
     ]
   });
 
   Activity.associate = (models) => {
-    Activity.belongsTo(models.Topic, { as: 'topic', foreignKey: 'topicId' })
+    Activity.belongsTo(models.Module, { as: 'module', foreignKey: 'moduleId' })
   }
 
   Activity.beforeCreate(course => course.id = uuid())

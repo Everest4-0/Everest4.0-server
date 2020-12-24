@@ -5,7 +5,8 @@ var {
     , Evaluation,
     User,
     Enrollment,
-    updateOrCreate
+    updateOrCreate,
+    Activity
 } = require('../../models/models');
 const fs = require("fs");
 
@@ -99,7 +100,13 @@ exports.one = async (req, res) => {
         include: [
             {
                 model: Module,
-                as: 'modules'
+                as: 'modules',
+                include:[
+                    {
+                        model:Activity,
+                        as: 'activities'
+                    }
+                ]
             },
             {
                 model: User,
@@ -163,7 +170,13 @@ exports.allBy = async (req, res) => {
             include: [
                 {
                     model: Module,
-                    as: 'modules'
+                    as: 'modules', 
+                    include: [
+                        {
+                            model: Activity,
+                            as: 'activities'
+                        }
+                    ]
                 },
                 {
                     model: User,

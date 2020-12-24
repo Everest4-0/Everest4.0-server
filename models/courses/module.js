@@ -40,7 +40,7 @@ module.exports = ({ sequelize, Sequelize }) => {
   });
 
   Module.associate = (models) => {
-    Module.hasMany(models.Topic, { as: 'topics', foreignKey: 'moduleId' })
+    Module.hasMany(models.Activity, { as: 'activities', foreignKey: 'moduleId' })
     Module.belongsTo(models.Course, { as: 'course', foreignKey: 'courseId' })
   }
 
