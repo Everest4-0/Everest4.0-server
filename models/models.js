@@ -53,6 +53,7 @@ db.Course = require("./courses/course")(db);
 db.Module = require("./courses/module")(db);
 db.Topic = require("./courses/topic")(db);
 db.Activity = require("./courses/activity")(db);
+db.Enrollment = require("./courses/enrollment")(db);
 
 
 db.Op = Sequelize.Op;
@@ -61,4 +62,27 @@ Object.keys(db).forEach(modelName => {
     db[modelName].associate(db);
   }
 });
+
+db.updateOrCreate = async (model, where, newItem) => {
+  // First try to find the record
+  return model
+    .findOne({ where: where })
+    .then(function (foundItem) {
+      if (!foundItem) {
+        // Item not found, create a new one
+        return model
+          .create(newItem)
+          .then((item) => {
+            return { item: item, created: true };
+          })
+      }
+      // Found an item, update it
+      return model
+        .update(newItem, { where: where })
+        .then((item) => {
+          return { item: item, created: false }
+        });
+    })
+  }
+
 module.exports = db;

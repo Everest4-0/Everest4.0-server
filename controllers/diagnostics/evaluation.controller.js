@@ -1,4 +1,4 @@
-var {Evaluation} = require('../../models/models');
+var { Evaluation, Course } = require('../../models/models');
 
 exports.create = async (req, res) => {
     let evaluations = await Evaluation.create(req.body);
@@ -13,10 +13,10 @@ exports.update = async (req, res) => {
 
     let evaluation = Evaluation.update(req.body, {
         where: {
-            id:req.body.id
+            id: req.body.id
         }
     });
-    res.json( evaluation );
+    res.json(evaluation);
 }
 
 exports.delete = async (req, res) => {
@@ -30,23 +30,35 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let evaluations = await Evaluation.findByPk(req.params.id);
+    let evaluations = await Evaluation.findByPk(req.params.id,
+        {
+            include: [
+                {
+                    model: Course,
+                    as: 'courses'
+                }]
+        }
+    );
     res.json(evaluations)
 
 }
 
 exports.allBy = async (req, res) => {
 
-    let t;
-    /* Evaluation.consts.forEach(async element => {
-      t=   await Evaluation.create(element).catch(e=>{
-        let i=e;
-    })
-     });*/
-    let evaluations = await Evaluation.findAll({where:{
-        isActive:true
-    }})
+    let filter = req.query;
+    filter.isActive = true
+    let evaluations = await Evaluation.findAll(
+        {
+            where: filter,
+            include: [
+                {
+                    model: Course,
+                    as: 'courses'
+                }
+            ]
+        }
+    )
 
-    
+
     res.json(evaluations)
 }

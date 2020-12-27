@@ -1,4 +1,9 @@
 
+
+const { v4: uuid } = require('uuid')
+const crypto = require('crypto');
+const ModelHelper = require('../../application/datas/model.helper');
+
 module.exports = ({ sequelize, Sequelize }) => {
 
   const Topic = sequelize.define("topics", {

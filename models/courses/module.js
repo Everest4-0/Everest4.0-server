@@ -1,4 +1,9 @@
 
+
+const { v4: uuid } = require('uuid')
+const crypto = require('crypto');
+const ModelHelper = require('../../application/datas/model.helper');
+
 module.exports = ({ sequelize, Sequelize }) => {
 
   const Module = sequelize.define("modules", {
@@ -14,7 +19,7 @@ module.exports = ({ sequelize, Sequelize }) => {
       type: Sequelize.STRING,
     },
     descriptions: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
     },
     duration: {
       type: Sequelize.INTEGER,
@@ -35,7 +40,7 @@ module.exports = ({ sequelize, Sequelize }) => {
   });
 
   Module.associate = (models) => {
-    Module.hasMany(models.Topic, { as: 'topics', foreignKey: 'moduleId' })
+    Module.hasMany(models.Activity, { as: 'activities', foreignKey: 'moduleId' })
     Module.belongsTo(models.Course, { as: 'course', foreignKey: 'courseId' })
   }
 

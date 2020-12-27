@@ -22,7 +22,12 @@ router.use('/todos', require('./goals/todo.route'));
 //User quiz
 router.use('/quizes', require("./quiz/quiz.route"));
 router.use('/answers', require("./quiz/answer.route"));
-//router.use('/attempted-responses', require("./user-quiz/attempted-response.route"));
+
+//User quiz
+router.use('/courses/courses', require("./courses/course.route"));
+router.use('/courses/enrollments', require("./courses/enrollment.route"));
+router.use('/courses/activities', require("./courses/activity.route"));
+//router.use('/answers', require("./quiz/answer.route"));
 
 // Export API routes
 module.exports = router;
