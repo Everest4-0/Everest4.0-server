@@ -101,11 +101,15 @@ exports.one = async (req, res) => {
             {
                 model: Module,
                 as: 'modules',
-                include:[
+                include: [
                     {
-                        model:Activity,
+                        model: Activity,
                         as: 'activities'
                     }
+                ],
+                order: [
+                    // We start the order array with the model we want to sort
+                    [{ model: Activity, as: 'activities' }, 'title', 'ASC']
                 ]
             },
             {
@@ -120,6 +124,11 @@ exports.one = async (req, res) => {
                 model: Evaluation,
                 as: 'evaluations'
             }
+        ],
+
+        order: [
+            // We start the order array with the model we want to sort
+            [{ model: Module, as: 'modules' }, 'order_no', 'ASC']
         ]
     });
     res.json(course)
@@ -170,7 +179,7 @@ exports.allBy = async (req, res) => {
             include: [
                 {
                     model: Module,
-                    as: 'modules', 
+                    as: 'modules',
                     include: [
                         {
                             model: Activity,

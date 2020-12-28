@@ -23,6 +23,13 @@ module.exports = ({ sequelize, Sequelize }) => {
     duration: {
       type: Sequelize.INTEGER,
     },
+    orderNo: {
+      type: Sequelize.INTEGER,
+      field:'order_no'
+    },
+    attachment: {
+      type: Sequelize.STRING,
+    },
     isActive: {
       type: Sequelize.BOOLEAN,
       default: true

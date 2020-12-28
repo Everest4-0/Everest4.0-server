@@ -1,4 +1,4 @@
-var {User, Quiz, Answer } = require('../../models/models');
+var { User, Quiz, Answer } = require('../../models/models');
 
 
 exports.create = async (req, res) => {
@@ -7,12 +7,17 @@ exports.create = async (req, res) => {
     let quiz = await Quiz.create(req.body).catch((e, Quiz) => {
         res.status(400).json(e || Quiz)
     });
+
+    req.body.answers.forEach(async a => {
+        a.quizId = quiz.id
+        await Answer.create(a)
+    })
     res.json(quiz)
 }
 
 exports.update = async (req, res) => {
 
-    let quiz=await Quiz.update(req.body, {
+    let quiz = await Quiz.update(req.body, {
         where: {
             id: req.body.id
         }
