@@ -23,37 +23,12 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    let modules = req.body.modules
-    req.body.modules = null;
-    let evaluations = req.body.evaluations;
-    req.body.evaluations = null;
-    let ev = [];
+    req.body.activityId = req.body.lastActivity.id
+    
     await Enrollment.update(req.body, {
         where: { id: req.body.id }
     })
     let enrollment = await Enrollment.findByPk(req.body.id);
-
-    evaluations.forEach(async evaluation => {
-        ev.push(await Evaluation.findByPk(evaluation.id))
-        if (ev.length === evaluations.length)
-            enrollment.setEvaluations(ev)
-    });
-
-    var base64Data = req.body.cover.split('base64,')[1];
-    if (base64Data !== undefined) {
-        enrollment.cover = '/courses/' + enrollment.code + '/cover-' + enrollment.id.split('-')[0] + '.' + req.body.cover.split(';')[0].split('/')[1];
-        fs.mkdir('./public/courses/' + enrollment.code, { recursive: true }, (err) => {
-            if (err) throw err;
-
-            fs.writeFile('public' + enrollment.cover, base64Data, 'base64', function (err) {
-                enrollment.save();
-            });
-        });
-    }
-    modules.forEach(async module => {
-        module.courseId = enrollment.id
-        await updateOrCreate(Module, { id: module.id || null }, module)
-    });
 
     res.json(enrollment)
 }
