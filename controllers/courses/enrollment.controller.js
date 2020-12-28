@@ -6,7 +6,8 @@ var {
     User,
     Enrollment,
     updateOrCreate,
-    Course
+    Course,
+    Activity
 } = require('../../models/models');
 const fs = require("fs");
 
@@ -73,20 +74,16 @@ exports.one = async (req, res) => {
     let enrollment = await Enrollment.findByPk(req.params.id, {
         include: [
             {
-                model: Module,
-                as: 'modules'
+                model: Course,
+                as: 'course'
             },
             {
                 model: User,
                 as: 'user'
             },
             {
-                model: Enrollment,
-                as: 'enrollments'
-            },
-            {
-                model: Evaluation,
-                as: 'evaluations'
+                model: Activity,
+                as: 'lastActivity'
             }
         ]
     });

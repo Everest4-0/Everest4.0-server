@@ -27,7 +27,7 @@ exports.create = async (req, res) => {
                 if (err) throw err;
 
                 fs.writeFile('public' + attachment, base64Data, 'base64', function (err) {
-                    course.save();
+                    //course.save();
                 });
             });
             req.body.attachment = attachment;
@@ -54,7 +54,7 @@ exports.update = async (req, res) => {
                 if (err) throw err;
 
                 fs.writeFile('public' + attachment, base64Data, 'base64', function (err) {
-                    course.save();
+                    //course.save();
                 });
             });
             req.body.attachment = attachment;
