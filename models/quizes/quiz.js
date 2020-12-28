@@ -11,9 +11,6 @@ module.exports = ({ sequelize, Sequelize }) => {
         text: {
             type: Sequelize.STRING,
         },
-        descriptions: {
-            type: Sequelize.STRING,
-        },
       //  userId: Sequelize.STRING,
         // Timestamps
         createdAt: Sequelize.DATE,
