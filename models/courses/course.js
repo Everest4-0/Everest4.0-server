@@ -36,6 +36,25 @@ module.exports = ({ sequelize, Sequelize }) => {
     level: {
       type: Sequelize.INTEGER,
     },
+    roles:{
+      type: Sequelize.STRING,
+      set(values=[]) {
+        this.setDataValue('roles', values.join('_'))
+      },
+      get() {
+        let roles;
+        try {
+          roles = this.getDataValue('roles');
+          if (roles === undefined || roles === null || roles.length === 0) return [];
+
+          roles = roles.split('_');
+        } catch (e) {
+
+        }
+        return roles;
+      },
+
+    },
     isActive: {
       type: Sequelize.BOOLEAN,
       default: true
