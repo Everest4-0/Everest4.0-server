@@ -38,7 +38,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     },
   });
   Evaluation.associate = (models) => {
-    Evaluation.hasMany(models.UserEvaluation, { foreignKey: 'evaluationId' })
+    Evaluation.hasMany(models.UserEvaluation, {as:'userEvaluations', foreignKey: 'evaluationId' })
 
     Evaluation.belongsToMany(models.Course,{as:'courses',through: "course_evaluations",foreignKey:'courseId'})
   }
