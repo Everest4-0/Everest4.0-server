@@ -6,7 +6,10 @@ var {
     User,
     Activity,
     updateOrCreate,
-    Course
+    Course,
+    ActivityTask,
+    TaskAnswer,
+    Answer
 } = require('../../models/models');
 const fs = require("fs");
 
@@ -33,9 +36,32 @@ exports.create = async (req, res) => {
             req.body.attachment = attachment;
         }
     }
-    let activity = await Activity.create(req.body).catch((e, activity) => {
-        res.status(400).json(e || activity)
-    });
+    let activity = await Activity.create(req.body,
+        {
+            include: [
+                {
+                    association: { target: ActivityTask, as: 'tasks' },
+
+                    include: [
+                        {
+                            association: { target: TaskAnswer, as: 'answers' }
+                        }
+                    ]
+                }
+            ]
+        }).catch((e, activity) => {
+            res.status(400).json(e || activity)
+        }).then(activity => {
+            activity.tasks.forEach(task => {
+                task.activityId = activity.id
+                task.save()
+                task.answers.forEach(answer => {
+                    answer.taskId = task.id
+                    answer.save()
+                })
+            })
+            res.json(activity)
+        });
     res.json(activity)
 }
 
@@ -64,12 +90,28 @@ exports.update = async (req, res) => {
         where: { id: req.body.id }
     }).catch(e => {
         let y = e;
-    })
+    }).then(activity => {
+        req.body.tasks.forEach(task => {
+            updateOrCreate(ActivityTask, { id: task.id || null }, task)
+            task.answers.forEach(answer =>
+                updateOrCreate(TaskAnswer, { id: answer.id || null }, answer)
+            )
+        })
+    });
     let activity = await Activity.findByPk(req.body.id, {
         include: [
             {
                 model: Module,
-                as: 'module'
+                as: 'module',
+            }, {
+                model: ActivityTask,
+                as: 'tasks',
+                include: [
+                    {
+                        model: TaskAnswer,
+                        as: 'answers'
+                    }
+                ]
             }
         ]
     });
@@ -93,7 +135,16 @@ exports.one = async (req, res) => {
         include: [
             {
                 model: Module,
-                as: 'module'
+                as: 'module',
+            }, {
+                model: ActivityTask,
+                as: 'tasks',
+                include: [
+                    {
+                        model: TaskAnswer,
+                        as: 'answers'
+                    }
+                ]
             }
         ]
     });

@@ -54,6 +54,8 @@ db.Module = require("./courses/module")(db);
 db.Topic = require("./courses/topic")(db);
 db.Activity = require("./courses/activity")(db);
 db.Enrollment = require("./courses/enrollment")(db);
+db.ActivityTask = require("./courses/activity_task")(db);
+db.TaskAnswer = require("./courses/task_answer")(db);
 
 
 db.Op = Sequelize.Op;

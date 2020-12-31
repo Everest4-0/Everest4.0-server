@@ -6,7 +6,9 @@ var {
     User,
     Enrollment,
     updateOrCreate,
-    Activity
+    Activity,
+    ActivityTask,
+    TaskAnswer
 } = require('../../models/models');
 const fs = require("fs");
 
@@ -104,7 +106,19 @@ exports.one = async (req, res) => {
                 include: [
                     {
                         model: Activity,
-                        as: 'activities'
+                        as: 'activities',
+                        include: [
+                            {
+                                model: ActivityTask,
+                                as: 'tasks',
+                                include: [
+                                    {
+                                        model: TaskAnswer,
+                                        as: 'answers'
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ],
                 order: [

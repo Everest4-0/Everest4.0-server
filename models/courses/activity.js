@@ -34,6 +34,10 @@ module.exports = ({ sequelize, Sequelize }) => {
       type: Sequelize.BOOLEAN,
       default: true
     },
+    attType: {
+      type: Sequelize.INTEGER,
+      default: 0
+    },
     // Timestamps
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
@@ -47,6 +51,7 @@ module.exports = ({ sequelize, Sequelize }) => {
 
   Activity.associate = (models) => {
     Activity.belongsTo(models.Module, { as: 'module', foreignKey: 'moduleId' })
+    Activity.hasMany(models.ActivityTask, { as: 'tasks', foreignKey: 'activityId' })
   }
 
   Activity.beforeCreate(course => course.id = uuid())
