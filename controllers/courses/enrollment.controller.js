@@ -24,7 +24,7 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
 
     req.body.activityId = req.body.lastActivity.id
-    
+
     await Enrollment.update(req.body, {
         where: { id: req.body.id }
     })
@@ -94,6 +94,16 @@ exports.allBy = async (req, res) => {
                     {
                         model: Evaluation,
                         as: 'evaluations'
+                    },
+                    {
+                        model: Module,
+                        as: 'modules',
+                        include: [
+                            {
+                                model: Activity,
+                                as: 'activities'
+                            }
+                        ]
                     }
                 ]
             },

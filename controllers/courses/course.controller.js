@@ -11,6 +11,7 @@ var {
     TaskAnswer
 } = require('../../models/models');
 const fs = require("fs");
+const CourseHelper = require('../../application/courses/course.helper');
 
 exports.create = async (req, res) => {
 
@@ -29,17 +30,8 @@ exports.create = async (req, res) => {
         course.addEvaluations(ev)
     });
 
-    var base64Data = req.body.cover.split('base64,')[1];
-    if (base64Data !== undefined) {
-        course.cover = '/courses/' + course.code + '/cover-' + course.id.split('-')[0] + '.' + req.body.cover.split(';')[0].split('/')[1];
-        fs.mkdir('./public/courses/' + course.code, { recursive: true }, (err) => {
-            if (err) throw err;
+    await CourseHelper.saveCover(course, req.body.cover)
 
-            fs.writeFile('public' + course.cover, base64Data, 'base64', function (err) {
-                course.save();
-            });
-        });
-    }
     modules.forEach(async module => {
         module.courseId = course.id
         let m = await Module.create(module)
@@ -52,6 +44,7 @@ exports.update = async (req, res) => {
 
     let modules = req.body.modules
     req.body.modules = null;
+    req.body.enrollments = null;
     let evaluations = req.body.evaluations;
     req.body.evaluations = null;
     let ev = [];
@@ -66,17 +59,8 @@ exports.update = async (req, res) => {
             course.setEvaluations(ev)
     });
 
-    var base64Data = req.body.cover.split('base64,')[1];
-    if (base64Data !== undefined) {
-        course.cover = '/courses/' + course.code + '/cover-' + course.id.split('-')[0] + '.' + req.body.cover.split(';')[0].split('/')[1];
-        fs.mkdir('./public/courses/' + course.code, { recursive: true }, (err) => {
-            if (err) throw err;
+    await CourseHelper.saveCover(course, req.body.cover)
 
-            fs.writeFile('public' + course.cover, base64Data, 'base64', function (err) {
-                course.save();
-            });
-        });
-    }
     modules.forEach(async module => {
         module.courseId = course.id
         await updateOrCreate(Module, { id: module.id || null }, module)
@@ -132,7 +116,13 @@ exports.one = async (req, res) => {
             },
             {
                 model: Enrollment,
-                as: 'enrollments'
+                as: 'enrollments',
+                include: [
+                    {
+                        model: User,
+                        as: 'user'
+                    }
+                ]
             },
             {
                 model: Evaluation,
