@@ -2,8 +2,10 @@
 const { v4: uuid } = require('uuid')
 const crypto = require('crypto');
 const ModelHelper = require('../../application/datas/model.helper');
+const { Activity, Module } = require('../models');
+const CourseHelper = require('../../application/courses/course.helper');
 
-module.exports = ({ sequelize, Sequelize }) => {
+module.exports = ({ sequelize, Sequelize, Activity, Module }) => {
 
   const Course = sequelize.define("courses", {
     id: {
@@ -23,7 +25,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     cover: {
       type: Sequelize.TEXT,
       set(value) {
-        if (value.length < 255)
+        if (value && value.length < 255)
           this.setDataValue('cover', value)
       }
     },
@@ -78,6 +80,7 @@ module.exports = ({ sequelize, Sequelize }) => {
   }
 
   Course.beforeCreate(course => course.id = uuid())
+  Course.afterCreate(async course => await CourseHelper.initializer(course))
   Course.beforeCreate(async course => course.code = await ModelHelper.nextCode(Course))
 
   return Course;
