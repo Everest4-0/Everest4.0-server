@@ -184,3 +184,35 @@ exports.allBy = async (req, res) => {
     res.json(activities)
 }
 
+
+exports.addUserAnswer = async (req, res) => {
+
+    let user = await User.findByPk(req.body.id)
+    req.body.taskAnswers.forEach(async t => {
+        user.addTaskAnswer(await TaskAnswer.findByPk(t.id))
+        user.save()
+    })
+}
+exports.getUserAnswer = async (req, res) => {
+
+    
+    let user = await User.findByPk(req.query.userId,
+        {
+            include: [
+                {
+                    model: TaskAnswer,
+                    as: 'taskAnswers',
+                    include:[
+                        {
+                            model:ActivityTask,
+                            as:'task'
+                        }
+                    ]
+
+                }],
+            where: {
+                '$taskAnswer.task.activityId$': req.query.activityId
+            }
+        })
+    res.json(user.taskAnswers.filter(t=>t.task.activityId===req.query.activityId))
+}
