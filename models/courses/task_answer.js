@@ -28,6 +28,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     TaskAnswer.associate = (models) => {
         TaskAnswer.belongsTo(models.ActivityTask, { as: 'task', foreignKey: 'taskId' });
         TaskAnswer.belongsToMany(models.Enrollment, { as: 'enrollments', through: "users_enrollments", foreignKey: 'enrollmentId' })
+        TaskAnswer.belongsToMany(models.User,{as:'users',through: "user_task_answers"})
     }
 
     TaskAnswer.beforeCreate(answer => answer.id = uuid())

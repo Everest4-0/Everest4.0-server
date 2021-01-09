@@ -11,7 +11,7 @@ module.exports = ({ sequelize, Sequelize }) => {
         text: {
             type: Sequelize.STRING,
         },
-        points: Sequelize.STRING,
+        points: Sequelize.INTEGER,
 
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
