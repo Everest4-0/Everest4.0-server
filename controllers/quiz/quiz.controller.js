@@ -1,5 +1,12 @@
-var { User, Quiz, Answer, updateOrCreate } = require('../../models/models');
-
+var {
+    User,
+    Quiz,
+    Answer,
+    updateOrCreate
+} = require('../../models/models');
+const {
+    Sequelize
+} = require('sequelize');
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
@@ -12,6 +19,7 @@ exports.create = async (req, res) => {
         a.quizId = quiz.id
         await Answer.create(a)
     })
+
     res.json(quiz)
 }
 
@@ -19,7 +27,9 @@ exports.update = async (req, res) => {
 
     req.body.answers.forEach(answer => {
         answer.quizId = req.body.id
-        updateOrCreate(Answer, { id: answer.id || null }, answer)
+        updateOrCreate(Answer, {
+            id: answer.id || null
+        }, answer)
     })
     let quiz = await Quiz.update(req.body, {
         where: {
@@ -31,7 +41,11 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let quiz = Quiz.destroy({ where: { id: req.params.id } })
+    let quiz = Quiz.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
     res.json({
         status: 200,
         message: "sucess",
@@ -42,8 +56,7 @@ exports.delete = async (req, res) => {
 exports.one = async (req, res) => {
 
     let quiz = await Quiz.findByPk(req.params.id, {
-        include: [
-            {
+        include: [{
                 model: User,
                 as: 'user'
             },
@@ -60,27 +73,54 @@ exports.allBy = async (req, res) => {
 
     let filter = req.query
 
-    let quizes = await Quiz.findAll({
-        where: filter,
-        include: [
-            {
-                model: User,
-                as: 'user'
-            },
-            {
-                model: Answer,
-                as: 'answers',
-                include:[
-                    {
+    if (filter.rand) {
+        let quizes = await Quiz.findAll({
+            
+            include: [{
+                    model: User,
+                    as: 'user'
+                },
+                {
+                    model: Answer,
+                    as: 'answers',
+                    include: [{
                         model: User,
                         as: 'users'
-                    }
-                ]
-            }
-        ]
-    }).catch((e, r) => {
-        let u = e
-    });
+                    }]
+                }
+            ],
+            order: Sequelize.literal('rand()'),
+            limit: 5
 
-    res.json(quizes)
+        }).catch((e, r) => {
+            let u = e
+        });
+
+        res.json(quizes)
+
+    } else {
+
+        let quizes = await Quiz.findAll({
+            include: [{
+                    model: User,
+                    as: 'user'
+                },
+                {
+                    model: Answer,
+                    as: 'answers',
+                    include: [{
+                        model: User,
+                        as: 'users'
+                    }]
+                }
+            ]
+
+        }).catch((e, r) => {
+            let u = e
+        });
+
+        res.json(quizes)
+
+    }
+
 }
