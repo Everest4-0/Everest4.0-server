@@ -52,12 +52,8 @@ exports.one = async (req, res) => {
                 as: 'course'
             },
             {
-                model: User,
-                as: 'user'
-            },
-            {
                 model: Activity,
-                as: 'lastActivity'
+                as: 'activities'
             }
         ]
     });
