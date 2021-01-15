@@ -11,6 +11,7 @@ const {
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
     req.body.userId = req.body.user.id
+    req.body.isActive = false;
     let quiz = await Quiz.create(req.body).catch((e, Quiz) => {
         res.status(400).json(e || Quiz)
     });
@@ -57,13 +58,13 @@ exports.one = async (req, res) => {
 
     let quiz = await Quiz.findByPk(req.params.id, {
         include: [{
-                model: User,
-                as: 'user'
-            },
-            {
-                model: Answer,
-                as: 'answers'
-            }
+            model: User,
+            as: 'user'
+        },
+        {
+            model: Answer,
+            as: 'answers'
+        }
         ]
     });
     res.json(quiz)
@@ -75,19 +76,19 @@ exports.allBy = async (req, res) => {
 
     if (filter.rand) {
         let quizes = await Quiz.findAll({
-            
+            where: { isActive: true },
             include: [{
+                model: User,
+                as: 'user'
+            },
+            {
+                model: Answer,
+                as: 'answers',
+                include: [{
                     model: User,
-                    as: 'user'
-                },
-                {
-                    model: Answer,
-                    as: 'answers',
-                    include: [{
-                        model: User,
-                        as: 'users'
-                    }]
-                }
+                    as: 'users'
+                }]
+            }
             ],
             order: Sequelize.literal('rand()'),
             limit: 5
@@ -102,17 +103,17 @@ exports.allBy = async (req, res) => {
 
         let quizes = await Quiz.findAll({
             include: [{
+                model: User,
+                as: 'user'
+            },
+            {
+                model: Answer,
+                as: 'answers',
+                include: [{
                     model: User,
-                    as: 'user'
-                },
-                {
-                    model: Answer,
-                    as: 'answers',
-                    include: [{
-                        model: User,
-                        as: 'users'
-                    }]
-                }
+                    as: 'users'
+                }]
+            }
             ]
 
         }).catch((e, r) => {
