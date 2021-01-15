@@ -50,6 +50,13 @@ class CourseHelper {
             moduleId: final.id,
             attType: 3
         })
+        await Activity.create({
+            title: 'Certificado',
+            descriptions: '',
+            orderNo: 100,
+            moduleId: final.id,
+            attType: 5
+        })
         await CourseHelper.survey(final)
     }
 
