@@ -31,7 +31,7 @@ class CourseHelper {
         await Activity.create({
             title: 'Avaliação do perfil de entrada',
             descriptions: '',
-            orderNo: 100,
+            orderNo: 96,
             moduleId: intro.id,
             attType: 3
         })
@@ -46,7 +46,7 @@ class CourseHelper {
         await Activity.create({
             title: 'Exame final',
             descriptions: '',
-            orderNo: 2,
+            orderNo: 97,
             moduleId: final.id,
             attType: 3
         })

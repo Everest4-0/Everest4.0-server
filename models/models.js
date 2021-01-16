@@ -75,14 +75,14 @@ db.updateOrCreate = async (model, where, newItem) => {
         return model
           .create(newItem)
           .then((item) => {
-            return { item: item, created: true };
+            return  item;
           })
       }
       // Found an item, update it
       return model
         .update(newItem, { where: where })
         .then((item) => {
-          return { item: item, created: false }
+          return  item
         });
     })
   }

@@ -74,7 +74,7 @@ exports.allBy = async (req, res) => {
 
     let filter = req.query
 
-    if (filter.rand&&filter.isActive) {
+    if (filter.rand) {
         let quizes = await Quiz.findAll({
             where: { isActive: true },
             include: [{

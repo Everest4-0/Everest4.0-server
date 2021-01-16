@@ -75,7 +75,7 @@ exports.update = async (req, res) => {
     if (req.body.attachment) {
         var base64Data = req.body.attachment.split('base64,')[1];
         if (base64Data !== undefined) {
-            attachment = '/courses/' + module.course.code + '/attachment/cover-' + module.courseId.split('-')[0] + '.' + req.body.attachment.split(';')[0].split('/')[1];
+            attachment = '/courses/' + module.course.code + '/attachment/att-' + module.courseId.split('-')[0] + '.' + req.body.attachment.split(';')[0].split('/')[1];
             fs.mkdir('./public/courses/' + module.course.code + '/attachment', { recursive: true }, (err) => {
                 if (err) throw err;
 
@@ -90,14 +90,16 @@ exports.update = async (req, res) => {
         where: { id: req.body.id }
     }).catch(e => {
         let y = e;
-    }).then(activity => {
-        req.body.tasks.forEach(task => {
-            updateOrCreate(ActivityTask, { id: task.id || null }, task)
-            task.answers.forEach(answer =>
-                updateOrCreate(TaskAnswer, { id: answer.id || null }, answer)
-            )
-        })
     });
+
+
+    req.body.tasks.forEach(async task => {
+        let tasky = await updateOrCreate(ActivityTask, { id: task.id || null }, { ...task, ...{ activityId: req.body.id } })
+        task.answers.forEach(answer =>
+            updateOrCreate(TaskAnswer, { id: answer.id || null }, { ...answer, ...{ taskId: tasky.id } })
+        )
+    })
+
     let activity = await Activity.findByPk(req.body.id, {
         include: [
             {
@@ -115,7 +117,42 @@ exports.update = async (req, res) => {
             }
         ]
     });
-    res.json(activity)
+    if (req.body.orderNo === 97 || req.body.orderNo === 96) {
+        let next = await Activity.findAll({
+            where: { orderNo: req.body.orderNo === 97 ? 96 : 97, createdAt: req.body.createdAt }
+            , include: [{
+                model: Module,
+                as: 'module'
+            }
+            ]
+        })
+        next = next.filter(n => n.module.courseId === activity.module.courseId)[0]
+        next.duration = req.body.duration;
+
+        next.save();
+
+        req.body.tasks.forEach(async task => {
+            if (task.id) {
+                await ActivityTask.destroy({
+                    where: {
+                        activityId: next.id
+                    }
+                })
+            }
+            task.id = null;
+            await ActivityTask.create({ ...task, ...{ activityId: next.id } }).then(t => {
+                task.answers.forEach(async answer =>
+                await TaskAnswer.create({ ...answer, ...{ id:null,taskId: t.id } })
+                )
+        }).catch(e => {
+            let u = e
+        })
+
+    });
+}
+res.json(activity)
+
+
 }
 
 exports.delete = async (req, res) => {
@@ -195,17 +232,17 @@ exports.addUserAnswer = async (req, res) => {
 }
 exports.getUserAnswer = async (req, res) => {
 
-    
+
     let user = await User.findByPk(req.query.userId,
         {
             include: [
                 {
                     model: TaskAnswer,
                     as: 'taskAnswers',
-                    include:[
+                    include: [
                         {
-                            model:ActivityTask,
-                            as:'task'
+                            model: ActivityTask,
+                            as: 'task'
                         }
                     ]
 
@@ -214,5 +251,5 @@ exports.getUserAnswer = async (req, res) => {
                 '$taskAnswer.task.activityId$': req.query.activityId
             }
         })
-    res.json(user.taskAnswers.filter(t=>t.task.activityId===req.query.activityId))
+    res.json(user.taskAnswers.filter(t => t.task.activityId === req.query.activityId))
 }

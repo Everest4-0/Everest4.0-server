@@ -109,8 +109,10 @@ module.exports = (db) => {
     User.hasMany(models.ToDo, { as: 'todos', foreignKey: 'userId', });
 
 
+    //User.belongsToMany(models.Answer, { as: 'quizAnswers',through: "user_quiz_answers" })
+
     User.hasMany(models.Enrollment, { as: 'courses', foreignKey: 'userId' })
-    User.belongsToMany(models.Answer,{as:'answers',through: "user_answers",foreignKey:'answerId'})
+    User.belongsToMany(models.Answer,{as:'answers',through: "user_answers",foreignKey:'userId'})
     User.belongsToMany(models.TaskAnswer,{as:'taskAnswers',through: "user_task_answers"})
   }
 

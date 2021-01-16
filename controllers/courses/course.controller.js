@@ -159,6 +159,11 @@ exports.allBy = async (req, res) => {
 
 
     let courses = await Course.findAll({
+        limit: 20,
+        offset: 1,
+        order: [
+            ['createdAt', 'DESC'],
+        ],
         where: filter,
         include: [
             {
