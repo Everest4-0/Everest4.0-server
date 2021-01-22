@@ -97,12 +97,12 @@ exports.allBy = async (req, res) => {
             let u = e
         });
 
-        res.json(quizes)
+        res.json(quizes.sort(_ => Math.random() > .5 ? 1 : -1))
 
     } else {
 
         let quizes = await Quiz.findAll({
-            where:filter,
+            where: filter,
             include: [{
                 model: User,
                 as: 'user'
