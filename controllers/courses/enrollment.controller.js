@@ -14,7 +14,8 @@ const fs = require("fs");
 exports.create = async (req, res) => {
 
     req.body.courseId = req.body.course.id;
-    req.body.userId = req.body.user.id;
+    req.body.course=null;
+    req.body.userId = req.user.id;
     let enrollment = await Enrollment.create(req.body).catch((e, enrollment) => {
         res.status(400).json(e || enrollment)
     });

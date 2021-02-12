@@ -9,6 +9,37 @@ var {
     , ProfessionalExperience 
 } = require('../../models/models');
 
+const queryData={
+    include: [
+        {
+            model: Role,
+            as: 'role'
+        },
+        {
+            model: PersonalData,
+            as: 'datas',
+            include: [
+
+                {
+                    model: AcademicLevel,
+                    as: 'academicLevel'
+                },
+                {
+                    model: ProfessionalExperience,
+                    as: 'professionalExperience'
+                },
+                {
+                    model: WorkSituation,
+                    as: 'workSituation'
+                }
+            ]
+        },
+        {
+            model: PersonalSettings,
+            as: 'settings'
+        }
+    ]
+}
 
 exports.create = async (req, res) => {
     console.log(req.body)
@@ -75,43 +106,13 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let user = await User.findByPk(req.params.id, {
-        include: [
-            {
-                model: Role,
-                as: 'role'
-            },
-            {
-                model: PersonalData,
-                as: 'datas',
-                include: [
-
-                    {
-                        model: AcademicLevel,
-                        as: 'academicLevel'
-                    },
-                    {
-                        model: ProfessionalExperience,
-                        as: 'professionalExperience'
-                    },
-                    {
-                        model: WorkSituation,
-                        as: 'workSituation'
-                    }
-                ]
-            },
-            {
-                model: PersonalSettings,
-                as: 'settings'
-            }
-        ]
-    });
+    let user = await User.findByPk(req.params.id, queryData);
     res.json(user)
 }
 
-exports.authenticate = async (req, res) => {
+exports.authenticate = async (req, res, next) => {
 
-    let user = await User.findOne({ where: { email: req.body.email } });
+    let user = await User.findOne({ where: { email: req.body.email } },queryData);
 
 
     if (!user && req.body.provider !== 'LOCAL') {
@@ -133,17 +134,19 @@ exports.authenticate = async (req, res) => {
             })/*.catch(e){
                 let r=e
             }*/
-        user = await User.findOne({ where: { email: req.body.email } });
+        user = await User.findOne({ where: { email: req.body.email } },queryData);
         res.status(200)
     }
     else if (!user)
-        res.status(404)
-    else if (req.body.id || User.validatePassword(user, req.body.password))
-        res.status(200)
+        user={code:404}
+    else if (req.body.id || User.validatePassword(user, req.body.password)){
+    }
     else
-        res.status(401)
+        user.code=401
 
-    res.json(user)
+    //res.json(user)
+    req.user=user
+    next()
 }
 exports.allBy = async (req, res) => {
 
