@@ -35,6 +35,13 @@ class CourseHelper {
             moduleId: intro.id,
             attType: 3
         })
+        await Activity.create({
+            title: 'Apresentação',
+            descriptions: course.descriptions,
+            orderNo: 95,
+            moduleId: intro.id,
+            attType: 0
+        })
 
         let final = await Module.create({
             title: 'Conclusão',
@@ -55,7 +62,7 @@ class CourseHelper {
             descriptions: '',
             orderNo: 100,
             moduleId: final.id,
-            attType: 5
+            attType: 100
         })
         await CourseHelper.survey(final)
     }
@@ -91,7 +98,7 @@ class CourseHelper {
             attType: 3
         })
         const answers = [
-            { text: "Sin" },
+            { text: "Sim" },
             { text: "Não" },
             { text: "Péssimo" },
         ]
