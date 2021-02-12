@@ -8,6 +8,7 @@ let checkToken = (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
 
   return next();
+  
   res.set('Content-Type', 'application/json')
 
   let token = req.headers['x-access-token'] || req.headers['authorization'] || req.headers['x-api-key'] || ''; // Express headers are auto converted to lowercase
