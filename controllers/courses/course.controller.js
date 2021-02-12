@@ -155,6 +155,9 @@ exports.allBy = async (req, res) => {
             ]
         }
     }
+    if (req.query['$is_active']){
+    //    filter={...{isActive:1},...filter}
+    }
 
 
 

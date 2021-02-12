@@ -126,10 +126,14 @@ exports.update = async (req, res) => {
             }
             ]
         })
-        next = next.filter(n => n.module.courseId === activity.module.courseId)[0]
-        next.duration = req.body.duration;
 
-        next.save();
+        next = next.filter(n => n.module.courseId === activity.module.courseId)[0]
+        if (next) {
+            next.duration = req.body.duration;
+            next.save();
+        }
+
+
 
         req.body.tasks.forEach(async task => {
             if (task.id) {
@@ -142,15 +146,15 @@ exports.update = async (req, res) => {
             task.id = null;
             await ActivityTask.create({ ...task, ...{ activityId: next.id } }).then(t => {
                 task.answers.forEach(async answer =>
-                await TaskAnswer.create({ ...answer, ...{ id:null,taskId: t.id } })
+                    await TaskAnswer.create({ ...answer, ...{ id: null, taskId: t.id } })
                 )
-        }).catch(e => {
-            let u = e
-        })
+            }).catch(e => {
+                let u = e
+            })
 
-    });
-}
-res.json(activity)
+        });
+    }
+    res.json(activity)
 
 
 }
