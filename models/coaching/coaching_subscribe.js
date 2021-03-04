@@ -1,19 +1,18 @@
-const { UUID, UUIDV4 } = require('sequelize/types');
 const {v4:uuid} = require('uuid');
 
 
 module.exports = ({sequelize, Sequelize}) => {
-    const CoachingSubscribe = sequelize.define('coaching_subscribe', {
+    const CoachingSubscribe = sequelize.define('coaching_subscribes', {
         id:{
             primaryKey: true,
-            type: UUID,
-            default: UUIDV4
+            type: Sequelize.UUID,
+            default: Sequelize.UUIDV4
         },
         description:{
             type: Sequelize.STRING
         },
         isActive:{
-            type:Sequelize.BOLEAN,
+            type:Sequelize.BOOLEAN,
             default: true
         },
         //Timestamp

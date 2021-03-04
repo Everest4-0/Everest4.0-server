@@ -8,11 +8,11 @@ module.exports = ({sequelize, Sequelize}) =>{
             type: Sequelize.UUID,
             default: Sequelize.UUIDV4
         },
-        duration:{
+        description:{
             type: Sequelize.STRING
         },
         isActive:{
-            type:Sequelize.BOLEAN,
+            type:Sequelize.BOOLEAN,
             default: true
         },
         // Timestamps
