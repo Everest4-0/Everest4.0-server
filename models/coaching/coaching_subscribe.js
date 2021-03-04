@@ -21,7 +21,7 @@ module.exports = ({sequelize, Sequelize}) => {
         updatedAt: Sequelize.DATE
     }, {
         indexes:[{
-            fields:['id']
+            fields:['id', 'userId']
         }]
     });
 
@@ -30,6 +30,10 @@ module.exports = ({sequelize, Sequelize}) => {
         CoachingSubscribe.hasOne(models.CoachingGoal);
         CoachingSubscribe.hasOne(models.CoachingDuration);
 
+        CoachingSubscribe.belongsTo(models.User, {
+            as: 'user',
+            foreignKey: 'userId'
+        })
     }
 
     CoachingSubscribe.beforeCreate(coachingSubscribe => coachingSubscribe.id = uuid());

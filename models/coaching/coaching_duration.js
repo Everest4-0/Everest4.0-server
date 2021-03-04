@@ -21,12 +21,12 @@ module.exports = ({sequelize, Sequelize}) =>{
     },
     {
         indexes:[{
-            fields: ['id']
+            fields: ['id', 'du']
         }]
     });
 
     CoachingDuration.associate = (models) => {
-        CoachingDuration.belongsTo(models.CoachingSubscribe, { as: 'duration', foreignKey: 'durationId'})
+        CoachingDuration.belongsTo(models.CoachingSubscribe, { as: 'duration', foreignKey: 'durationId'});
     }
 
     CoachingDuration.beforeCreate(coachingDuration => coachingDuration.id = uuid());
