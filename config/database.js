@@ -6,7 +6,7 @@ module.exports = {
     HOST: "localhost",
     USER: "root",
     PASSWORD: "",
-    DB: "everest_dev_2",
+    DB: "everest",
     dialect: "mysql",
     pool: {
       max: 5,
