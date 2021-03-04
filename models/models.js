@@ -57,6 +57,10 @@ db.Enrollment = require("./courses/enrollment")(db);
 db.ActivityTask = require("./courses/activity_task")(db);
 db.TaskAnswer = require("./courses/task_answer")(db);
 
+//coaching
+db.CoachingDuration = require("./coaching/coaching_duration")(db);
+db.CoachingGoal = require("./coaching/coaching_goal")(db);
+db.CoachingSubscribe = require("./coaching/coaching_subscribe")(db);
 
 db.Op = Sequelize.Op;
 Object.keys(db).forEach(modelName => {
