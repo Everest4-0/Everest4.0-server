@@ -3,6 +3,7 @@ var { ToDo, User } = require('../../models/models');
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
     req.body.userId = req.body.user.id
+    req.body.user = null
     let todo = await ToDo.create(req.body).catch((e, ToDo) => {
         res.status(400).json(e || ToDo)
     });

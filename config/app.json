@@ -5,5 +5,25 @@
         "algorithms": [
             "RS256"
         ]
-    }
+    },
+    "clients":[
+        {
+            "id":"810be46b-b27c-4a3f-beef-3e9788538c89",
+            "name":"Everest Web App",
+            "apiKey":"EAAFc0IurJEcBAEGV9Nm7Pn2xMrymLusKT6NVW7zPj5klUDeXCaqOrNZAyvuXhyoLTKq5iFGoHJYgXo5765EzMtRYgpDJAubWrQP1rT46FgKqx3Ho4WX8x1DWXAnEWu0oBZBm56rdhV961s4TrSkPzCEBsNrMBHbuOWzTByPJuxniGzGlOLZA5ZBWvFrPJfpSvPl6XFmk7AZDZD",
+            "authorizedHost":"localhost:4200"
+        },
+        {
+            "id":"39fb53fc-fbd7-4869-9f5f-9f3827dfe2e3",
+            "name":"Everest landing page",
+            "apiKey":"ya29.a0AfH6SMAOSUuneRJY76pjL1WCjQL6cKRA0DyItK9fCpGT9o6_CpdDagLMcI1zIYzvORo9kSNQ8fHt-AsUdHfP1ENPrm8umRvoaMHD-YKgo1Yr-wWvyH-gI0RzbeaDoxEQcNDoS414S6H9cHCStCfvXjXEk-3OurbyGq_pJ61EmHCr",
+            "authorizedHost":"localhost:4200"
+        },
+        {
+            "id":"4e5d4923-6370-4d8b-936e-10b9a8fa4fe5",
+            "name":"Everest Mobile App",
+            "apiKey":"ya29.a0AfH6SMC64pVLbBrjDG-GuN-uUh6YCHWPcGVODlCJsp_nmylIiej76cK9ryM-KQorcCO5fVrqgB5H2lpbUNBsjkj1VCfbbU34LUxlH9Cl4Z4Zkh1iZq2k6SPsS1EZp5qzQsjcRW3mbHQuK33oUQvuIxh-J6ezNSXal4TaJLnds-Tk",
+            "authorizedHost":"localhost:4200"
+        }
+    ]
 }

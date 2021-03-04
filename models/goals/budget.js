@@ -25,6 +25,7 @@ module.exports = ({ sequelize, Sequelize }) => {
             type: Sequelize.BOOLEAN,
             default: true
         },
+        
         // Timestamps
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
