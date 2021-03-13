@@ -21,8 +21,12 @@ const options = {
 // Init App
 var app = express();
 var server = require("http").Server(app);
-//var server = require("https").createServer(options,app);
 
+app.use(function(req, res, next){
+    res.io = io;
+    next();
+  });
+app.options('*', cors())
 app.use(cors())
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
@@ -31,12 +35,37 @@ app.use(express.static('public'))
 app.use('/static', express.static('public'))
 
 app.use('/api/v1/', middleware.checkToken, routes);
+
 app.get('/', function (req, res) {
     res.send('Everes 4.0 - sc!');
 });
 
 app.set('port', (process.env.PORT || 9800));
 app.set('address', '0.0.0.0');
-server.listen(app.get('port'), app.get('address'), function () {
+server=server.listen(app.get('port'), app.get('address'), function () {
     console.log('Everest4.0 -server side is listening to ' + app.get('address') + ' port ' + app.get('port'));
+});
+
+var io = require('socket.io')(server, { 
+    cors: {
+        origin: "http://localhost:4200",
+        credentials: true
+      } 
+    });
+
+io.on('connection', (io) => {
+    //console.log("Client connected!");
+    io.on('message-from-client-to-server', (msg) => {
+        console.log(msg);
+    })
+    io.emit('notification', 'Hello World!');
+});
+/**
+ * 
+ */
+
+//const socket = require('socket.io')(server);
+// On every Client Connection
+io.on('connection', socket => {
+    console.log('Socket: client connected');
 });
