@@ -30,6 +30,8 @@ db.PersonalSettings = require("./main/personal-settings")(db);
 db.User = require("./main/user.js")(db);
 db.ProfessionalExperienceData = require("./main/professional-experience-data")(db);
 db.ACL = require("./main/acl.js")(db);
+db.Chat = require("./main/chat")(db);
+db.ChatMessage = require("./main/chat_message")(db);
 
 //Diagnostics
 db.Evaluation = require("./diagnostic/evaluation")(db);
@@ -60,7 +62,7 @@ db.TaskAnswer = require("./courses/task_answer")(db);
 //coaching
 db.CoachingDuration = require("./coaching/coaching_duration")(db);
 db.CoachingGoal = require("./coaching/coaching_goal")(db);
-db.CoachingSubscribe = require("./coaching/coaching_subscribe")(db);
+db.CoachingSubscription = require("./coaching/coaching_subscription")(db);
 db.Note = require("./coaching/note")(db);
 
 db.Op = Sequelize.Op;
