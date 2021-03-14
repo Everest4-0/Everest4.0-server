@@ -1,33 +1,33 @@
-var {CoachingSubscription, CoachingGoal, CoachingDuration} = require("../../models/models")
+var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User } = require("../../models/models")
 
-exports.create = async(req, res) =>{
+exports.create = async (req, res) => {
 
     req.body.userId = req.body.user.id
-    
-    let coaching_subscription = await CoachingSubscription.create(req.body).catch((e, coaching_subscription) =>{
+
+    let coaching_subscription = await CoachingSubscription.create(req.body).catch((e, coaching_subscription) => {
         res.status(400).json(e || coaching_subscription)
     });
 
     res.json(coaching_subscription)
 }
 
-exports.update = async (req, res) =>{
+exports.update = async (req, res) => {
     await CoachingSubscription.update(req.body, {
-        where:{
+        where: {
             id: req.body.id
         }
-        
+
     })
 
     let coaching_subscription = await CoachingSubscription.findByPk(req.body.id, {
-    }).catch(e =>{
+    }).catch(e => {
         let i = e
     })
     res.json(coaching_subscription);
 }
 
-exports.delete = async (req, res) =>{
-    let coaching_subscription = await CoachingSubscription.destroy({where:{id:req.params.id}})
+exports.delete = async (req, res) => {
+    let coaching_subscription = await CoachingSubscription.destroy({ where: { id: req.params.id } })
     res.json({
         status: 200,
         message: "sucess",
@@ -37,15 +37,55 @@ exports.delete = async (req, res) =>{
 
 exports.one = async (req, res) => {
 
-    let coaching_subscription = await CoachingSubscription.findByPk(req.params.id, {
+    let subscription = await CoachingSubscription.findByPk(req.params.id, {
+        include: [
+
+            {
+                model: User,
+                as: 'user'
+            },
+            {
+                model: Chat,
+                as: 'chat'
+            },
+            {
+                model: User,
+                as: 'coach'
+            },
+            {
+                model: CoachingGoal,
+                as: 'goal'
+            }
+        ]
     });
-    res.json(coaching_subscription)
+
+    res.json(subscription)
 }
 
 exports.allBy = async (req, res) => {
 
+    let filter = req.query
     let coaching_subscriptions = await CoachingSubscription.findAll({
         where: filter,
+        include: [
+
+            {
+                model: User,
+                as: 'user'
+            },
+            {
+                model: Chat,
+                as: 'chat'
+            },
+            {
+                model: User,
+                as: 'coach'
+            },
+            {
+                model: CoachingGoal,
+                as: 'goal'
+            }
+        ]
     }).catch((e, r) => {
         let u = e
     });

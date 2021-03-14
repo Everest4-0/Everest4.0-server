@@ -31,7 +31,7 @@ module.exports = ({ sequelize, Sequelize }) => {
         CoachingSubscription.belongsTo(models.CoachingDuration, { as: 'duration', foreignKey: 'durationId' });
         CoachingSubscription.belongsTo(models.User, {as: 'user',foreignKey: 'userId'})
         CoachingSubscription.belongsTo(models.User, {as: 'coach',foreignKey: 'coachId'})
-        CoachingSubscription.belongsTo(models.Chat, {as: 'chat',foreignKey: 'chatId'})
+        CoachingSubscription.belongsTo(models.Chat, {as: 'chat'})
 
     }
 
