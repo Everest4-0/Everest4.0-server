@@ -7,8 +7,11 @@ module.exports = ({sequelize, Sequelize}) =>{
             type: Sequelize.UUID,
             default: Sequelize.UUIDV4
         },
-        description:{
+        title:{
             type:Sequelize.STRING
+        },
+        description:{
+            type:Sequelize.TEXT
         },
         isActive:{
             type:Sequelize.BOOLEAN,
@@ -25,7 +28,7 @@ module.exports = ({sequelize, Sequelize}) =>{
     });
 
     CoachingGoal.associate = (models) => {
-        CoachingGoal.belongsTo(models.CoachingSubscribe, {as: 'goal', foreignKey:'goalId'})
+        CoachingGoal.hasMany(models.CoachingSubscription, {as: 'subscriptions', foreignKey: 'goalId'})
     }
 
     CoachingGoal.beforeCreate(coachingGoal => coachingGoal.id = uuid());

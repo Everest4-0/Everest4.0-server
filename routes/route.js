@@ -6,6 +6,8 @@ router.use('/news', require('./mains/news.route'));
 router.use('/users', require('./mains/user.route'));
 router.use('/roles', require('./mains/role.route'));
 router.use('/acls', require('./mains/acl.route'));
+router.use('/chats', require('./mains/chat.route'));
+router.use('/chats/messages', require('./mains/chat_message.route'));
 
 //Diagnostics
 router.use('/evaluations', require('./diagnostics/evaluation.route'));

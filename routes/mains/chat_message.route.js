@@ -1,5 +1,7 @@
 var router = require('express').Router();
-let controller = require('../../controllers/coaching/note.controller');
+let controller = require('../../controllers/mains/chat_message.controller');
+
+let midlleWare = require('../../application/middlewares/main');
 
 // Export API routes
 module.exports = router;

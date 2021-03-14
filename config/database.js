@@ -4,9 +4,9 @@ const fs = require('fs');
 module.exports = {
   dev: {
     HOST: "localhost",
-    USER: "root",
-    PASSWORD: "",
-    DB: "everest",
+    USER: "dev",
+    PASSWORD: "qasw",
+    DB: "everest_dev",
     dialect: "mysql",
     pool: {
       max: 5,

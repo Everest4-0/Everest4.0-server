@@ -1,35 +1,36 @@
 
-const {v4:uuid} = require ('uuid');
+const { v4: uuid } = require('uuid');
 
-module.exports = ({sequelize, Sequelize}) =>{
+module.exports = ({ sequelize, Sequelize }) => {
     const CoachingDuration = sequelize.define('coaching_durations', {
-        id:{
+        id: {
             primaryKey: true,
             type: Sequelize.UUID,
             default: Sequelize.UUIDV4
         },
-        description:{
+        months: Sequelize.INTEGER,
+        description: {
             type: Sequelize.STRING
         },
-        isActive:{
-            type:Sequelize.BOOLEAN,
+        isActive: {
+            type: Sequelize.BOOLEAN,
             default: true
         },
         // Timestamps
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE
     },
-    {
-        indexes:[{
-            fields: ['id']
-        }]
-    });
+        {
+            indexes: [{
+                fields: ['id']
+            }]
+        });
 
     CoachingDuration.associate = (models) => {
-        CoachingDuration.belongsTo(models.CoachingSubscribe, { as: 'duration', foreignKey: 'durationId'});
+        CoachingDuration.hasMany(models.CoachingSubscription, { as: 'subscriptions', foreignKey: 'durationId' });
     }
 
     CoachingDuration.beforeCreate(coachingDuration => coachingDuration.id = uuid());
-    
+
     return CoachingDuration;
 }

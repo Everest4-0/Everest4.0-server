@@ -30,6 +30,8 @@ db.PersonalSettings = require("./main/personal-settings")(db);
 db.User = require("./main/user.js")(db);
 db.ProfessionalExperienceData = require("./main/professional-experience-data")(db);
 db.ACL = require("./main/acl.js")(db);
+db.Chat = require("./main/chat")(db);
+db.ChatMessage = require("./main/chat_message")(db);
 
 //Diagnostics
 db.Evaluation = require("./diagnostic/evaluation")(db);
