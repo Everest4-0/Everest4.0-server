@@ -108,6 +108,8 @@ module.exports = (db) => {
     User.hasMany(models.UserEvaluation, { as: 'requested', foreignKey: 'requestedId', });
     User.hasMany(models.ToDo, { as: 'todos', foreignKey: 'userId', });
 
+    User.hasMany(models.CoachingSubscription, {as: 'coachingSubscriptions',foreignKey: 'userId'})
+    User.hasMany(models.CoachingSubscription, {as: 'coachings',foreignKey: 'coachId'})
 
     //User.belongsToMany(models.Answer, { as: 'quizAnswers',through: "user_quiz_answers" })
 

@@ -7,8 +7,11 @@ module.exports = ({sequelize, Sequelize}) =>{
             type: Sequelize.UUID,
             default: Sequelize.UUIDV4
         },
-        description:{
+        title:{
             type:Sequelize.STRING
+        },
+        description:{
+            type:Sequelize.TEXT
         },
         isActive:{
             type:Sequelize.BOOLEAN,
