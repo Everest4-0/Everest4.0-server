@@ -31,7 +31,7 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let chat = await Chat.findOne({
+    let chat = await Chat.findByPk(req.params.id,{
         include: [
             {
                 model: ChatMessage,
@@ -47,6 +47,7 @@ exports.one = async (req, res) => {
                     }]
             }]
     });
+    //socket.customId = data.customId;
     res.json(chat)
 
 }
