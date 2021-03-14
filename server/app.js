@@ -1,7 +1,6 @@
 var express = require('express'),
     config = require('../config/database'),
-    middleware = require('../config/middleware'),
-
+    middleWare = require('../application/middlewares/main'),
     //  { google } = require('googleapis'),
     cors = require('cors'),
     bodyParser = require('body-parser'),
@@ -34,7 +33,7 @@ app.use(bodyParser.json());
 app.use(express.static('public'))
 app.use('/static', express.static('public'))
 
-app.use('/api/v1/', middleware.checkToken, routes);
+app.use('/api/v1/', middleWare.validateUserAuthToken, routes);
 
 app.get('/', function (req, res) {
     res.send('Everes 4.0 - sc!');

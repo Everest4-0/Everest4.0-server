@@ -7,7 +7,7 @@ let midlleWare = require('../../application/middlewares/main');
 module.exports = router;
 router.get('/', controller.allBy);
 router.get('/:id', controller.one);
-router.post('/',midlleWare.validateUserAuthToken, controller.create);
+router.post('/', controller.create);
 router.put('/', controller.update);
 router.delete('/', controller.delete);
 
