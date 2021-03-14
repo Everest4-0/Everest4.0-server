@@ -20,14 +20,14 @@ module.exports = ({sequelize, Sequelize}) => {
         updatedAt: Sequelize.DATE
     }, {
         indexes:[{
-            fields:['id', 'userId']
+            fields:['id', 'userId', 'durationId', 'goalId']
         }]
     });
 
     CoachingSubscribe.associate = (models) =>{
 
-        CoachingSubscribe.hasOne(models.CoachingGoal);
         CoachingSubscribe.hasOne(models.CoachingDuration);
+        CoachingSubscribe.hasOne(models.CoachingGoal);
 
         CoachingSubscribe.belongsTo(models.User, {
             as: 'user',
