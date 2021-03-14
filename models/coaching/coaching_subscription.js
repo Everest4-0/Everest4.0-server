@@ -2,7 +2,7 @@ const {v4:uuid} = require('uuid');
 
 
 module.exports = ({sequelize, Sequelize}) => {
-    const CoachingSubscribe = sequelize.define('coaching_subscribes', {
+    const CoachingSubscription = sequelize.define('coaching_subscription', {
         id:{
             primaryKey: true,
             type: Sequelize.UUID,
@@ -24,18 +24,18 @@ module.exports = ({sequelize, Sequelize}) => {
         }]
     });
 
-    CoachingSubscribe.associate = (models) =>{
+    CoachingSubscription.associate = (models) =>{
 
-        CoachingSubscribe.hasOne(models.CoachingDuration);
-        CoachingSubscribe.hasOne(models.CoachingGoal);
+        CoachingSubscription.hasMany(models.CoachingDuration);
+        CoachingSubscription.hasMany(models.CoachingGoal);
 
-        CoachingSubscribe.belongsTo(models.User, {
+        CoachingSubscription.belongsTo(models.User, {
             as: 'user',
             foreignKey: 'userId'
         })
     }
 
-    CoachingSubscribe.beforeCreate(coachingSubscribe => coachingSubscribe.id = uuid());
+    CoachingSubscription.beforeCreate(coachingSubscribe => coachingSubscribe.id = uuid());
     
-    return CoachingSubscribe;
+    return CoachingSubscription;
 }

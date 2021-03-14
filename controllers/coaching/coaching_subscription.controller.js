@@ -3,6 +3,7 @@ var {CoachingSubscription, CoachingGoal, CoachingDuration} = require("../../mode
 exports.create = async(req, res) =>{
 
     req.body.userId = req.body.user.id
+    
     let coaching_subscription = await CoachingSubscription.create(req.body).catch((e, coaching_subscription) =>{
         res.status(400).json(e || coaching_subscription)
     });

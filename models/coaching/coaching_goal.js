@@ -28,7 +28,7 @@ module.exports = ({sequelize, Sequelize}) =>{
     });
 
     CoachingGoal.associate = (models) => {
-        CoachingGoal.hasMany(models.CoachingSubscription, {as: 'subscriptions', foreignKey: 'goalId'})
+        CoachingGoal.belongsTo(models.CoachingSubscription, {as: 'subscriptions', foreignKey: 'goalId'})
     }
 
     CoachingGoal.beforeCreate(coachingGoal => coachingGoal.id = uuid());
