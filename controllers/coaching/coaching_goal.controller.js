@@ -1,8 +1,8 @@
-const Coaching_goal = require("../../models/coaching/coaching_coaching_goal")
+var {CoachingGoal} = require("../../models/models")
 
 exports.create = async(req, res) =>{
 
-    let coaching_goal = await Coaching_goal.create(req.body).catch((e, note) =>{
+    let coaching_goal = await CoachingGoal.create(req.body).catch((e, coaching_goal) =>{
         res.status(400).json(e || coaching_goal)
     });
 
@@ -10,13 +10,13 @@ exports.create = async(req, res) =>{
 }
 
 exports.update = async (req, res) =>{
-    await Coaching_goal.update(req.body, {
+    await CoachingGoal.update(req.body, {
         where:{
             id: req.body.id
         }
     })
 
-    let coaching_goal = await Coaching_goal.findByPk(req.body.id, {
+    let coaching_goal = await CoachingGoal.findByPk(req.body.id, {
     }).catch(e =>{
         let i = e
     })
@@ -24,7 +24,7 @@ exports.update = async (req, res) =>{
 }
 
 exports.delete = async (req, res) =>{
-    let coaching_goal = Coaching_goal.destroy({where:{id:req.params.id}})
+    let coaching_goal = await CoachingGoal.destroy({where:{id:req.params.id}})
     res.json({
         status: 200,
         message: "sucess",
@@ -34,14 +34,14 @@ exports.delete = async (req, res) =>{
 
 exports.one = async (req, res) => {
 
-    let coaching_goal = await Coaching_goal.findByPk(req.params.id, {
+    let coaching_goal = await CoachingGoal.findByPk(req.params.id, {
     });
     res.json(coaching_goal)
 }
 
 exports.allBy = async (req, res) => {
 
-    let coaching_goals = await Coaching_goal.findAll({
+    let coaching_goals = await CoachingGoal.findAll({
         where: filter,
     }).catch((e, r) => {
         let u = e

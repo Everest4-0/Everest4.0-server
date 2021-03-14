@@ -1,53 +1,53 @@
-const Coaching_duration = require("../../models/coaching/coaching_duration");
+var {CoachingDuration} = require("../../models/models");
 
 exports.create = async(req, res) =>{
 
-    let duration = await Coaching_duration.create(req.body).catch((e, note) =>{
-        res.status(400).json(e || duration)
+    let coaching_duration = await CoachingDuration.create(req.body).catch((e, coaching_duration) =>{
+        res.status(400).json(e || coaching_duration)
     });
 
-    res.json(duration)
+    res.json(coaching_duration)
 }
 
 exports.update = async (req, res) =>{
-    await Coaching_duration.update(req.body, {
+    await CoachingDuration.update(req.body, {
         where:{
             id: req.body.id
         }
     })
 
-    let duration = await Coaching_duration.findByPk(req.body.id, {
+    let coaching_duration = await CoachingDuration.findByPk(req.body.id, {
     }).catch(e =>{
         let i = e
     })
-    res.json(duration);
+    res.json(coaching_duration);
 }
 
 exports.delete = async (req, res) =>{
-    let duration = Coaching_duration.destroy({where:{id:req.params.id}})
+    let coaching_duration = await CoachingDuration.destroy({where:{id:req.params.id}})
     res.json({
         status: 200,
         message: "sucess",
-        data: duration
+        data: coaching_duration
     })
 }
 
 exports.one = async (req, res) => {
 
-    let duration = await Note.findByPk(req.params.id, {
+    let coaching_duration = await CoachingDuration.findByPk(req.params.id, {
     });
-    res.json(duration)
+    res.json(coaching_duration)
 }
 
 exports.allBy = async (req, res) => {
 
-    let durations = await Note.findAll({
+    let coaching_durations = await CoachingDuration.findAll({
         where: filter,
     }).catch((e, r) => {
         let u = e
     });
 
-    res.json(durations)
+    res.json(coaching_durations)
 }
 
 
