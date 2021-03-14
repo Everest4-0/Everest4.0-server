@@ -34,6 +34,8 @@ router.use('/courses/modules', require("./courses/module.route"));
 //Coaching
 router.use('/coaching/notes', require("./coaching/note.route"));
 router.use('/coaching/subscriptions', require("./coaching/coaching_subscription.route"));
+router.use('/coaching/durations', require("./coaching/coaching_duration.route"));
+router.use('/coaching/goals', require("./coaching/coaching_goal.route"));
 //router.use('/answers', require("./quiz/answer.route"));
 
 // Export API routes
