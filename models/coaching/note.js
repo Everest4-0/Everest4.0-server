@@ -37,6 +37,7 @@ module.exports = ({sequelize, Sequelize}) => {
     }
 
     Note.beforeCreate(coachingSubscribe => coachingSubscribe.id = uuid());
+    Note.beforeUpdate(coachingSubscribe => coachingSubscribe.updatedAt = new Date());
     
     return Note;
 }
