@@ -35,12 +35,6 @@ exports.delete = async (req, res) =>{
 exports.one = async (req, res) => {
 
     let duration = await Note.findByPk(req.params.id, {
-        include: [
-            {
-                model: Quiz,
-                as: 'quiz'
-            }
-        ]
     });
     res.json(duration)
 }
