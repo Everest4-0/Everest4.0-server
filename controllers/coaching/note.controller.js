@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-
+    
     await Note.update(req.body, {
         where: {
             id: req.body.id
