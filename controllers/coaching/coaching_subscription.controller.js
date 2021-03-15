@@ -1,4 +1,5 @@
-var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User } = require("../../models/models")
+
+var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, PersonalData } = require("../../models/models")
 
 exports.create = async (req, res) => {
 
@@ -71,7 +72,12 @@ exports.allBy = async (req, res) => {
 
             {
                 model: User,
-                as: 'user'
+                as: 'user',
+                include: [{
+                    model:PersonalData,
+                    as:'datas'
+
+                }]
             },
             {
                 model: Chat,
