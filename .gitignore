@@ -6,5 +6,6 @@
 /public/*
 /.deployment/
 /.vscode/
+/.vscode/laouch.json
 /.env*
 /.env
