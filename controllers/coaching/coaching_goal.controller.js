@@ -41,9 +41,7 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let coaching_goals = await CoachingGoal.findAll({
-        where: filter,
-    }).catch((e, r) => {
+    let coaching_goals = await CoachingGoal.findAll().catch((e, r) => {
         let u = e
     });
 
