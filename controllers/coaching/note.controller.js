@@ -3,6 +3,7 @@ var { User, Note } = require('../../models/models');
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
     req.body.userId = req.user.id
+    req.body.subscriptionId = req.body.subscription.id
     let note = await Note.create(req.body).catch((e, note) => {
         res.status(400).json(e || note)
     });
@@ -47,7 +48,7 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let filter = { userId: req.user.id }
+    let filter = {...req.query,...{ userId: req.user.id }}
 
     let users = await Note.findAll({
         where: filter,

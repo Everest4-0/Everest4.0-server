@@ -1,5 +1,5 @@
 
-var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, PersonalData } = require("../../models/models")
+var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, PersonalData, Note } = require("../../models/models")
 
 exports.create = async (req, res) => {
 
@@ -54,6 +54,16 @@ exports.one = async (req, res) => {
             {
                 model: User,
                 as: 'coach'
+            },
+            {
+                model: Note,
+                as: 'notes',
+                include: [
+
+                    {
+                        model: User,
+                        as: 'user'
+                    }]
             },
             {
                 model: CoachingGoal,

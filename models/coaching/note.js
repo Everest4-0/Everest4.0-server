@@ -33,11 +33,16 @@ module.exports = ({sequelize, Sequelize}) => {
         Note.belongsTo(models.User, {
             as: 'user',
             foreignKey: 'userId'
+        });
+
+        Note.belongsTo(models.CoachingSubscription, {
+            as: 'subscription',
+            foreignKey: 'subscriptionId'
         })
     }
 
-    Note.beforeCreate(coachingSubscribe => coachingSubscribe.id = uuid());
-    Note.beforeUpdate(coachingSubscribe => coachingSubscribe.updatedAt = new Date());
+    Note.beforeCreate(note => note.id = uuid());
+    Note.beforeUpdate(note => note.updatedAt = new Date());
     
     return Note;
 }
