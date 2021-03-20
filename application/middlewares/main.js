@@ -33,30 +33,30 @@ class Main {
              next();
          }
      }*/
-     
+
     static validateClientAuth = (req, res, next) => {
         let token = req.headers['apikey']
     }
 
     static validateUserAuthToken = (req, res, next) => {
-        if(req.url.split('authenticate').length>1) {
-           return next();
+        if (req.url.split('authenticate').length > 1) {
+            return next();
         }
 
         let token = req.headers['authorization']
-        if (typeof token === 'string' && token.split(' ').length < 2) {
+        if (typeof token === 'string' && token.split(' ').length > 1)
+            jwt.verify(token.split(' ')[1], serverJWT_secret, async (err, decoded) => {
+                if (err) {
+                    res.sendStatus(403)
+                } else {
+                    req.user = await User.findOne({ where: { email: decoded } })
+                    next()
+                    return true
+                }
+            })
+        else {
             res.sendStatus(403)
         }
-        jwt.verify(token.split(' ')[1], serverJWT_secret, async (err, decoded) => {
-            if (err) {
-                res.sendStatus(403)
-            } else {
-                req.user = await User.findOne({ where: { email: decoded } })
-                next()
-                return true
-            }
-        })
-
 
     }
 }
