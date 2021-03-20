@@ -28,6 +28,10 @@ module.exports = ({sequelize, Sequelize}) => {
             as: 'subscription',
             foreignKey: 'subscriptionId'
         })
+        Feedback.belongsTo(models.User, {
+            as: 'user',
+            foreignKey: 'userId'
+        })
         Feedback.hasMany(models.FeedbackPoint, {
             as: 'points',
             foreignKey: 'feedbackId'
