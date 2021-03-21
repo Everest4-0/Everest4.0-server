@@ -36,6 +36,10 @@ module.exports = ({sequelize, Sequelize}) => {
             as: 'points',
             foreignKey: 'feedbackId'
         })
+        Feedback.hasMany(models.FeedbackComment, {
+            as: 'comments',
+            foreignKey: 'feedbackId'
+        })
     }
     Feedback.beforeCreate(feedback => feedback.id = uuid());
     Feedback.beforeUpdate(feedback => feedback.updatedAt = new Date());

@@ -67,6 +67,7 @@ db.Note = require("./coaching/note")(db);
 db.Feedback = require("./coaching/feedback")(db);
 db.FeedbackPoint = require("./coaching/feedback_point")(db);
 db.FeedbackItem = require("./coaching/feedback_item")(db);
+db.FeedbackComment = require("./coaching/feedback_comment")(db);
 
 db.Op = Sequelize.Op;
 Object.keys(db).forEach(modelName => {
