@@ -38,6 +38,7 @@ router.use('/coaching/durations', require("./coaching/coaching_duration.route"))
 router.use('/coaching/goals', require("./coaching/coaching_goal.route"));
 router.use('/coaching/feedbacks', require("./coaching/feedback.route"));
 router.use('/coaching/feedback_items', require("./coaching/feedback_item.route"));
+router.use('/coaching/feedback_comments', require("./coaching/feedback_comment.route"));
 //router.use('/answers', require("./quiz/answer.route"));
 
 // Export API routes
