@@ -4,16 +4,23 @@ exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
     req.body.userId = req.user.id
     req.body.feedbackId = req.body.feedback.id
-    let feedback = await FeedbackComment.create(req.body).catch((e, comment) => {
+    let comment = await FeedbackComment.create(req.body).catch((e, comment) => {
         res.status(400).json(e || comment)
     });
+     comment = await FeedbackComment.findByPk(comment.id,{
+        include: [
+            {
+                model: User,
+                as: 'user',
+                include: [
+                    {
+                        model: PersonalData,
+                        as: 'datas'
+                    }
+                ]
 
-    req.body.points.forEach(async point => {
-        point.feedbackId = feedback.id
-        point.itemId = point.item.id
-        await FeedbackPoint.create(point).catch((e, comment) => {
-            let err = e
-        })
+            }
+        ]
     })
     res.json(comment)
 }
@@ -84,11 +91,6 @@ exports.allBy = async (req, res) => {
                         as: 'datas'
                     }
                 ]
-
-            },
-            {
-                model: Feedback,
-                as: 'feedback',
 
             }
         ]
