@@ -60,7 +60,7 @@ module.exports = ({ sequelize, Sequelize }) => {
 
   PersonalData.associate = (models) => {
     //PersonalData.belongsTo(models.ProfessionalExperienceData, { as: 'professionalExperience', foreignKey: 'ProfessionalExperienceDataId' })
-    PersonalData.belongsTo(models.AcademicLevel, { as: 'academicLevel', foreignKey: 'acad_levelId', });
+    PersonalData.belongsTo(models.AcademicLevel, { as: 'academicLevel', foreignKey: 'acad_levelId' });
     PersonalData.belongsTo(models.ProfessionalExperience, { as: 'professionalExperience', foreignKey: 'pro_expId', });
     PersonalData.belongsTo(models.WorkSituation, { as: 'workSituation', foreignKey: 'work_sitId', });
 

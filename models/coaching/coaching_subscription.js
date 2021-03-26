@@ -1,4 +1,5 @@
 const { v4: uuid } = require('uuid');
+const { Chat } = require('../models');
 
 
 module.exports = ({ sequelize, Sequelize }) => {
@@ -29,14 +30,23 @@ module.exports = ({ sequelize, Sequelize }) => {
 
         CoachingSubscription.belongsTo(models.CoachingGoal, { as: 'goal', foreignKey: 'goalId' });
         CoachingSubscription.belongsTo(models.CoachingDuration, { as: 'duration', foreignKey: 'durationId' });
-        CoachingSubscription.belongsTo(models.User, {as: 'user',foreignKey: 'userId'})
-        CoachingSubscription.belongsTo(models.User, {as: 'coach',foreignKey: 'coachId'})
-        CoachingSubscription.belongsTo(models.Chat, {as: 'chat'})
-        CoachingSubscription.hasMany(models.Note, {as: 'notes',foreignKey: 'subscriptionId'})
+        CoachingSubscription.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
+        CoachingSubscription.belongsTo(models.User, { as: 'coach', foreignKey: 'coachId' })
+        CoachingSubscription.belongsTo(models.Chat, { as: 'chat' })
+        CoachingSubscription.hasMany(models.Note, { as: 'notes', foreignKey: 'subscriptionId' })
 
     }
 
     CoachingSubscription.beforeCreate(coachingSubscribe => coachingSubscribe.id = uuid());
+    /*CoachingSubscription.afterUpdate(async subscription => {
+        if (subscription.coachId == null) return;
+        let chat = await Chat.create({
+            from_user_id: subscription.coachId,
+            to_user_id: subscription.userId
+        })
+        coachingSubscribe.chatId = chat.id
+        coachingSubscribe.save()
+    });*/
 
     return CoachingSubscription;
 }

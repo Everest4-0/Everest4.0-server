@@ -25,6 +25,8 @@ module.exports = ({ sequelize, Sequelize }) => {
 
   Chat.associate = (models) => {
     Chat.hasMany(models.ChatMessage, { as: 'messages'});
+    Chat.belongsTo(models.User, { as: 'to',foreignKey: 'to_user_id'});
+    Chat.belongsTo(models.User, { as: 'from',foreignKey: 'from_user_id'});
   }
 
   Chat.beforeCreate(r => r.id = uuid())

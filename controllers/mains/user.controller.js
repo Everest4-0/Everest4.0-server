@@ -160,6 +160,9 @@ exports.allBy = async (req, res) => {
                 },
                 {
                     telePhone: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+                },
+                {
+                    roles: { [Op.like]: '%' + req.query['$filter'] + '%' }
                 }
               ]
         }

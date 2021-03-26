@@ -1,5 +1,5 @@
 
-var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, PersonalData, Note } = require("../../models/models")
+var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, PersonalData, Note, ChatMessage } = require("../../models/models")
 
 exports.create = async (req, res) => {
 
@@ -15,6 +15,8 @@ exports.create = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
+
+    req.body.coachId = req.body.coach.id
     await CoachingSubscription.update(req.body, {
         where: {
             id: req.body.id
@@ -22,11 +24,21 @@ exports.update = async (req, res) => {
 
     })
 
-    let coaching_subscription = await CoachingSubscription.findByPk(req.body.id, {
+    let subscription = await CoachingSubscription.findByPk(req.body.id, {
     }).catch(e => {
         let i = e
     })
-    res.json(coaching_subscription);
+
+    if (subscription.coachId !== null) {
+        let chat = await Chat.create({
+            from_user_id: subscription.coachId,
+            to_user_id: subscription.userId
+        })
+        subscription.chatId = chat.id
+        subscription.save()
+    }
+
+    res.json(subscription);
 }
 
 exports.delete = async (req, res) => {
@@ -86,14 +98,34 @@ exports.allBy = async (req, res) => {
                 model: User,
                 as: 'user',
                 include: [{
-                    model:PersonalData,
-                    as:'datas'
+                    model: PersonalData,
+                    as: 'datas'
 
                 }]
             },
             {
                 model: Chat,
-                as: 'chat'
+                as: 'chat',
+                include: [{
+                    model: ChatMessage,
+                    as: 'messages'
+                }, {
+                    model: User,
+                    as: 'to',
+                    include: [{
+                        model: PersonalData,
+                        as: 'datas'
+
+                    }]
+                }, {
+                    model: User,
+                    as: 'from',
+                    include: [{
+                        model: PersonalData,
+                        as: 'datas'
+
+                    }]
+                }]
             },
             {
                 model: User,

@@ -23,12 +23,6 @@ module.exports = ({ sequelize, Sequelize }) => {
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
-  }, {
-    indexes: [
-      {
-        fields: ['evaluationId', 'userId', 'requestedId','requestId']
-      }
-    ]
   });
   UserEvaluation.associate = (models) => {
 
