@@ -1,5 +1,5 @@
 const chat = require('../../models/main/chat');
-var {ChatMessage, User} = require('../../models/models');
+var {ChatMessage, User, Chat} = require('../../models/models');
 
 exports.create = async (req, res) => {
     req.body.to_user_id=req.body.to.id
@@ -8,6 +8,10 @@ exports.create = async (req, res) => {
     let chatMessage = await ChatMessage.create(req.body);
     chatMessage = await ChatMessage.findByPk(chatMessage.id,{
         include: [
+            {
+                model: Chat,
+                as: 'chat'
+            },
             {
                 model: User,
                 as: 'from'

@@ -45,6 +45,14 @@ exports.one = async (req, res) => {
                         model: User,
                         as: 'to'
                     }]
+            },
+            {
+                model: User,
+                as: 'from'
+            },
+            {
+                model: User,
+                as: 'to'
             }]
     });
     //socket.customId = data.customId;
