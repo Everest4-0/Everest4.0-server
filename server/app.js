@@ -48,7 +48,7 @@ server = server.listen(app.get('port'), app.get('address'), function () {
 
 var io = require('socket.io')(server, {
     cors: {
-        origin: "http://localhost:4200",
+        origin: "http://everest.nova-vps.com:9000/",
         credentials: true
     }
 });
