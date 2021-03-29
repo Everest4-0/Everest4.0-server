@@ -1,4 +1,4 @@
-const dbConfig = require("../config/database.js").qa2;
+const dbConfig = require("../config/database.js").dev;
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -30,6 +30,7 @@ db.PersonalSettings = require("./main/personal-settings")(db);
 db.User = require("./main/user.js")(db);
 db.ProfessionalExperienceData = require("./main/professional-experience-data")(db);
 db.ACL = require("./main/acl.js")(db);
+db.File = require("./main/file.js")(db);
 db.Chat = require("./main/chat")(db);
 db.ChatMessage = require("./main/chat_message")(db);
 
@@ -68,6 +69,9 @@ db.Feedback = require("./coaching/feedback")(db);
 db.FeedbackPoint = require("./coaching/feedback_point")(db);
 db.FeedbackItem = require("./coaching/feedback_item")(db);
 db.FeedbackComment = require("./coaching/feedback_comment")(db);
+
+//Virtual Data Room
+db.DataRoom = require("./virtual_data_room/data_room")(db);
 
 db.Op = Sequelize.Op;
 Object.keys(db).forEach(modelName => {
