@@ -1,11 +1,12 @@
+const { v4: uuid } = require('uuid')
 
 module.exports = ({ sequelize, Sequelize }) => {
 
   const File = sequelize.define("files", {
     id: {
-      allowNull: false,
       primaryKey: true,
-      type: Sequelize.STRING
+      type: Sequelize.UUID,
+      default: Sequelize.UUIDV4
     },
     name: {
       type: Sequelize.STRING,
@@ -30,5 +31,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     File.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
   }
 
+  File.beforeCreate(file => file.id = uuid())
+  
   return File;
 };

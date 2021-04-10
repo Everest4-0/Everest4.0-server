@@ -35,12 +35,16 @@ module.exports = ({ sequelize, Sequelize, Activity, Module }) => {
     duration: {
       type: Sequelize.INTEGER,
     },
+    privacity: {
+      type: Sequelize.INTEGER,
+      default: 0
+    },
     level: {
       type: Sequelize.INTEGER,
     },
-    roles:{
+    roles: {
       type: Sequelize.STRING,
-      set(values=[]) {
+      set(values = []) {
         this.setDataValue('roles', values.join('_'))
       },
       get() {
