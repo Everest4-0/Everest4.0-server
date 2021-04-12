@@ -30,6 +30,7 @@ module.exports = ({ sequelize, Sequelize }) => {
 
         CoachingSubscription.belongsTo(models.CoachingGoal, { as: 'goal', foreignKey: 'goalId' });
         CoachingSubscription.belongsTo(models.CoachingDuration, { as: 'duration', foreignKey: 'durationId' });
+        CoachingSubscription.belongsTo(models.Enrollment, { as: 'enrollment', foreignKey: 'enrollmentId' });
         CoachingSubscription.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
         CoachingSubscription.belongsTo(models.User, { as: 'coach', foreignKey: 'coachId' })
         CoachingSubscription.belongsTo(models.Chat, { as: 'chat' })

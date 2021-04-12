@@ -1,5 +1,5 @@
 
-var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, PersonalData, Note, ChatMessage } = require("../../models/models")
+var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, PersonalData, Note, ChatMessage, Enrollment, Course } = require("../../models/models")
 
 exports.create = async (req, res) => {
 
@@ -17,6 +17,7 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
 
     req.body.coachId = req.body.coach.id
+    req.body.enrollmentId = req.body.enrollment.id
     await CoachingSubscription.update(req.body, {
         where: {
             id: req.body.id
@@ -28,8 +29,8 @@ exports.update = async (req, res) => {
     }).catch(e => {
         let i = e
     })
-
-    if (subscription.coachId !== null) {
+/*
+    if (subscription.chatId !== null) {
         let chat = await Chat.create({
             from_user_id: subscription.coachId,
             to_user_id: subscription.userId
@@ -37,7 +38,7 @@ exports.update = async (req, res) => {
         subscription.chatId = chat.id
         subscription.save()
     }
-
+*/
     res.json(subscription);
 }
 
@@ -52,9 +53,9 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
+
     let subscription = await CoachingSubscription.findByPk(req.params.id, {
         include: [
-
             {
                 model: User,
                 as: 'user'
@@ -78,12 +79,20 @@ exports.one = async (req, res) => {
                     }]
             },
             {
+                model: Enrollment,
+                as: 'enrollment',
+                include: [
+                    {
+                        model: Course,
+                        as: 'course'
+                    }]
+            },
+            {
                 model: CoachingGoal,
                 as: 'goal'
             }
         ]
-    });
-
+    })
     res.json(subscription)
 }
 
