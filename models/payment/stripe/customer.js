@@ -28,7 +28,7 @@ module.exports = ({sequelize, Sequelize}) => {
     Customer.associate = (models) => {
 
         Customer.belongsTo(models.User, {
-            as: 'user',
+            as: 'users',
             foreignKey: 'userId'
         });
 

@@ -31,7 +31,7 @@ module.exports = ({sequelize, Sequelize}) => {
     });
 
     Charge.associate = (models) => {
-        Charge.hasMany(models.Customer, {
+        Charge.belongsTo(models.Customer, {
             as: 'customers',
             foreignKey: 'customerId'
         })
