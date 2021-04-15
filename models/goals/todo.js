@@ -12,8 +12,9 @@ module.exports = ({ sequelize, Sequelize }) => {
         subject: {
             type: Sequelize.STRING,
         },
-        done:{
-            type:Sequelize.BOOLEAN
+        done: {
+            type: Sequelize.BOOLEAN,
+            default: false
         },
         startDate: {
             type: Sequelize.DATE,
@@ -43,5 +44,6 @@ module.exports = ({ sequelize, Sequelize }) => {
     }
 
     ToDo.beforeCreate(todo => todo.id = uuid())
+    ToDo.beforeCreate(todo => todo.state = false)
     return ToDo;
 };
