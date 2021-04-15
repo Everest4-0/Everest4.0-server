@@ -27,7 +27,7 @@ module.exports = ({sequelize, Sequelize}) => {
 
     Address.associate = (models) => {
         Address.belongsTo(models.Customer, {
-            as: 'customer',
+            as: 'customers',
             foreignKey: 'customerId'
         })
     }
