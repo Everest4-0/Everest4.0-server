@@ -24,10 +24,6 @@ module.exports = ({sequelize, Sequelize}) => {
         // Timestamps
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
-    }, {
-        indexes: [{
-            fields: ['id', 'userId']
-        }]
     });
 
     Charge.associate = (models) => {
