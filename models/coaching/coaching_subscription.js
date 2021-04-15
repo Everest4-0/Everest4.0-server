@@ -34,6 +34,7 @@ module.exports = ({ sequelize, Sequelize }) => {
         CoachingSubscription.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
         CoachingSubscription.belongsTo(models.User, { as: 'coach', foreignKey: 'coachId' })
         CoachingSubscription.belongsTo(models.Chat, { as: 'chat' })
+        CoachingSubscription.belongsToMany(models.ToDo, { as: 'todos' , through: "coaching_subscriptions_todos" })
         CoachingSubscription.hasMany(models.Note, { as: 'notes', foreignKey: 'subscriptionId' })
 
     }
