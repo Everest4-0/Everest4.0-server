@@ -25,7 +25,7 @@ router.use('/todos', require('./goals/todo.route'));
 router.use('/quizes', require("./quiz/quiz.route"));
 router.use('/answers', require("./quiz/answer.route"));
 
-//User quiz
+//User courses
 router.use('/courses/courses', require("./courses/course.route"));
 router.use('/courses/enrollments', require("./courses/enrollment.route"));
 router.use('/courses/activities', require("./courses/activity.route"));
