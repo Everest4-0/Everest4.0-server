@@ -42,7 +42,9 @@ router.use('/coaching/feedback_comments', require("./coaching/feedback_comment.r
 
 //Virtual Data Room
 router.use('/vdrs', require("./virtual_data_room/virtual_data_room.route"));
-//router.use('/answers', require("./quiz/answer.route"));
+
+//Stripe payments
+router.use('/make-payments', require("./payment/stripe/charge.route"));
 
 // Export API routes
 module.exports = router;
