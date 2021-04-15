@@ -14,6 +14,9 @@ module.exports = ({sequelize, Sequelize}) => {
         email:{
             type: Sequelize.STRING
         },
+        addressId:{
+            type: Sequelize.STRING
+        },
         description:{
             type: Sequelize.STRING
         },        
@@ -22,8 +25,14 @@ module.exports = ({sequelize, Sequelize}) => {
         updatedAt: Sequelize.DATE,
     });
 
-    charge.associate = (models) => {
-        charge.hasMany(models.Address, {
+    Customer.associate = (models) => {
+
+        Customer.belongsTo(models.User, {
+            as: 'user',
+            foreignKey: 'userId'
+        });
+
+        Customer.hasMany(models.Address, {
             as: 'addresses',
             foreignKey: 'addressId'
         })

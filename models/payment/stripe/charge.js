@@ -17,9 +17,6 @@ module.exports = ({sequelize, Sequelize}) => {
         curency:{
             type: Sequelize.STRING
         },
-        addressId:{
-            type: Sequelize.STRING
-        },
         customerId:{
             type: Sequelize.STRING
         },
@@ -34,10 +31,6 @@ module.exports = ({sequelize, Sequelize}) => {
     });
 
     Charge.associate = (models) => {
-        Charge.belongsTo(models.User, {
-            as: 'user',
-            foreignKey: 'userId'
-        })
         Charge.hasMany(models.Customer, {
             as: 'customers',
             foreignKey: 'customerId'
