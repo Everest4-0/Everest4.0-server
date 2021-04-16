@@ -14,11 +14,11 @@ module.exports = ({sequelize, Sequelize}) => {
         amount:{
             type: Sequelize.DECIMAL
         },
-        curency:{
+        currency:{
             type: Sequelize.STRING
         },
-        customerId:{
-            type: Sequelize.STRING
+        isActive:{
+            type: Sequelize.BOOLEAN
         },
         
         // Timestamps

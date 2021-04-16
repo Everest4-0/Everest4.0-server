@@ -17,6 +17,9 @@ module.exports = ({sequelize, Sequelize}) => {
         description:{
             type: Sequelize.STRING
         },        
+        isActive:{
+            type: Sequelize.BOOLEAN
+        },        
         // Timestamps
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
