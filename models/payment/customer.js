@@ -33,6 +33,10 @@ module.exports = ({sequelize, Sequelize}) => {
             as: 'address',
             foreignKey: 'addressId'
         })
+        Customer.hasMany(models.Charge, {
+            as: 'charges',
+            foreignKey: 'customerId'
+        })
     }
 
     return Customer;

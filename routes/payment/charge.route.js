@@ -1,5 +1,5 @@
 var router = require('express').Router();
-let controller = require('../../../controllers/payment/stripe/charge.controller');
+let controller = require('../../controllers/payment/charge.controller');
 
 //router.get('/', controller.allBy);
 //router.get('/:id', controller.one);

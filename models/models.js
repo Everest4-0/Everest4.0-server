@@ -20,9 +20,9 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 //Stripe payment
-db.Address = require("./payment/stripe/address")(db);
-db.Charge = require("./payment/stripe/charge")(db);
-db.Customer = require("./payment/stripe/customer")(db);
+db.Charge = require("./payment/charge")(db);
+db.Address = require("./payment/address")(db);
+db.Customer = require("./payment/customer")(db);
 
 //Datas
 db.ProfessionalExperience = require("./data/professional-experience")(db);

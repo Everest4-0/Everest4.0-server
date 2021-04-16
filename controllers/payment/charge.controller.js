@@ -1,4 +1,4 @@
-const {  Address, Customer, Charge } = require('../../../models/models');
+const {  Address, Customer, Charge } = require('../../models/models');
 
 const Stripe = require('stripe');
 
