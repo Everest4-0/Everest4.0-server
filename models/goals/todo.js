@@ -47,3 +47,5 @@ module.exports = ({ sequelize, Sequelize }) => {
     ToDo.beforeCreate(todo => todo.state = false)
     return ToDo;
 };
+
+ 
