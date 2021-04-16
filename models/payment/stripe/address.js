@@ -14,10 +14,7 @@ module.exports = ({sequelize, Sequelize}) => {
         postal_code:{
             type: Sequelize.STRING
         },
-        time_zone:{
-            type: Sequelize.STRING
-        },
-        language:{
+        city:{
             type: Sequelize.STRING
         },
         // Timestamps
@@ -25,12 +22,6 @@ module.exports = ({sequelize, Sequelize}) => {
         updatedAt: Sequelize.DATE,
     });
 
-    Address.associate = (models) => {
-        Address.belongsTo(models.Customer, {
-            as: 'customers',
-            foreignKey: 'customerId'
-        })
-    }
 
     return Address;
 };

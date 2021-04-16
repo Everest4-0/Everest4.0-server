@@ -14,9 +14,6 @@ module.exports = ({sequelize, Sequelize}) => {
         email:{
             type: Sequelize.STRING
         },
-        addressId:{
-            type: Sequelize.STRING
-        },
         description:{
             type: Sequelize.STRING
         },        
@@ -28,12 +25,12 @@ module.exports = ({sequelize, Sequelize}) => {
     Customer.associate = (models) => {
 
         Customer.belongsTo(models.User, {
-            as: 'users',
+            as: 'user',
             foreignKey: 'userId'
         });
 
-        Customer.hasMany(models.Address, {
-            as: 'addresses',
+        Customer.belongsTo(models.Address, {
+            as: 'address',
             foreignKey: 'addressId'
         })
     }

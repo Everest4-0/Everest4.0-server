@@ -18,6 +18,12 @@ const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+
+//Stripe payment
+db.Address = require("./payment/stripe/address")(db);
+db.Charge = require("./payment/stripe/charge")(db);
+db.Customer = require("./payment/stripe/customer")(db);
+
 //Datas
 db.ProfessionalExperience = require("./data/professional-experience")(db);
 db.WorkSituation = require("./data/work-situation")(db);
