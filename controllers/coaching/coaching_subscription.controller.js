@@ -1,5 +1,5 @@
 
-var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, PersonalData, Note, ChatMessage, Enrollment, Course, ToDo } = require("../../models/models")
+var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, PersonalData, Note, ChatMessage, Enrollment, Course, ToDo, Charge } = require("../../models/models")
 
 exports.create = async (req, res) => {
 
@@ -116,6 +116,10 @@ exports.one = async (req, res) => {
             {
                 model: CoachingGoal,
                 as: 'goal'
+            },
+            {
+                model: Payment,
+                as: 'payment'
             }
         ]
     })
@@ -173,6 +177,10 @@ exports.allBy = async (req, res) => {
             {
                 model: CoachingGoal,
                 as: 'goal'
+            },
+            {
+                model: Charge,
+                as: 'payment'
             }
         ]
     }).catch((e, r) => {
