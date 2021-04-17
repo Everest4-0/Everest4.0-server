@@ -7,7 +7,8 @@ const stripe = Stripe('sk_test_51IeHexKPeIS2foQk5ur9bFa32oT3Q9Yf0DdShqfhRgy1Yo8D
 
 exports.create = async (req, res) => {
 
-    req.body.amount = req.body.services.reduce((x, y) => (y.price * req.body.quantity) + x, 0).toFixed(2).split('.').join('')
+    let amount = req.body.services.reduce((x, y) => (y.price * req.body.quantity) + x, 0).toFixed(2)
+    req.body.amount = amount.split('.').join('')
     delete req.body.customer.charge
     delete req.body.customer.user
     if (req.body.customer.source) {
@@ -20,7 +21,7 @@ exports.create = async (req, res) => {
     let callback = async (charge) => {
         let ourCharge = await Charge.create({
             descriptions: charge.descriptions,
-            amount: charge.amount,
+            amount: amount,
             currency: charge.currency,
             customerId: ourCustomer.id,
             isActive: req.body.isActive
