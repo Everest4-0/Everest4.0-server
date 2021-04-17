@@ -33,5 +33,6 @@ module.exports = ({sequelize, Sequelize}) => {
         })
     }
 
+    Charge.beforeCreate(charge => charge.id = uuid())
     return Charge;
 };

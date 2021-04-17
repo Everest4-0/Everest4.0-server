@@ -42,5 +42,6 @@ module.exports = ({sequelize, Sequelize}) => {
         })
     }
 
+    Customer.beforeCreate(customer => customer.id = uuid())
     return Customer;
 };

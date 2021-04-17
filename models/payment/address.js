@@ -23,5 +23,7 @@ module.exports = ({sequelize, Sequelize}) => {
     });
 
 
+
+    Address.beforeCreate(address => address.id = uuid())
     return Address;
 };
