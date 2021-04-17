@@ -8,18 +8,42 @@ exports.create = async (req, res) => {
         res.status(400).json(e || feedback)
     });
 
-    req.body.points.forEach(async point=>{
-        point.feedbackId=feedback.id
-        point.itemId=point.item.id
-        await FeedbackPoint.create(point).catch((e, feedback) => {
-            let err=e
+    let p, points = []
+    req.body.points.forEach(async point => {
+        point.feedbackId = feedback.id
+        point.itemId = point.item.id
+        p = await FeedbackPoint.create(point).catch((e, feedback) => {
+            let err = e
         })
+        points.push(p)
+        if (points.length === req.body.points.length) {
+            feedback=await Feedback.findByPk(feedback.id,{
+                include: [
+                    {
+                        model: User,
+                        as: 'user'
+                    },
+                    {
+                        model: FeedbackPoint,
+                        as: 'points',
+                        include: [
+                            {
+                                model: FeedbackItem,
+                                as: 'item'
+                            }
+                        ]
+                    }
+                ]
+            })
+            res.json(feedback)
+        }
     })
-    res.json(feedback)
+
+
 }
 
 exports.update = async (req, res) => {
-    
+
     await Feedback.update(req.body, {
         where: {
             id: req.body.id
@@ -66,7 +90,7 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let filter = {...req.query,...{  }}
+    let filter = { ...req.query, ...{} }
 
     let feedbacks = await Feedback.findAll({
         where: filter,

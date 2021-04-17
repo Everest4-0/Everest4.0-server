@@ -4,8 +4,9 @@ var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, Personal
 exports.create = async (req, res) => {
 
     req.body.userId = req.user.id
+    req.body.paymentId = req.body.payment.id
     req.body.durationId = req.body.duration.id
-    req.body.goalId = req.body.goal.id
+    //req.body.goalId = req.body.goal.id
 
     let coaching_subscription = await CoachingSubscription.create(req.body).catch((e, coaching_subscription) => {
         res.status(400).json(e || coaching_subscription)
@@ -17,8 +18,17 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    req.body.coachId = req.body.coach.id
-    req.body.enrollmentId = req.body.enrollment.id
+    if (req.body.coach) {
+        req.body.coachId = req.body.coach.id;
+    }
+    if (req.body.enrollment) {
+        req.body.enrollmentId = req.body.enrollment.id
+    }
+    if (req.body.goal) {
+        req.body.goalId = req.body.goal.id
+        req.body.isActive = true;
+    }
+
 
     if (req.query.add_todo) {
         let todo = await ToDo.findByPk(req.query.todoId)
@@ -41,16 +51,16 @@ exports.update = async (req, res) => {
     }).catch(e => {
         let i = e
     })
-    /*
-        if (subscription.chatId !== null) {
-            let chat = await Chat.create({
-                from_user_id: subscription.coachId,
-                to_user_id: subscription.userId
-            })
-            subscription.chatId = chat.id
-            subscription.save()
-        }
-    */
+   
+    if (req.body.coach && subscription.chat == null) {
+        let chat = await Chat.create({
+            from_user_id: subscription.coachId,
+            to_user_id: subscription.userId
+        })
+        subscription.chatId = chat.id
+        subscription.save()
+    }
+
     res.json(subscription);
 }
 
@@ -127,6 +137,10 @@ exports.allBy = async (req, res) => {
                     as: 'datas'
 
                 }]
+            },
+            {
+                model: CoachingDuration,
+                as: 'duration'
             },
             {
                 model: Chat,
