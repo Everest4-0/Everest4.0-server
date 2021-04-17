@@ -1,73 +1,49 @@
-const {  Address, Customer, Charge } = require('../../models/models');
+const { Address, Customer, Charge } = require('../../models/models');
 
 const Stripe = require('stripe');
 
-const stripe = Stripe('sk_test_51IfgbGJRuKTl5x5bRLdbZbEcu8BRNthqny6g0URPP5BCp8prXMJSiDpSzcm9dmNv9SHp3HEXD1xxX04QvKZgxc5Y00OefAewwz');
+const stripe = Stripe('sk_test_51IeHexKPeIS2foQk5ur9bFa32oT3Q9Yf0DdShqfhRgy1Yo8DC2jJuhN2iKPzpNSXik4G8OtJgsJTvp8w5Yd47jS800UZItfE06');
 
 exports.create = async (req, res) => {
 
-        console.log('request data: ')
+    console.log('request data: ')
 
-        console.log(req.body)
+    console.log(req.body)
 
-        stripe.customers.create({
-            email: 'cos@mail.com',
-            source: req.body.stripeToken,
-            name: 'Jane Doe',
-            address: {
-                line1: 'costumer address',
-                postal_code: '00744',
-                city: 'Luanda',
-                state: 'Luanda',
-                country: 'Angola'
-            }
-        }).then(customer => {
+    req.body.amount = req.body.services.reduce((x,y)=>(y.price*req.body.quantity)+x,0).toFixed(2).split('.').join('')
+    delete req.body.customer.charge
+    delete req.body.customer.user
+    req.body.customer.source = req.body.customer.source.id
+    req.body.customer.email = req.user.email
 
-            let ourCustomer = Customer.create({
-                name: customer.name,
-                email: customer.email,
-                descriptions: customer.descriptions
-            }).catch((e, Customer) => {
-                res.status(400).json(e || Customer)
-            });
-
-            let ourAddress = Address.create({
-                country: customer.address.country,
-                postal_code: customer.address.postal_code,
-                city: customer.Address.city
-            }).catch((e, Address) => {
-                res.status(400).json(e || Address)
-            });
-
-            console.log('custumer data: ')
-            console.log(customer)
-
+    let ourCustomer;
+    stripe.customers.create(req.body.customer)
+        .then(async customer => {
+            let ourAddress = await Address.create(req.body.customer.address);
+            
+            ourCustomer = await Customer.create({ ...req.body.customer, ...{ addressId: ourAddress.id } });
+            ourCustomer.address=ourAddress;
             return stripe.charges.create({
                 amount: req.body.amount,
-                descriptions: 'Paymant from angular',
-                curency: req.body.currency,
-                custumer: custumer.id
+                description: req.body.descriptions,
+                currency: req.body.currency,
+                customer: customer.id
             })
-
-        }).then(charge => {
-            console.log('final charge data: ')
-            console.log(charge)
-
-            let ourCharge = Charge.create({
+        }).then(async charge => {
+            let ourCharge = await Charge.create({
                 descriptions: charge.descriptions,
                 amount: charge.amount,
-                curency: charge.curency,
-                customerId: charge.customer
-            }).catch((e, Charge) => {
-                res.status(400).json(e || Charge)
-            });
-
-            res.send(charge)
+                currency: charge.currency,
+                customerId: ourCustomer.id
+            })
+            ourCharge.customer=ourCustomer;
+            ourCharge.quantity=req.body.quantity
+            res.json(ourCharge)
 
         }).catch(err => {
             console.log('on error: ')
             console.log(err)
 
-            res.send(err)
+            res.json(err)
         })
 }
