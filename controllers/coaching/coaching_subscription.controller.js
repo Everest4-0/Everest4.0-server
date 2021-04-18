@@ -48,6 +48,51 @@ exports.update = async (req, res) => {
     })
 
     let subscription = await CoachingSubscription.findByPk(req.body.id, {
+        include: [
+            {
+                model: User,
+                as: 'user'
+            },
+            {
+                model: Chat,
+                as: 'chat'
+            },
+            {
+                model: User,
+                as: 'coach'
+            },
+            {
+                model: ToDo,
+                as: 'todos'
+            },
+            {
+                model: Note,
+                as: 'notes',
+                include: [
+
+                    {
+                        model: User,
+                        as: 'user'
+                    }]
+            },
+            {
+                model: Enrollment,
+                as: 'enrollment',
+                include: [
+                    {
+                        model: Course,
+                        as: 'course'
+                    }]
+            },
+            {
+                model: CoachingGoal,
+                as: 'goal'
+            },
+            {
+                model: Charge,
+                as: 'payment'
+            }
+        ]
     }).catch(e => {
         let i = e
     })
@@ -118,7 +163,7 @@ exports.one = async (req, res) => {
                 as: 'goal'
             },
             {
-                model: Payment,
+                model: Charge,
                 as: 'payment'
             }
         ]
