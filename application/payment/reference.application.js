@@ -9,28 +9,28 @@ class ReferenceApplication {
         'Accept': 'application/json',
         'Content-Type': 'application/json; charset=UTF-8'
     }
-    create = (data, callback) => {
+    create = async (data) => {
 
-        axios({
+        let final = await axios.put(
+            this.endpoint + '/references/' + data.custom_fields.reference,
+            data,
+            {
+                headers:
+                    this.headers
+            }
 
-            url: this.endpoint + '/references/' + data.custom_fields.reference,
+        ).then(function (data) {
 
-            method: 'PUT',
-
-            headers: this.headers,
-
-            data: data
-
-        }).then(function (data) {
-
-            console.log(res);
-
+            return data;
         }).catch(function (e) {
 
             console.log(e);
 
         });
+
+        return final;
     }
+
     delete = (data, callback) => {
 
         axios({
