@@ -1,0 +1,11 @@
+<% if(entries.length> 0) { %>
+    <ol>
+        <% entries.forEach(function(entry) { %>
+            <li>
+                <%= entry %>
+            </li>
+            <% }); %>
+    </ol>
+    <% } else { %>
+        <p>No results to show.</p>
+    <% } %>

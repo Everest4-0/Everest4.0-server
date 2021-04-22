@@ -7,6 +7,10 @@ var express = require('express'),
     // routes
     routes = require('../routes/route');
 const fs = require('fs');
+
+
+const readLog = require('../config/readlog');
+
 const { User } = require('../models/models');
 const TOKEN_PATH = '../config/token.json';
 //sect the mongoo connection string from config
@@ -22,6 +26,8 @@ const options = {
 var app = express();
 var server = require("http").Server(app);
 
+app.set('view engine', 'ejs');
+
 app.use(function (req, res, next) {
     res.io = io;
     next();
@@ -33,6 +39,15 @@ app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
 app.use(bodyParser.json());
 app.use(express.static('public'))
 app.use('/static', express.static('public'))
+
+app.get('/log', async (req, res) => {
+    try {
+        const entries = await readLog();
+        res.render('log', {entries: entries});
+    } catch(err) {
+         res.sendStatus(500); 
+        }
+});
 
 app.use('/api/v1/', middleWare.validateUserAuthToken, routes);
 
