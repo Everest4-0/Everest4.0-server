@@ -36,7 +36,7 @@ module.exports = {
     }
   },
   qa2: {
-    HOST: "185.247.119.207",
+    HOST: "localhost",//"185.247.119.207",
     USER: "qauser",
     PASSWORD: "2SXzaQQu;",
     DB: "everest_qa2",
