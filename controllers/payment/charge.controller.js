@@ -29,8 +29,11 @@ exports.create = async (req, res) => {
         })
         ourCharge.customer = ourCustomer;
         ourCharge.quantity = req.body.quantity
+        try {
+            let u = callback(ourCharge)
+        } catch (e) {
+        }
 
-        let u = callback(ourCharge)
         res.json(ourCharge)
 
     }
@@ -38,7 +41,7 @@ exports.create = async (req, res) => {
     if (req.body.type === ChargeApplication.REFERENCE) {
         req.body.isActive = false
         callback(req.body, async (data) => {
-            return  final = await referenceApplication.create({
+            return final = await referenceApplication.create({
                 amount: data.amount,
                 end_datetime: moment(data.createdAt).add(1, 'days').format('YYYY-MM-DD'),
                 custom_fields: {

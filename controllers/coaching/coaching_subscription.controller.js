@@ -8,7 +8,8 @@ exports.create = async (req, res) => {
     req.body.durationId = req.body.duration.id
     //req.body.goalId = req.body.goal.id
 
-    let coaching_subscription = await CoachingSubscription.create(req.body).catch((e, coaching_subscription) => {
+    let coaching_subscription = await CoachingSubscription.create(req.body)
+    .catch((e, coaching_subscription) => {
         res.status(400).json(e || coaching_subscription)
     });
 
