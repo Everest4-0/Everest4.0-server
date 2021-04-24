@@ -16,10 +16,10 @@ module.exports = {
     }
   },
   qa: {
-    HOST: "everest40db.mysql.database.azure.com",
-    USER: "qa@everest40db",
-    PASSWORD: "2wsxZAQ!",
-    DB: "everest_qa",
+    HOST: "185.247.119.207",
+    USER: "qauser",
+    PASSWORD: "2SXzaQQu;",
+    DB: "everest_qa2",
     dialect: "mysql",
 
     dialectOptions: {
