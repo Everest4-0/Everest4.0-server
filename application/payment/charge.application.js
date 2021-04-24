@@ -26,9 +26,14 @@ class ChargeApplication {
         })
         let reference = (last[0] || { reference: 0 }).reference;
 
-        let prefix = '4';
+        if (reference === 0) {
+            let prefix = '4';
 
-        reference = prefix + ((reference + 1) + '').padStart(4, '0')
+            reference = prefix + ((reference + 1) + '').padStart(4, '0')
+        }
+        else {
+            reference += 3;
+        }
 
         return parseInt(reference);
     }
