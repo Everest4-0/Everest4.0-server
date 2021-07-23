@@ -4,7 +4,7 @@ var { EvaluationRequest, Evaluation, User,  UserEvaluation, PersonalData } = req
 exports.create = async (req, res) => {
     req.body.requesterId = req.body.requester.id
     req.body.requestedId = req.body.requested.id
-    if(req.body.requestedId===undefined){
+    if(req.body.requestedId!==undefined){
 //        let requested=await User.create({email:req.body.requested.email})
         let requested=await User.findAll({where:{email:req.body.requested.email}})
         req.body.requestedId=requested.id;

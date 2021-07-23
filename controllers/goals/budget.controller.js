@@ -1,9 +1,6 @@
 var { Budget, Role, Op, PartialGoal, User, Goal } = require('../../models/models');
 
 exports.create = async (req, res) => {
-    req.body.taskId = req.body.task.id
-    req.body.categoryId = req.body.category.id
-    
     let budget = await Budget.create(req.body).catch((e, budget) => {
         res.status(400).json(e || budget)
     });

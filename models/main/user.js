@@ -124,9 +124,11 @@ module.exports = (db) => {
     let r = user.password() === User.encryptPassword(password, user.salt())
     return r;
   }
+
   User.generateSalt = function () {
     return crypto.randomBytes(16).toString('base64')
   };
+
   User.encryptPassword = function (plainText, salt) {
     return crypto
       .createHash('RSA-SHA256')
@@ -134,6 +136,7 @@ module.exports = (db) => {
       .update(salt)
       .digest('hex')
   }
+
   const setSaltAndPassword = user => {
     if (user.changed('password') || user.password() === undefined) {
       user.salt = User.generateSalt()
