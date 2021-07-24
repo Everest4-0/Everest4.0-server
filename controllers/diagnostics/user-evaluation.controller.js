@@ -1,11 +1,11 @@
-var {UserEvaluation, User, Evaluation, EvaluationRequest} = require('../../models/models');
+var { UserEvaluation, User, Evaluation, EvaluationRequest } = require('../../models/models');
 
 exports.create = async (req, res) => {
 
-    req.body.userId=req.body.requester.id
-    req.body.requestedId=req.body.requested.id
-    req.body.evaluationId=req.body.evaluation.id
-    req.body.requestId=req.body.request.id
+    req.body.userId = req.body.requester.id
+    req.body.requestedId = req.body.requested.id
+    req.body.evaluationId = req.body.evaluation.id
+    req.body.requestId = req.body.request.id
     let userEvaluations = await UserEvaluation.create(req.body);
     res.json(userEvaluations)
 }
@@ -25,7 +25,25 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let userEvaluations = UserEvaluation.destroy({})
+
+
+    let userEvaluations = await UserEvaluation.findAll({
+        where: {
+            userId:req.user.id,
+        },
+        include: {
+            model: Evaluation,
+            as: 'evaluation',
+            where: {
+                group: req.body.group
+            }
+          }
+    })
+    
+    userEvaluations.forEach(e => {
+        e.destroy()
+    });
+    
     res.json({
         status: 200,
         message: "sucess",
@@ -53,7 +71,7 @@ exports.allBy = async (req, res) => {
     })
      });*/
     let userEvaluations = await UserEvaluation.findAll({
-        where:req.query,
+        where: req.query,
         include: [
             {
                 model: User,
@@ -74,6 +92,6 @@ exports.allBy = async (req, res) => {
         ]
     })
 
-    
+
     res.json(userEvaluations)
 }

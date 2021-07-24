@@ -1,3 +1,4 @@
+const Email = require('../../application/mail/mail');
 var { 
     User
     , Role
@@ -51,7 +52,11 @@ exports.create = async (req, res) => {
     user.settings = await PersonalSettings.create(req.body.datas);
     user.datas = await PersonalData.create(req.body.datas);
     let y = await User.update({ dataId: user.id, settingId: user.id }, { where: { id: user.id } })
+    let email=new Email({
+        template:'mains/create_new_user'
+    })
 
+    email.send()
     res.json(user)
 }
 
@@ -148,6 +153,7 @@ exports.authenticate = async (req, res, next) => {
     req.user=user
     next()
 }
+
 exports.allBy = async (req, res) => {
 
     let filter = {}

@@ -1,4 +1,4 @@
-const dbConfig = require("../config/database.js").qa2;
+const dbConfig = require("../config/database.js").qa;
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -28,6 +28,8 @@ db.Customer = require("./payment/customer")(db);
 db.ProfessionalExperience = require("./data/professional-experience")(db);
 db.WorkSituation = require("./data/work-situation")(db);
 db.AcademicLevel = require("./data/academic-level")(db);
+db.ServicePlan = require("./data/service_plan")(db);
+db.SubscriptionPlan = require("./data/subscription_plan")(db);
 
 //MAINS
 db.Role = require("./main/role.js")(db);
