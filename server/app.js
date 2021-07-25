@@ -1,6 +1,7 @@
 var express = require('express'),
     config = require('../config/database'),
     middleWare = require('../application/middlewares/main'),
+    //  { google } = require('googleapis'),
     cors = require('cors'),
     bodyParser = require('body-parser'),
     // routes
@@ -12,6 +13,7 @@ const readLog = require('../config/readlog');
 
 const { User } = require('../models/models');
 const TOKEN_PATH = '../config/token.json';
+//sect the mongoo connection string from config
 
 const db = require("../models/models");
 db.sequelize.sync({ force: false });
@@ -30,8 +32,10 @@ app.use(function (req, res, next) {
     res.io = io;
     next();
 });
+//app.options('*', cors())
+//app.use(cors())
+app.use(cors({ origin: 'https://application.qld.everest40.com' , credentials :  true,  methods: 'GET,PUT,POST,OPTIONS'}));
 
-app.use(cors())
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
 app.use(bodyParser.json());
@@ -61,7 +65,7 @@ server = server.listen(app.get('port'), app.get('address'), function () {
 
 var io = require('socket.io')(server, {
     cors: {
-        origin: "https://application.qld.everest40.com",
+        origin: "http://localhost:4200",
         credentials: true
     }
 });
