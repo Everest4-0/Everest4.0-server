@@ -33,7 +33,7 @@ app.use(function (req, res, next) {
     next();
 });
 //app.options('*', cors())
-//app.use(cors())
+app.use(cors())
 app.use(cors({ origin: 'https://application.qld.everest40.com' , credentials :  true,  methods: 'GET,PUT,POST,OPTIONS'}));
 
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
