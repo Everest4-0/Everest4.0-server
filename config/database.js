@@ -19,7 +19,7 @@ module.exports = {
     HOST: "localhost",
     USER: "qauser",
     PASSWORD: "2SXzaQQu",
-    DB: "everest_qa2",
+    DB: "everest_qa",
     dialect: "mysql",
 
     dialectOptions: {
