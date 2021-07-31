@@ -51,13 +51,4 @@ exports.allBy = async (req, res) => {
     new NewsApi(response => {
         res.json(response.data)
     })
-
-    /*axios.get(host, {
-        headers:
-            headers
-    })
-        .then()
-        .catch(error => {
-            res.json(error)
-        });*/
 }

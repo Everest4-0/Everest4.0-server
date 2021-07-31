@@ -1,5 +1,5 @@
 const Email = require('../../application/mail/mail');
-var { 
+var {
     User
     , Role
     , PersonalData
@@ -7,10 +7,10 @@ var {
     , PersonalSettings
     , AcademicLevel
     , WorkSituation
-    , ProfessionalExperience 
+    , ProfessionalExperience
 } = require('../../models/models');
 
-const queryData={
+const queryData = {
     include: [
         {
             model: Role,
@@ -43,21 +43,31 @@ const queryData={
 }
 
 exports.create = async (req, res) => {
-    console.log(req.body)
-    let user = await User.create(req.body).catch((e, user) => {
-        res.status(400).json(e || user)
-    });
 
-    req.body.datas = {...{id:user.id},...req.body.datas }
-    user.settings = await PersonalSettings.create(req.body.datas);
-    user.datas = await PersonalData.create(req.body.datas);
-    let y = await User.update({ dataId: user.id, settingId: user.id }, { where: { id: user.id } })
-    let email=new Email({
-        template:'mains/create_new_user'
-    })
+    try {
+        let user = await User.create(req.body)
 
-    email.send()
-    res.json(user)
+        req.body.datas = { ...{ id: user.id }, ...req.body.datas }
+        user.settings = await PersonalSettings.create(req.body.datas);
+        user.datas = await PersonalData.create(req.body.datas);
+        let y = await User.update({ dataId: user.id, settingId: user.id }, { where: { id: user.id } })
+        /*let email = new Email({
+            template: 'mains/create_new_user'
+        })
+    
+        email.send()*/
+        res.json(
+            {
+                success: false,
+                user
+            })
+    } catch (errors) {
+        res.json({
+            success: false,
+            errors
+        })
+    }
+
 }
 
 exports.update = async (req, res) => {
@@ -117,7 +127,7 @@ exports.one = async (req, res) => {
 
 exports.authenticate = async (req, res, next) => {
 
-    let user = await User.findOne({ where: { email: req.body.email } },queryData);
+    let user = await User.findOne({ where: { email: req.body.email } }, queryData);
 
 
     if (!user && req.body.provider !== 'LOCAL') {
@@ -134,23 +144,23 @@ exports.authenticate = async (req, res, next) => {
         if (!user.isActive)
             user = await User.update(req.body, {
                 where: { email: req.body.email }
-            },(e,r)=>{
-                let u=e;
+            }, (e, r) => {
+                let u = e;
             })/*.catch(e){
                 let r=e
             }*/
-        user = await User.findOne({ where: { email: req.body.email } },queryData);
+        user = await User.findOne({ where: { email: req.body.email } }, queryData);
         res.status(200)
     }
     else if (!user)
-        user={code:404}
-    else if (req.body.id || User.validatePassword(user, req.body.password)){
+        user = { code: 404 }
+    else if (req.body.id || User.validatePassword(user, req.body.password)) {
     }
     else
-        user.code=401
+        user.code = 401
 
     //res.json(user)
-    req.user=user
+    req.user = user
     next()
 }
 
@@ -170,7 +180,7 @@ exports.allBy = async (req, res) => {
                 {
                     roles: { [Op.like]: '%' + req.query['$filter'] + '%' }
                 }
-              ]
+            ]
         }
     }
 

@@ -32,40 +32,20 @@ app.use(function (req, res, next) {
     res.io = io;
     next();
 });
-//app.options('*', cors())
-// app.use(cors())
-// app.use(cors({ origin: 'https://everest40.com' , credentials :  true,  methods: 'GET,PUT,POST,OPTIONS'}));
 
-
-var whitelist = ['https://everest40.com', 'https://qld.everest40.com', 'https://application.qld.everest40.com', 'https://server.qld.everest40.com']
+var whitelist = ['http://localhost:4200','https://everest40.com', 'https://qld.everest40.com', 'https://application.qld.everest40.com', 'https://server.qld.everest40.com']
 var corsOptions = {
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
-            callback(null, true)
-            //callback(new Error('Not allowed by CORS'))
+            callback(new Error('Not allowed by CORS'))
         }
-    }
+    },
+    credentials: true, methods: 'GET,PUT,POST,OPTIONS'
 }
+app.use(cors());
 
-// Then pass them to cors:
-app.use(cors(corsOptions));
-/*
-app.use(function (req, res, next) {
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    // Pass to next layer of middleware
-    next();
-});
-*/
 
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
@@ -96,24 +76,14 @@ server = server.listen(app.get('port'), app.get('address'), function () {
 
 var io = require('socket.io')(server, {
     cors: {
-        origin: "http://localhost:4200",
+        origin: whitelist,
         credentials: true
     }
 });
 
-/**
- * 
- */
 
-//const socket = require('socket.io')(server);
-// On every Client Connection
-
-
-//const socket = require('socket.io')(server);
-// On every Client Connection
 io.on('connect', socket => {
-    //let user = await User.update({ apikey: socket.id }, { where: { id: socket.handshake.auth.token } })
-
+    
     console.log('Socket: client connected--' + socket.id);
     io.sockets.sockets.forEach((client, data) => {
         let s = client;

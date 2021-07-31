@@ -40,7 +40,10 @@ class Main {
 
     static validateUserAuthToken = (req, res, next) => {
         
-        if (req.url.split('authenticate').length > 1) {
+        if (
+            req.url.split('authenticate').length > 1 || 
+            req.url.split('signOn').length > 1
+            ) {
             return next();
         }
 

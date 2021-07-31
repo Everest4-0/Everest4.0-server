@@ -3,7 +3,8 @@ const { v4: uuid } = require('uuid')
 const crypto = require('crypto');
 const ModelHelper = require('../../application/datas/model.helper');
 //const { PersonalSettings, PersonalData, Role } = require('../models');
-
+const that = require('../../models/models').User;
+const { exception } = require('console');
 module.exports = (db) => {
   let { sequelize, Sequelize, PersonalSettings, PersonalData, Role } = db
   const User = sequelize.define("user", {
@@ -108,14 +109,14 @@ module.exports = (db) => {
     User.hasMany(models.UserEvaluation, { as: 'requested', foreignKey: 'requestedId', });
     User.hasMany(models.ToDo, { as: 'todos', foreignKey: 'userId', });
 
-    User.hasMany(models.CoachingSubscription, {as: 'coachingSubscriptions',foreignKey: 'userId'})
-    User.hasMany(models.CoachingSubscription, {as: 'coachings',foreignKey: 'coachId'})
+    User.hasMany(models.CoachingSubscription, { as: 'coachingSubscriptions', foreignKey: 'userId' })
+    User.hasMany(models.CoachingSubscription, { as: 'coachings', foreignKey: 'coachId' })
 
     //User.belongsToMany(models.Answer, { as: 'quizAnswers',through: "user_quiz_answers" })
 
     User.hasMany(models.Enrollment, { as: 'courses', foreignKey: 'userId' })
-    User.belongsToMany(models.Answer,{as:'answers',through: "user_answers",foreignKey:'userId'})
-    User.belongsToMany(models.TaskAnswer,{as:'taskAnswers',through: "user_task_answers"})
+    User.belongsToMany(models.Answer, { as: 'answers', through: "user_answers", foreignKey: 'userId' })
+    User.belongsToMany(models.TaskAnswer, { as: 'taskAnswers', through: "user_task_answers" })
   }
 
   User.validatePassword = (user, password) => {
@@ -151,15 +152,11 @@ module.exports = (db) => {
   //User.beforeCreate(user => user.firstName = user.firstName || user.email.split('@')[0].toUpperCase())
   User.beforeCreate(user => user.provider = user.provider || 'LOCAL')
 
-  User.afterCreate(async user => {
-    /*try {
-      user.settings = await PersonalSettings.create({ id: user.id });
-      user.datas = await PersonalData.create({ id: user.id });
-      let y = await User.update({ dataId: user.id, settingId: user.id }, { where: { id: user.id } })
-    } catch (e) {
-      let u = e;
+  User.beforeCreate(async user => {
+    const u = await db.User.findOne({ where: { email: user.email } });
+    if (u) {
+      throw { email: ['Ja existe um utilizador com este E-mail'] };
     }
-*/
   });
 
   User.beforeCreate(user => user.photoUrl = user.photoUrl || "/avatar/default/unknow.jpg")
