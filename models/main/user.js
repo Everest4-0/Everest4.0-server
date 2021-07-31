@@ -119,12 +119,7 @@ module.exports = (db) => {
     User.belongsToMany(models.TaskAnswer, { as: 'taskAnswers', through: "user_task_answers" })
   }
 
-  User.validatePassword = (user, password) => {
-    let p = user.password();
-    let q = User.encryptPassword(password, user.salt())
-    let r = user.password() === User.encryptPassword(password, user.salt())
-    return r;
-  }
+  User.validatePassword = (user, password) => user.password() === User.encryptPassword(password, user.salt())
 
   User.generateSalt = function () {
     return crypto.randomBytes(16).toString('base64')
@@ -151,6 +146,9 @@ module.exports = (db) => {
   User.beforeCreate(user => user.roleId = user.roleId || 'FREE')
   //User.beforeCreate(user => user.firstName = user.firstName || user.email.split('@')[0].toUpperCase())
   User.beforeCreate(user => user.provider = user.provider || 'LOCAL')
+  User.beforeCreate(user => {
+    user.apikey = user.apikey == 'signOn' ? crypto.randomBytes(16).toString('base64') : user.apikey
+  })
 
   User.beforeCreate(async user => {
     const u = await db.User.findOne({ where: { email: user.email } });

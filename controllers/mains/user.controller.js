@@ -58,7 +58,7 @@ exports.create = async (req, res) => {
         email.send()*/
         res.json(
             {
-                success: false,
+                success: true,
                 user
             })
     } catch (errors) {
