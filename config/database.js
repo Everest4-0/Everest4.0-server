@@ -1,4 +1,4 @@
-
+require('dotenv').config();
 const fs = require('fs');
 
 module.exports = {
@@ -35,4 +35,4 @@ module.exports = {
       idle: 10000
     }
   }
-};
+}[process.env.ENV.toLowerCase()];
