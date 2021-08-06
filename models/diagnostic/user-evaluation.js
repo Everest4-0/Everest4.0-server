@@ -27,7 +27,7 @@ module.exports = ({ sequelize, Sequelize }) => {
   UserEvaluation.associate = (models) => {
 
     UserEvaluation.belongsTo(models.Evaluation, { as:'evaluation', foreignKey: 'evaluationId', });
-    UserEvaluation.belongsTo(models.User, { as:'requester', foreignKey: 'userId', });
+    UserEvaluation.belongsTo(models.User, { as:'requester', foreignKey: 'requesterId', });
     UserEvaluation.belongsTo(models.User, { as:'requested',foreignKey: 'requestedId', });
     UserEvaluation.belongsTo(models.EvaluationRequest, { as:'request',foreignKey: 'requestId', });
   }
