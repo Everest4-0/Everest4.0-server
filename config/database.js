@@ -15,7 +15,7 @@ module.exports = {
       idle: 10000
     }
   },
-  qa: {
+  qld: {
     HOST: "localhost",
     USER: "qauser",
     PASSWORD: "2SXzaQQu",
