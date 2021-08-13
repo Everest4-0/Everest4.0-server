@@ -1,22 +1,28 @@
 var express = require('express'),
-    config = require('../config/database'),
-    middleWare = require('../application/middlewares/main'),
-    //  { google } = require('googleapis'),
     cors = require('cors'),
     bodyParser = require('body-parser'),
+    config = require('../config/database'),
+    middleWare = require('../application/middlewares/main'),
     // routes
-    routes = require('../routes/route');
-const fs = require('fs');
-
+    routes = require('../routes/route'),
+    fs = require('fs');
 
 const readLog = require('../config/readlog');
 
-const { User } = require('../models/models');
-const TOKEN_PATH = '../config/token.json';
-//sect the mongoo connection string from config
-
+const { ENV } = process.env
 const db = require("../models/models");
-db.sequelize.sync({ force: false });
+
+var whitelist = ['http://localhost:4200', 'https://everest40.com', 'https://qld.everest40.com', 'https://application.qld.everest40.com', 'https://server.qld.everest40.com']
+var corsOptions = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    },
+    credentials: true, methods: 'GET,PUT,POST,OPTIONS'
+}
 
 const options = {
     key: fs.readFileSync('server/ssl/key.pem'),
@@ -33,19 +39,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-var whitelist = ['http://localhost:4200','https://everest40.com', 'https://qld.everest40.com', 'https://application.qld.everest40.com', 'https://server.qld.everest40.com']
-var corsOptions = {
-    origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    },
-    credentials: true, methods: 'GET,PUT,POST,OPTIONS'
-}
 app.use(cors());
-
 
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
@@ -65,7 +59,7 @@ app.get('/log', async (req, res) => {
 app.use('/api/v1/', middleWare.validateUserAuthToken, routes);
 
 app.get('/', function (req, res) {
-    res.send('Everes 4.0 - sc!');
+    res.send(`version 4.0 - sc! ${process.env.ENV.toLowerCase()}`);
 });
 
 app.set('port', (process.env.PORT || 9800));
@@ -83,7 +77,7 @@ var io = require('socket.io')(server, {
 
 
 io.on('connect', socket => {
-    
+
     console.log('Socket: client connected--' + socket.id);
     io.sockets.sockets.forEach((client, data) => {
         let s = client;

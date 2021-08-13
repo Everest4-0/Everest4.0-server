@@ -2,7 +2,8 @@ var { UserEvaluation, User, Evaluation, EvaluationRequest } = require('../../mod
 
 exports.create = async (req, res) => {
 
-    req.body.userId = req.body.requester.id
+    req.body.userId = req.user.id
+    req.body.requesterId = req.body.requester.id
     req.body.requestedId = req.body.requested.id
     req.body.evaluationId = req.body.evaluation.id
     req.body.requestId = req.body.request.id

@@ -1,4 +1,7 @@
-const dbConfig = require("../config/database.js")['dev'];
+require('dotenv').config();
+
+
+const dbConfig = require("../config/database.js");
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -98,18 +101,19 @@ db.updateOrCreate = async (model, where, newItem) => {
         return model
           .create(newItem)
           .then((item) => {
-            return  item;
+            return item;
           })
       }
       // Found an item, update it
       return model
         .update(newItem, { where: where })
         .then((item) => {
-          return  item
+          return item
         });
     })
-  }
-
-db.sequelize.sync({ force: false });
+}
+if (process.env.ENV === 'DEV') {
+  db.sequelize.sync({ force: false });
+}
 
 module.exports = db;
