@@ -58,7 +58,7 @@ exports.allBy = async (req, res) => {
 
     let filter = req.query
 
-    let Goals = await Task.findAll({
+    let goals = await Task.findAll({
         where: filter,
         include: [
 
@@ -66,15 +66,11 @@ exports.allBy = async (req, res) => {
                 model: User,
                 as: 'user'
             },
-            {
-                model: PartialGoal,
-                as: 'partials'
-            }
         ]
     }).catch((e, r) => {
         let u = e
     });
 
-    res.json(Goals)
+    res.json(goals)
 }
 

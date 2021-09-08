@@ -47,6 +47,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     });
     Task.associate = (models) => {
         Task.belongsTo(models.Goal, { as: 'goal', foreignKey: 'goalId' })
+        Task.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
         Task.hasMany(models.Budget, { as: 'budgets', foreignKey: 'taskId' })
     }
 
