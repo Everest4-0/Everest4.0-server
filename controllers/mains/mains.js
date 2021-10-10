@@ -1,8 +1,13 @@
 module.exports = {
+
     activitySector: (req,res) => {
-        const as=require('../../application/constants/consts').ActivitySectors;
-        console.warn(as)
-        res.json(as)
+        const activitySectors = require('../../application/constants/consts').ActivitySectors;
+        res.json(activitySectors)
+    },
+    newsCategories: (req, res) =>{
+        const newsCategories = require('../../application/constants/consts').NewsCategories;
+        res.json(newsCategories)
     }
+
 }
 

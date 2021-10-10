@@ -45,7 +45,9 @@ router.use('/vdrs', require("./virtual_data_room/virtual_data_room.route"));
 
 //Stripe payments
 router.use('/payments/charges', require("./payment/charge.route"));
+
 router.use('/mains/consts', require("./mains/mains"));
 
+router.use('./mains/consts/news-categories', require("./mains/mains"))
 // Export API routes
 module.exports = router;
