@@ -1,5 +1,6 @@
 
 const { uuid: uuidV4 } = require('uuid');
+const Consts = require("../../application/constants/consts")
 module.exports = ({ sequelize, Sequelize }) => {
 
   const PersonalData = sequelize.define("personal_data", {
@@ -32,8 +33,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     activitySector: {
       type: Sequelize.INTEGER,
       get(){
-        let i = this.getDataValue('act_secId');
-        return [{ id: 2, name: 'Público' }, { id: 1, name: 'Privado' }, { id: 0, name: 'Outro' }][this.getDataValue('act_secId')]
+        return Consts.ActivitySectors.filter(x=>x.id===this.getDataValue('activitySector'))[0]
       }
     },
     descriptions: {
@@ -63,10 +63,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     PersonalData.belongsTo(models.AcademicLevel, { as: 'academicLevel', foreignKey: 'acad_levelId' });
     PersonalData.belongsTo(models.ProfessionalExperience, { as: 'professionalExperience', foreignKey: 'pro_expId', });
     PersonalData.belongsTo(models.WorkSituation, { as: 'workSituation', foreignKey: 'work_sitId', });
-
-   // PersonalData.hasOne(models.User, { as: 'user', foreignKey: 'id' });
   }
-
 
   PersonalData.beforeCreate(data => data.id = data.userId)
   return PersonalData;

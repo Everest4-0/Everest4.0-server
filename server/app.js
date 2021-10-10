@@ -9,25 +9,19 @@ var express = require('express'),
 
 const readLog = require('../config/readlog');
 
-const { ENV } = process.env
-const db = require("../models/models");
-
 var whitelist = ['http://localhost:4200', 'https://everest40.com', 'https://qld.everest40.com', 'https://application.qld.everest40.com', 'https://server.qld.everest40.com']
 var corsOptions = {
-    origin: function (origin, callback) {
+    //TODO: Fix origin when origin is undefined
+    origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
-            callback(new Error('Not allowed by CORS'))
+         //   callback(new Error('Not allowed by CORS'))
         }
     },
     credentials: true, methods: 'GET,PUT,POST,OPTIONS'
 }
 
-const options = {
-    key: fs.readFileSync('server/ssl/key.pem'),
-    cert: fs.readFileSync('server/ssl/cert.pem')
-};
 // Init App
 var app = express();
 var server = require("http").Server(app);
@@ -39,7 +33,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))

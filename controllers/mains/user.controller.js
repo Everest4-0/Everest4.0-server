@@ -81,7 +81,6 @@ exports.update = async (req, res) => {
     }
 
     req.body.datas.pro_expId = req.body.datas.professionalExperience
-    req.body.datas.act_secId = req.body.datas.activitySector
     req.body.datas.work_sitId = req.body.datas.workSituation
     req.body.datas.acad_levelId = req.body.datas.academicLevel
     await PersonalData.update(req.body.datas, {
