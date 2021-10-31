@@ -1,7 +1,6 @@
 var { Task, Role, Op, PartialGoal, User, Goal } = require('../../models/models');
 
 exports.create = async (req, res) => {
-    req.body.goalId = req.body.goal.id
     let task = await Task.create(req.body).catch((e, Task) => {
         res.status(400).json(e || Task)
     });

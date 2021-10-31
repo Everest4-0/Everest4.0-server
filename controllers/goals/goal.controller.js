@@ -24,17 +24,17 @@ exports.update = async (req, res) => {
             id: req.body.id
         }
     });
-    let Goal = await Goal.findByPk(req.body.id, {
+    let goal = await Goal.findByPk(req.body.id, {
         include: [
             {
-                model: Role,
-                as: 'role'
+                model: Task,
+                as: 'tasks'
             }
         ]
     }).catch(e => {
         let i = e
     });
-    res.json(Goal);
+    res.json(goal);
 }
 
 exports.delete = async (req, res) => {

@@ -2,7 +2,6 @@ var router = require('express').Router();
 let controller = require('../../controllers/quiz/quiz.controller');
 
 // Export API routes
-module.exports = router;
 router.get('/', controller.allBy);
 router.get('/:id', controller.one);
 router.post('/', controller.create);

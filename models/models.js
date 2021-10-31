@@ -91,6 +91,29 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+let updateThen = async (newItem, where = null) => {
+  
+  // First try to find the record
+  return this
+    .findOne({ where: where ?? { id: newItem.id } })
+    .then(function (foundItem) {
+      if (!foundItem) {
+        // Item not found, create a new one
+        return null
+      }
+      // Found an item, update it
+      return this
+        .update(newItem, { where: where })
+        .then((item) => {
+          this.findOne({ where: where ?? { id: newItem.id } })
+        });
+    })
+}
+
+Object.keys(db).forEach(modelName => {
+  db[modelName].updateThen = updateThen
+});
+
 db.updateOrCreate = async (model, where, newItem) => {
   // First try to find the record
   return model
