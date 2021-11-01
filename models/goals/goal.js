@@ -1,14 +1,10 @@
 
 const { v4: uuid } = require('uuid')
 
-module.exports = ({ sequelize, Sequelize }) => {
+module.exports = ({ sequelize, Sequelize, defaultKeys,}) => {
 
     const Goal = sequelize.define("goals", {
-        id: {
-            primaryKey: true,
-            type: Sequelize.UUID,
-            default: Sequelize.UUIDV4
-        },
+            ...defaultKeys,
         code: {
             type: Sequelize.STRING,
         },
@@ -24,19 +20,6 @@ module.exports = ({ sequelize, Sequelize }) => {
         descriptions: {
             type: Sequelize.STRING,
         },
-        isActive: {
-            type: Sequelize.BOOLEAN,
-            default: true
-        },
-        // Timestamps
-        createdAt: Sequelize.DATE,
-        updatedAt: Sequelize.DATE,
-    }, {
-        indexes: [
-            {
-                fields: ['id', 'userId']
-            }
-        ]
     });
     Goal.associate = (models) => {
         Goal.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })

@@ -1,14 +1,10 @@
 
 const { v4: uuid } = require('uuid')
 
-module.exports = ({ sequelize, Sequelize }) => {
+module.exports = ({ sequelize, Sequelize, defaultKeys, }) => {
 
     const Task = sequelize.define("tasks", {
-        id: {
-            primaryKey: true,
-            type: Sequelize.UUID,
-            default: Sequelize.UUIDV4
-        },
+        ...defaultKeys,
         revenue: {
             type: Sequelize.DECIMAL(10, 2),
         },
@@ -31,19 +27,6 @@ module.exports = ({ sequelize, Sequelize }) => {
         dueDate: {
            type: Sequelize.DATE,
         },
-        isActive: {
-            type: Sequelize.BOOLEAN,
-            default: true
-        },
-        // Timestamps
-        createdAt: Sequelize.DATE,
-        updatedAt: Sequelize.DATE,
-    }, {
-        indexes: [
-            {
-                fields: ['id', 'goalId']
-            }
-        ]
     });
     Task.associate = (models) => {
         Task.belongsTo(models.Goal, { as: 'goal', foreignKey: 'goalId' })

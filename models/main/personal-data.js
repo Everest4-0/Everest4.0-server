@@ -1,14 +1,9 @@
 
-const { uuid: uuidV4 } = require('uuid');
 const Consts = require("../../application/constants/consts")
-module.exports = ({ sequelize, Sequelize }) => {
+module.exports = ({ sequelize, Sequelize, defaultKeys }) => {
 
   const PersonalData = sequelize.define("personal_data", {
-    id: {
-      allowNull: false,
-      primaryKey: true,
-      type: Sequelize.UUID
-    },
+    ...defaultKeys,
     sex: {
       type: Sequelize.STRING
     },
@@ -41,20 +36,7 @@ module.exports = ({ sequelize, Sequelize }) => {
     },
     salary: {
       type: Sequelize.DECIMAL(32.2),
-    },
-    isActive: {
-      type: Sequelize.BOOLEAN,
-      default: true
-    },
-    // Timestamps
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE,
-  }, {
-    indexes: [
-      {
-        fields: ['id', 'work_sitId', 'pro_expId', 'acad_levelId','act_secId']
-      }
-    ]
+    }
   });
 
 

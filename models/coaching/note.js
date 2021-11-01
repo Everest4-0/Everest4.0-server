@@ -1,7 +1,7 @@
 const {v4:uuid} = require('uuid');
 
 
-module.exports = ({sequelize, Sequelize}) => {
+module.exports = ({sequelize, Sequelize, defaultKeys}) => {
     const Note = sequelize.define('notes', {
         id:{
             primaryKey: true,
@@ -14,13 +14,7 @@ module.exports = ({sequelize, Sequelize}) => {
         title:{
             type: Sequelize.STRING
         },
-        isActive:{
-            type:Sequelize.BOOLEAN,
-            default: true
-        },
-        //Timestamp
-        createdAt: Sequelize.DATE,
-        updatedAt: Sequelize.DATE
+        ...defaultKeys
     }, {
         indexes:[{
             fields:['id', 'userId']

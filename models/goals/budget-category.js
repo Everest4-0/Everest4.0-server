@@ -1,14 +1,10 @@
 
 const { v4: uuid } = require('uuid')
 
-module.exports = ({ sequelize, Sequelize }) => {
+module.exports = ({ sequelize, Sequelize, defaultKeys, }) => {
 
     const BudgetCategory = sequelize.define("budget_categories", {
-        id: {
-            primaryKey: true,
-            type: Sequelize.UUID,
-            default: Sequelize.UUIDV4
-        },
+        ...defaultKeys,
         code: {
             type: Sequelize.STRING,
         },
@@ -21,13 +17,6 @@ module.exports = ({ sequelize, Sequelize }) => {
         descriptions: {
             type: Sequelize.STRING,
         },
-        isActive: {
-            type: Sequelize.BOOLEAN,
-            default: true
-        },
-        // Timestamps
-        createdAt: Sequelize.DATE,
-        updatedAt: Sequelize.DATE,
     }, {
         indexes: [
             {

@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+const { v4: uuid } = require('uuid');
 
 const dbConfig = require("../config/database.js");
 
@@ -21,7 +21,24 @@ const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-
+db.defaultKeys = {
+  id: {
+    primaryKey: true,
+    type: Sequelize.UUID,
+    default: Sequelize.UUIDV4
+  },
+  isActive: {
+    type: Sequelize.BOOLEAN,
+    default: true
+  },
+  onTrash: {
+    type: Sequelize.BOOLEAN,
+    default: false
+  },
+  //Timestamp
+  createdAt: Sequelize.DATE,
+  updatedAt: Sequelize.DATE
+}
 //Stripe payment
 db.Charge = require("./payment/charge")(db);
 db.Address = require("./payment/address")(db);
@@ -91,27 +108,14 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
-let updateThen = async (newItem, where = null) => {
-  
-  // First try to find the record
-  return this
-    .findOne({ where: where ?? { id: newItem.id } })
-    .then(function (foundItem) {
-      if (!foundItem) {
-        // Item not found, create a new one
-        return null
-      }
-      // Found an item, update it
-      return this
-        .update(newItem, { where: where })
-        .then((item) => {
-          this.findOne({ where: where ?? { id: newItem.id } })
-        });
-    })
-}
 
 Object.keys(db).forEach(modelName => {
-  db[modelName].updateThen = updateThen
+  db[modelName].toTrash = (where) =>
+    db[modelName].update({ onTrash: true }, { where })
+  db[modelName].fromTrash = (where) =>
+    db[modelName].update({ onTrash: false }, { where })
+  if (db[modelName].beforeCreate)
+    db[modelName].beforeCreate(r => r.id = r.id ?? uuid())
 });
 
 db.updateOrCreate = async (model, where, newItem) => {
@@ -135,8 +139,16 @@ db.updateOrCreate = async (model, where, newItem) => {
         });
     })
 }
+
+
+
+db.defaultFilter = {
+  onTrash: {
+    [Sequelize.Op.not]: true,
+  }
+}
 if (process.env.ENV === 'DEV') {
-  db.sequelize.sync({ force: false });
+  db.sequelize.sync({ force: false, alter: { drop: false } });
 }
 
 module.exports = db;

@@ -1,25 +1,14 @@
 const {v4:uuid} = require ('uuid');
 
-module.exports = ({sequelize, Sequelize}) =>{
+module.exports = ({sequelize, Sequelize, defaultKeys}) =>{
     const CoachingGoal = sequelize.define('coaching_goals', {
-        id:{
-            primaryKey: true,
-            type: Sequelize.UUID,
-            default: Sequelize.UUIDV4
-        },
+        ...defaultKeys,
         title:{
             type:Sequelize.STRING
         },
         description:{
             type:Sequelize.TEXT
-        },
-        isActive:{
-            type:Sequelize.BOOLEAN,
-            default: true
-        },
-        // Timestamps
-        createdAt: Sequelize.DATE,
-        updatedAt: Sequelize.DATE
+        }
     },
     {
         indexes:[{

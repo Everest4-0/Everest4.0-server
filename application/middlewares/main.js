@@ -9,6 +9,7 @@
 
 const { User } = require("../../models/models")
 
+var { defaultFilter } = require('../../models/models');
 //const config = require('../config/app.json');
 
 const jwt = require('jsonwebtoken')
@@ -38,12 +39,18 @@ class Main {
         let token = req.headers['apikey']
     }
 
+    static queryFilter = (req, res, next) => {
+        req.query = { ...req.query, ...defaultFilter };
+        req.where = defaultFilter;
+        return next();
+    }
+
     static validateUserAuthToken = (req, res, next) => {
-        
+
         if (
-            req.url.split('authenticate').length > 1 || 
+            req.url.split('authenticate').length > 1 ||
             req.url.split('signOn').length > 1
-            ) {
+        ) {
             return next();
         }
 

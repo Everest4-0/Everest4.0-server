@@ -1,28 +1,19 @@
 
-const { v4: uuid } = require('uuid')
 const crypto = require('crypto');
 const ModelHelper = require('../../application/datas/model.helper');
-//const { PersonalSettings, PersonalData, Role } = require('../models');
-const that = require('../../models/models').User;
-const { exception } = require('console');
+
 module.exports = (db) => {
-  let { sequelize, Sequelize, PersonalSettings, PersonalData, Role } = db
+  let { sequelize, Sequelize, defaultKeys, PersonalSettings, PersonalData, Role } = db
   const User = sequelize.define("user", {
-    id: {
-      primaryKey: true,
-      type: Sequelize.UUID,
-      default: Sequelize.UUIDV4
-    },
+    ...defaultKeys,
     username: {
       type: Sequelize.STRING,
-      unique: true
     },
     code: {
       type: Sequelize.STRING
     },
     email: {
       type: Sequelize.STRING,
-      unique: true
     },
     telePhone: {
       type: Sequelize.STRING
@@ -50,8 +41,7 @@ module.exports = (db) => {
       }
     },
     apikey: {
-      type: Sequelize.STRING,
-      unique: true
+      type: Sequelize.STRING
     },
     password: {
       type: Sequelize.STRING,
@@ -65,23 +55,12 @@ module.exports = (db) => {
         return () => this.getDataValue('salt')
       }
     },
-    isActive: {
-      type: Sequelize.BOOLEAN,
-      default: true
-    },
     provider: {
-      type: Sequelize.BOOLEAN,
+      type: Sequelize.STRING,
       default: 'LOCAL'
     },
-    // Timestamps
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE,
+    dataId: Sequelize.STRING
   }, {
-    indexes: [
-      {
-        fields: ['id', 'roleId', 'settingId', 'dataId']
-      }
-    ],
     defaultScope: {
       include: [{
         model: Role,
@@ -142,7 +121,7 @@ module.exports = (db) => {
 
   User.beforeCreate(setSaltAndPassword)
   User.beforeUpdate(setSaltAndPassword)
-  User.beforeCreate(user => user.id = uuid())
+
   User.beforeCreate(user => user.roleId = user.roleId || 'FREE')
   //User.beforeCreate(user => user.firstName = user.firstName || user.email.split('@')[0].toUpperCase())
   User.beforeCreate(user => user.provider = user.provider || 'LOCAL')

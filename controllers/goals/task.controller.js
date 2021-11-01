@@ -28,11 +28,15 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let Task = Task.destroy({ where: { id: req.params.id } })
+    
+    if (req.params.force) {
+        await Task.destroy({ where: { id: req.params.id } });
+    } else {
+        await Task.toTrash({ id: task.id });
+    }
     res.json({
         status: 200,
-        message: "sucess",
-        data: Task
+        message: "sucess"
     });
 }
 

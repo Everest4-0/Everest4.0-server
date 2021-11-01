@@ -38,11 +38,15 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let Goal = Goal.destroy({ where: { id: req.params.id } })
+
+    if (req.params.force) {
+        await Goal.destroy({ where: { id: req.params.id } });
+    } else {
+        await Goal.toTrash({ id: req.params.id });
+    }
     res.json({
         status: 200,
-        message: "sucess",
-        data: Goal
+        message: "success"
     });
 }
 
@@ -65,12 +69,11 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let filter = req.query
+    let { query, where } = req
 
     let goals = await Goal.findAll({
-        where: filter,
+        where: query,
         include: [
-
             {
                 model: User,
                 as: 'user'
@@ -81,15 +84,16 @@ exports.allBy = async (req, res) => {
             },
             {
                 model: Task,
-                as: 'tasks',
-                include:[
+                as: 'tasks',required: false,
+                where,
+                include: [
                     {
                         model: Budget,
-                        as: 'budgets',
-                        include:[
+                        as: 'budgets',required: false,
+                        include: [
                             {
                                 model: BudgetCategory,
-                                as: 'category'
+                                as: 'category',required: false,
                             }]
                     }
                 ]

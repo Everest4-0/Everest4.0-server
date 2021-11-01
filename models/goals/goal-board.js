@@ -1,24 +1,13 @@
-module.exports = ({ sequelize, Sequelize }) => {
+module.exports = ({ sequelize, Sequelize, defaultKeys, }) => {
 
     const GoalBoard = sequelize.define("goals_boards", {
-        id: {
-            allowNull: false,
-            primaryKey: true,
-            type: Sequelize.STRING
-        },
+        ...defaultKeys,
         code: {
             type: Sequelize.STRING,
         },
         descriptions: {
             type: Sequelize.STRING,
-        },
-        isActive: {
-            type: Sequelize.BOOLEAN,
-            default: true
-        },
-        // Timestamps
-        createdAt: Sequelize.DATE,
-        updatedAt: Sequelize.DATE,
+        }
     });
 
     GoalBoard.consts = [

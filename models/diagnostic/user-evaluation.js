@@ -1,28 +1,15 @@
 
 const { v4: uuid } = require('uuid')
-module.exports = ({ sequelize, Sequelize }) => {
+module.exports = ({ sequelize, Sequelize, defaultKeys, }) => {
 
   const UserEvaluation = sequelize.define("user_evaluation", {
-    id: {
-      primaryKey: true,
-      type: Sequelize.UUID,
-      default: Sequelize.UUIDV4
-    },
+    ...defaultKeys,
     points: {
       type: Sequelize.INTEGER
     },
     descriptions: {
       type: Sequelize.STRING,
     },
-   /* requestId: {
-      type: Sequelize.STRING,
-    },*/
-    isActive: {
-      type: Sequelize.BOOLEAN,
-      default: true
-    },
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE,
   });
   UserEvaluation.associate = (models) => {
 

@@ -1,13 +1,8 @@
 
-const { uuid: uuidV4 } = require('uuid');
-module.exports = ({ sequelize, Sequelize }) => {
+module.exports = ({ sequelize, Sequelize, defaultKeys }) => {
 
   const ProfessionalExperienceData = sequelize.define("professional_experience_data", {
-    id: {
-      allowNull: false,
-      primaryKey: true,
-      type: Sequelize.UUID
-    },
+    ...defaultKeys,
     name: {
       type: Sequelize.STRING,
       get() {
@@ -40,9 +35,6 @@ module.exports = ({ sequelize, Sequelize }) => {
       type: Sequelize.BOOLEAN,
       default: true
     },
-    // Timestamps
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE,
   });
 
 

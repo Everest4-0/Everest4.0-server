@@ -2,7 +2,7 @@ var express = require('express'),
     cors = require('cors'),
     bodyParser = require('body-parser'),
     config = require('../config/database'),
-    middleWare = require('../application/middlewares/main'),
+    { validateUserAuthToken, queryFilter } = require('../application/middlewares/main'),
     // routes
     routes = require('../routes/route'),
     fs = require('fs');
@@ -16,10 +16,10 @@ var corsOptions = {
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
-         //   callback(new Error('Not allowed by CORS'))
+            //   callback(new Error('Not allowed by CORS'))
         }
     },
-    credentials: true, methods: 'GET,PUT,POST,OPTIONS'
+    credentials: true, methods: 'GET,PUT,POST,OPTIONS,DELETE'
 }
 
 // Init App
@@ -50,7 +50,7 @@ app.get('/log', async (req, res) => {
     }
 });
 
-app.use('/api/v1/', middleWare.validateUserAuthToken, routes);
+app.use('/api/v1/', validateUserAuthToken, queryFilter, routes);
 
 app.get('/', function (req, res) {
     res.send(`version 4.0 - sc! ${process.env.ENV.toLowerCase()}`);

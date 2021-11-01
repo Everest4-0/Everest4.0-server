@@ -1,13 +1,7 @@
-
-const { uuid: uuidV4 } = require('uuid');
-module.exports = ({ sequelize, Sequelize }) => {
+module.exports = ({ sequelize, Sequelize, defaultKeys }) => {
 
   const PersonalSettings = sequelize.define("personal_settings", {
-    id: {
-      allowNull: false,
-      primaryKey: true,
-      type: Sequelize.UUID
-    },
+    ...defaultKeys,
     newsCategories: {
       type: Sequelize.TEXT,
       get() {
@@ -34,15 +28,6 @@ module.exports = ({ sequelize, Sequelize }) => {
       type: Sequelize.BOOLEAN,
       default: true
     },
-    // Timestamps
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE,
-  }, {
-    indexes: [
-      {
-        fields: ['id']
-      }
-    ]
   });
 
 

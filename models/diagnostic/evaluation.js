@@ -1,13 +1,9 @@
 
 const { v4: uuid } = require('uuid')
-module.exports = ({ sequelize, Sequelize }) => {
+module.exports = ({ sequelize, Sequelize, defaultKeys,}) => {
 
   const Evaluation = sequelize.define("evaluation", {
-    id: {
-      primaryKey: true,
-      type: Sequelize.UUID,
-      default: Sequelize.UUIDV4
-    },
+    ...defaultKeys,
     code: {
       type: Sequelize.STRING,
       unique: true
@@ -17,18 +13,12 @@ module.exports = ({ sequelize, Sequelize }) => {
       unique: true
     },
     descriptions: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
     },
     group: {
       type: Sequelize.STRING,
     },
-    isActive: {
-      type: Sequelize.BOOLEAN,
-      default: true
-    },
-    // Timestamps
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE,
+    ...defaultKeys,
   },{
     classMethods: {
       associate(models) {
