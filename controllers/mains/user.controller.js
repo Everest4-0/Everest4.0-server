@@ -51,11 +51,8 @@ exports.create = async (req, res) => {
         user.settings = await PersonalSettings.create(req.body.datas);
         user.datas = await PersonalData.create(req.body.datas);
         let y = await User.update({ dataId: user.id, settingId: user.id }, { where: { id: user.id } })
-        /*let email = new Email({
-            template: 'mains/create_new_user'
-        })
-    
-        email.send()*/
+
+
         res.json(
             {
                 success: true,
@@ -113,7 +110,7 @@ exports.delete = async (req, res) => {
     let user = User.destroy({ where: { id: req.params.id } })
     res.json({
         status: 200,
-        message: "sucess",
+        message: "success",
         data: user
     });
 }
@@ -199,6 +196,17 @@ exports.allBy = async (req, res) => {
     }).catch((e, r) => {
         let u = e
     });
+/*
+    let user = users[0];
+    new Email({
+        user
+        , subject: "Hello ✔"
+        , to: "pedrojoaodev@gmail.com"
+        , template: "mains/created_new_user"
+    }).send((e, i)=>{
+        console.log(e.message)
+        info = i
+    })*/
     //res.statusCode = 401
     res.json(users)
 }

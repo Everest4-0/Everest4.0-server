@@ -1,43 +1,51 @@
 var sendgrid = require('sendgrid')(process.env.EMAIL_USERNAME, process.env.EMAIL_PASSWORD);
+
 var Hogan = require('hogan.js');
-var fs = require('fs');
+var ejs = require('ejs');
+
+const fs = require("fs");
+const path = require("path");
 var nodemailer = require('nodemailer');
+const { readFile } = require('fs/promises');
 
 class Email {
 
-    to;
-    from;
-
     transporter;
 
-    static template = {
-
-    }
     constructor(data) {
+
         this.transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: process.env.EMAIL_SERVER,
+            port: 993,
+            secure: true,
             auth: {
                 user: process.env.EMAIL_USERNAME,
-                pass: process.env.EMAIL_PASSWORD
+                pass: process.env.EMAIL_PASSWORD,
             }
-        });
-        data.from = 'noreplay@everest.40'
-        data.html = this.render(data.template, data)
+        })
+
+        this.dirname=__dirname;
+        data.from = '"Pedro Joao" <pedrojoaodev@gmail.com>' 
+
         this.data = data
+        this.data.html = this.render()
+
     }
 
-    send(fn) {
-        // var mail={...this.data, ...object2 }
-        //sendgrid.send(this.data,fn)
-        this.transporter.sendMail(this.data, fn)
-    }
-    render = (template, data) => {
-        let t = fs.readFileSync('./views/emails/' + template + '.hjs').toString()
-        let h = Hogan
-            .compile(t);
-        let f = h.render(data)
 
-        return f;
+     send = (fn) => {
+       let info = this.transporter.sendMail(this.data, fn)
+    }
+
+    render = function() {
+        let f = fs.readFileSync(path.join(__dirname , '../../views/emails/default.ejs')).toString();
+        let file = ejs.render(f, this);
+        /** let h = Hogan
+            .compile(f);
+
+        let file = h.render(this.data)
+*/
+        return file;
     }
 
 }
