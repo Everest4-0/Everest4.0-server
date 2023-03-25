@@ -1,4 +1,5 @@
 var { WorkSituation } = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     let workSituation = await WorkSituation.create(req.body);
@@ -33,7 +34,10 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let workSituations = await WorkSituation.findAll({});
+    const workSituations = await paginate({
+        Model: WorkSituation,
+        ...req.query
+    })
 
     res.json(workSituations)
 }

@@ -1,5 +1,8 @@
 var { AcademicLevel } = require('../../models/models');
-const { v4: uuid } = require('uuid')
+
+const { v4: uuid } = require('uuid');
+const { paginate } = require('../global/paginator/paginator.controller');
+
 exports.create = async (req, res) => {
     let academicLevel = await AcademicLevel.create(req.body);
     res.json(academicLevel)
@@ -33,7 +36,10 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let academicLevels = await AcademicLevel.findAll({});
+    const academicLevels = await paginate({
+        Model: AcademicLevel,
+        ...req.query
+    })
 
     res.json(academicLevels)
 }

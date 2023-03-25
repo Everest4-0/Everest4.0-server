@@ -1,5 +1,10 @@
-var {ProfessionalExperience} = require('../../models/models');
-const { v4: uuid } = require('uuid')
+var {
+    ProfessionalExperience
+} = require('../../models/models');
+const {
+    v4: uuid
+} = require('uuid');
+const { paginate } = require('../global/paginator/paginator.controller');
 exports.create = async (req, res) => {
     let professionalExperience = await ProfessionalExperience.create(req.body);
     res.json(professionalExperience)
@@ -32,10 +37,14 @@ exports.one = async (req, res) => {
 }
 
 exports.allBy = async (req, res) => {
-
-    let professionalExperiences = await ProfessionalExperience.findAll({ order: [
-        // Will escape title and validate DESC against a list of valid direction parameters
-        ['from', 'DESC']]});
     
+    const order = ['from', 'DESC']
+
+    const professionalExperiences = await paginate({
+        Model: ProfessionalExperience,
+        order,
+        ...req.query
+    })
+
     res.json(professionalExperiences)
 }
