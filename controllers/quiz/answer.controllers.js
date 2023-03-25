@@ -1,5 +1,11 @@
-var { Quiz, Answer } = require('../../models/models');
-var {User} = require("../../models/main/user");
+var {
+    Quiz,
+    Answer
+} = require('../../models/models');
+var {
+    User
+} = require("../../models/main/user");
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
@@ -20,12 +26,10 @@ exports.update = async (req, res) => {
         }
     });
     let answer = await Answer.findByPk(req.body.id, {
-        include: [
-            {
-                model: Quiz,
-                as: 'quiz'
-            }
-        ]
+        include: [{
+            model: Quiz,
+            as: 'quiz'
+        }]
     }).catch(e => {
         let i = e
     });
@@ -33,7 +37,11 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let answer = Answer.destroy({ where: { id: req.params.id } })
+    let answer = Answer.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
     res.json({
         status: 200,
         message: "sucess",
@@ -44,12 +52,10 @@ exports.delete = async (req, res) => {
 exports.one = async (req, res) => {
 
     let answer = await Answer.findByPk(req.params.id, {
-        include: [
-            {
-                model: Quiz,
-                as: 'quiz'
-            }
-        ]
+        include: [{
+            model: Quiz,
+            as: 'quiz'
+        }]
     });
     res.json(answer)
 }
@@ -58,23 +64,22 @@ exports.allBy = async (req, res) => {
 
     let filter = req.query
 
-    let answers = await Answer.findAll({
-        where: filter,
-        include: [
-            {
-                model: Quiz,
-                as: 'quiz',
-                include: [
-                    {
-                        model: User,
-                        as: 'user'
-                    }
-                ]
-            }
-        ]
-    }).catch((e, r) => {
-        let u = e
-    });
+    const where = filter,
+        include = [{
+            model: Quiz,
+            as: 'quiz',
+            include: [{
+                model: User,
+                as: 'user'
+            }]
+        }]
+
+    const answers = await paginate({
+        Model: Answer,
+        where,
+        include,
+        ...req.query
+    })
 
     res.json(answers)
 }
