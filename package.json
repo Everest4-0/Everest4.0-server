@@ -9,7 +9,7 @@
         "app": "npm run tsc;",
         "test": "echo \"Error: no test specified\" && exit 1",
         "tsc": "tsc",
-        "start": "node ./server/app.js"
+        "start": "nodemon ./server/app.js"
     },
     "repository": {
         "type": "git",
