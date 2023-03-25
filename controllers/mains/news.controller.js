@@ -47,7 +47,6 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-
     new NewsApi(response => {
         res.json(response.data)
     })

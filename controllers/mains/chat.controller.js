@@ -1,4 +1,9 @@
-var { Chat, ChatMessage, User } = require('../../models/models');
+var {
+    Chat,
+    ChatMessage,
+    User
+} = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     let chat = await Chat.create(req.body);
@@ -8,7 +13,9 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    let chat = Chat.update({ lastName: "Doe" }, {
+    let chat = Chat.update({
+        lastName: "Doe"
+    }, {
         where: {
             lastName: null
         }
@@ -31,20 +38,19 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let chat = await Chat.findByPk(req.params.id,{
-        include: [
-            {
+    let chat = await Chat.findByPk(req.params.id, {
+        include: [{
                 model: ChatMessage,
                 as: 'messages',
-                include: [
-                    {
+                include: [{
                         model: User,
                         as: 'from'
                     },
                     {
                         model: User,
                         as: 'to'
-                    }]
+                    }
+                ]
             },
             {
                 model: User,
@@ -53,7 +59,8 @@ exports.one = async (req, res) => {
             {
                 model: User,
                 as: 'to'
-            }]
+            }
+        ]
     });
     //socket.customId = data.customId;
     res.json(chat)
@@ -62,23 +69,29 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let chats = await Chat.findAll({
-        include: [
-            {
-                model: ChatMessage,
-                as: 'messages', 
-                include: [
-                    {
-                        model: User,
-                        as: 'from'
-                    },
-                    {
-                        model: User,
-                        as: 'to'
-                    }]
 
-            }]
-    });
-    //res.statusCode = 401
+
+    const
+        include = [{
+            model: ChatMessage,
+            as: 'messages',
+            include: [{
+                    model: User,
+                    as: 'from'
+                },
+                {
+                    model: User,
+                    as: 'to'
+                }
+            ]
+
+        }]
+
+    const chats = await paginate({
+        Model: Chat,
+        include,
+        ...req.query
+    })
+
     res.json(chats)
 }

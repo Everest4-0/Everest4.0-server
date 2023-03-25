@@ -1,4 +1,5 @@
 var {Role} = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     let role = await Role.create(req.body);
@@ -45,7 +46,10 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let roles = await Role.findAll({});
-    //res.statusCode = 401
+    const roles = await paginate({
+        Model: Role,
+        ...req.query
+    })
+
     res.json(roles)
 }
