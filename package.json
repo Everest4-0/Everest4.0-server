@@ -34,6 +34,7 @@
         "hogan.js": "^3.0.2",
         "jsonwebtoken": "^9.0.0",
         "moment": "^2.29.1",
+        "multer": "1.4.5-lts.1",
         "mysql2": "^2.2.5",
         "nodemailer": "^6.4.16",
         "request": "^2.81.0",
