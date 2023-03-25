@@ -1,4 +1,8 @@
-var { ToDo, User } = require('../../models/models');
+var {
+    ToDo,
+    User
+} = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
@@ -19,12 +23,10 @@ exports.update = async (req, res) => {
         let i = e
     });;
     let todo = await ToDo.findByPk(req.body.id, {
-        include: [
-            {
-                model: User,
-                as: 'user'
-            }
-        ]
+        include: [{
+            model: User,
+            as: 'user'
+        }]
     }).catch(e => {
         let i = e
     });
@@ -32,7 +34,11 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let ToDo = ToDo.destroy({ where: { id: req.params.id } })
+    let ToDo = ToDo.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
     res.json({
         status: 200,
         message: "sucess",
@@ -43,12 +49,10 @@ exports.delete = async (req, res) => {
 exports.one = async (req, res) => {
 
     let ToDo = await ToDo.findByPk(req.params.id, {
-        include: [
-            {
-                model: User,
-                as: 'user'
-            }
-        ]
+        include: [{
+            model: User,
+            as: 'user'
+        }]
     });
     res.json(ToDo)
 }
@@ -57,19 +61,20 @@ exports.allBy = async (req, res) => {
 
     let filter = req.query
 
-    let Goals = await ToDo.findAll({
-        where: filter,
-        include: [
-
+    const where = filter,
+        include = [
             {
                 model: User,
                 as: 'user'
             }
         ]
-    }).catch((e, r) => {
-        let u = e
-    });
 
-    res.json(Goals)
+    const todoList = await paginate({
+        Model: ToDo,
+        where,
+        include,
+        ...req.query
+    })
+
+    res.json(todoList)
 }
-

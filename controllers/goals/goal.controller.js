@@ -1,4 +1,16 @@
-var { Goal, Role, Op, PartialGoal, User, Task, Budget, BudgetCategory } = require('../../models/models');
+var {
+    Goal,
+    Role,
+    Op,
+    PartialGoal,
+    User,
+    Task,
+    Budget,
+    BudgetCategory
+} = require('../../models/models');
+const {
+    paginate
+} = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
@@ -25,12 +37,10 @@ exports.update = async (req, res) => {
         }
     });
     let Goal = await Goal.findByPk(req.body.id, {
-        include: [
-            {
-                model: Role,
-                as: 'role'
-            }
-        ]
+        include: [{
+            model: Role,
+            as: 'role'
+        }]
     }).catch(e => {
         let i = e
     });
@@ -38,7 +48,11 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let Goal = Goal.destroy({ where: { id: req.params.id } })
+    let Goal = Goal.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
     res.json({
         status: 200,
         message: "sucess",
@@ -49,8 +63,7 @@ exports.delete = async (req, res) => {
 exports.one = async (req, res) => {
 
     let Goal = await Goal.findByPk(req.params.id, {
-        include: [
-            {
+        include: [{
                 model: User,
                 as: 'user'
             },
@@ -67,10 +80,8 @@ exports.allBy = async (req, res) => {
 
     let filter = req.query
 
-    let goals = await Goal.findAll({
-        where: filter,
-        include: [
-
+    const where = filter,
+        include = [
             {
                 model: User,
                 as: 'user'
@@ -82,23 +93,23 @@ exports.allBy = async (req, res) => {
             {
                 model: Task,
                 as: 'tasks',
-                include:[
-                    {
-                        model: Budget,
-                        as: 'budgets',
-                        include:[
-                            {
-                                model: BudgetCategory,
-                                as: 'category'
-                            }]
-                    }
-                ]
+                include: [{
+                    model: Budget,
+                    as: 'budgets',
+                    include: [{
+                        model: BudgetCategory,
+                        as: 'category'
+                    }]
+                }]
             }
         ]
-    }).catch((e, r) => {
-        let u = e
-    });
+
+    const goals = await paginate({
+        Model: Goal,
+        where,
+        include,
+        ...req.query
+    })
 
     res.json(goals)
 }
-

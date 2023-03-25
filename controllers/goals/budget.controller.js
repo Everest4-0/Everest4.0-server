@@ -1,4 +1,12 @@
-var { Budget, Role, Op, PartialGoal, User, Goal } = require('../../models/models');
+var {
+    Budget,
+    Role,
+    Op,
+    PartialGoal,
+    User,
+    Goal
+} = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     let budget = await Budget.create(req.body).catch((e, budget) => {
@@ -16,12 +24,10 @@ exports.update = async (req, res) => {
     })
 
     let budget = await Budget.findByPk(req.body.id, {
-        include: [
-            {
-                model: Goal,
-                as: 'goal'
-            }
-        ]
+        include: [{
+            model: Goal,
+            as: 'goal'
+        }]
     }).catch(e => {
         let i = e
     });
@@ -29,7 +35,11 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let Budget = Budget.destroy({ where: { id: req.params.id } })
+    let Budget = Budget.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
     res.json({
         status: 200,
         message: "sucess",
@@ -40,8 +50,7 @@ exports.delete = async (req, res) => {
 exports.one = async (req, res) => {
 
     let Budget = await Budget.findByPk(req.params.id, {
-        include: [
-            {
+        include: [{
                 model: User,
                 as: 'user'
             },
@@ -58,10 +67,8 @@ exports.allBy = async (req, res) => {
 
     let filter = req.query
 
-    let Goals = await Budget.findAll({
-        where: filter,
-        include: [
-
+    const where = filter,
+        include = [
             {
                 model: User,
                 as: 'user'
@@ -71,10 +78,13 @@ exports.allBy = async (req, res) => {
                 as: 'partials'
             }
         ]
-    }).catch((e, r) => {
-        let u = e
-    });
 
-    res.json(Goals)
+    const badgets = await paginate({
+        Model: Budget,
+        where,
+        include,
+        ...req.query
+    })
+
+    res.json(badgets)
 }
-

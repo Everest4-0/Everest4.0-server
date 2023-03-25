@@ -1,4 +1,12 @@
-var { Task, Role, Op, PartialGoal, User, Goal } = require('../../models/models');
+var {
+    Task,
+    Role,
+    Op,
+    PartialGoal,
+    User,
+    Goal
+} = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     req.body.goalId = req.body.goal.id
@@ -16,12 +24,10 @@ exports.update = async (req, res) => {
         }
     })
     let task = await Task.findByPk(req.body.id, {
-        include: [
-            {
-                model: Goal,
-                as: 'goal'
-            }
-        ]
+        include: [{
+            model: Goal,
+            as: 'goal'
+        }]
     }).catch(e => {
         let i = e
     });
@@ -29,7 +35,11 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let Task = Task.destroy({ where: { id: req.params.id } })
+    let Task = Task.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
     res.json({
         status: 200,
         message: "sucess",
@@ -40,8 +50,7 @@ exports.delete = async (req, res) => {
 exports.one = async (req, res) => {
 
     let Task = await Task.findByPk(req.params.id, {
-        include: [
-            {
+        include: [{
                 model: User,
                 as: 'user'
             },
@@ -58,9 +67,8 @@ exports.allBy = async (req, res) => {
 
     let filter = req.query
 
-    let Goals = await Task.findAll({
-        where: filter,
-        include: [
+    const where = filter,
+        include = [
 
             {
                 model: User,
@@ -71,10 +79,13 @@ exports.allBy = async (req, res) => {
                 as: 'partials'
             }
         ]
-    }).catch((e, r) => {
-        let u = e
-    });
 
-    res.json(Goals)
+    const tasks = await paginate({
+        Model: Task,
+        where,
+        include,
+        ...req.query
+    })
+
+    res.json(tasks)
 }
-
