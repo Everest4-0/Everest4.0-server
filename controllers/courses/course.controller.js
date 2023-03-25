@@ -1,8 +1,8 @@
 var {
-    Course
-    , Op
-    , Module
-    , Evaluation,
+    Course,
+    Op,
+    Module,
+    Evaluation,
     User,
     Enrollment,
     updateOrCreate,
@@ -12,6 +12,9 @@ var {
 } = require('../../models/models');
 const fs = require("fs");
 const CourseHelper = require('../../application/courses/course.helper');
+const {
+    paginate
+} = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
 
@@ -49,7 +52,9 @@ exports.update = async (req, res) => {
     req.body.evaluations = null;
     let ev = [];
     await Course.update(req.body, {
-        where: { id: req.body.id }
+        where: {
+            id: req.body.id
+        }
     })
     let course = await Course.findByPk(req.body.id);
 
@@ -63,51 +68,47 @@ exports.update = async (req, res) => {
 
     modules.forEach(async module => {
         module.courseId = course.id
-        await updateOrCreate(Module, { id: module.id || null }, module)
+        await updateOrCreate(Module, {
+            id: module.id || null
+        }, module)
     });
 
     res.json(course)
 }
 
 exports.delete = async (req, res) => {
-    let course = Course.destroy(
-        {
-            where: {
-                id: req.params.id
-            }
+    let course = Course.destroy({
+        where: {
+            id: req.params.id
         }
-    )
+    })
     res.json(course);
 }
 
 exports.one = async (req, res) => {
 
     let course = await Course.findByPk(req.params.id, {
-        include: [
-            {
+        include: [{
                 model: Module,
                 as: 'modules',
-                include: [
-                    {
-                        model: Activity,
-                        as: 'activities',
-                        include: [
-                            {
-                                model: ActivityTask,
-                                as: 'tasks',
-                                include: [
-                                    {
-                                        model: TaskAnswer,
-                                        as: 'answers'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ],
+                include: [{
+                    model: Activity,
+                    as: 'activities',
+                    include: [{
+                        model: ActivityTask,
+                        as: 'tasks',
+                        include: [{
+                            model: TaskAnswer,
+                            as: 'answers'
+                        }]
+                    }]
+                }],
                 order: [
                     // We start the order array with the model we want to sort
-                    [{ model: Activity, as: 'activities' }, 'title', 'ASC']
+                    [{
+                        model: Activity,
+                        as: 'activities'
+                    }, 'title', 'ASC']
                 ]
             },
             {
@@ -117,12 +118,10 @@ exports.one = async (req, res) => {
             {
                 model: Enrollment,
                 as: 'enrollments',
-                include: [
-                    {
-                        model: User,
-                        as: 'user'
-                    }
-                ]
+                include: [{
+                    model: User,
+                    as: 'user'
+                }]
             },
             {
                 model: Evaluation,
@@ -132,7 +131,10 @@ exports.one = async (req, res) => {
 
         order: [
             // We start the order array with the model we want to sort
-            [{ model: Module, as: 'modules' }, 'order_no', 'ASC']
+            [{
+                model: Module,
+                as: 'modules'
+            }, 'order_no', 'ASC']
         ]
     });
     res.json(course)
@@ -143,33 +145,66 @@ exports.allBy = async (req, res) => {
 
     let filter = {}
 
-    if (req.query['$filter']) {
+    if (req.query['filter']) {
         filter = {
-            [Op.or]: [
-                {
-                    title: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+            [Op.or]: [{
+                    title: {
+                        [Op.like]: '%' + req.query['filter'].toLowerCase() + '%'
+                    }
                 },
                 {
-                    descriptions: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+                    descriptions: {
+                        [Op.like]: '%' + req.query['filter'].toLowerCase() + '%'
+                    }
                 }
             ]
         }
     }
-    if (req.query['$is_active']){
-    //    filter={...{isActive:1},...filter}
-    }
+
+    /* 
+        if (req.query['filter']) {
+            let realteds = await Course.findAll({
+                include: [
+                    {
+                        model: Module,
+                        as: 'modules',
+                        include: [
+                            {
+                                model: Activity,
+                                as: 'activities'
+                            }
+                        ]
+                    },
+                    {
+                        model: User,
+                        as: 'user'
+                    },
+                    {
+                        model: Evaluation,
+                        as: 'evaluations',
+                        where: {
+                            name: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+
+                        }, include: [
+                            {
+                                model: Course,
+                                as: 'courses'
+                            }
+                        ]
+
+                    }
+                ]
+            }).catch((e, r) => {
+                let u = e
+            });
+
+            courses = courses.concat(realteds)
+        }
+     */
 
 
-
-    let courses = await Course.findAll({
-        limit: 20,
-        offset: 1,
-        order: [
-            ['createdAt', 'DESC'],
-        ],
-        where: filter,
-        include: [
-            {
+    const where = filter,
+        include = [{
                 model: Module,
                 as: 'modules'
             },
@@ -181,48 +216,17 @@ exports.allBy = async (req, res) => {
                 model: Evaluation,
                 as: 'evaluations'
             }
+        ], order = [
+            ['createdAt', 'DESC'],
         ]
-    }).catch((e, r) => {
-        let u = e
-    });
 
-    if (req.query['$filter']) {
-        let realteds = await Course.findAll({
-            include: [
-                {
-                    model: Module,
-                    as: 'modules',
-                    include: [
-                        {
-                            model: Activity,
-                            as: 'activities'
-                        }
-                    ]
-                },
-                {
-                    model: User,
-                    as: 'user'
-                },
-                {
-                    model: Evaluation,
-                    as: 'evaluations',
-                    where: {
-                        name: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+    const courses = await paginate({
+        Model: Course,
+        where,
+        include,
+        order,
+        ...req.query
+    })
 
-                    }, include: [
-                        {
-                            model: Course,
-                            as: 'courses'
-                        }
-                    ]
-
-                }
-            ]
-        }).catch((e, r) => {
-            let u = e
-        });
-        courses = courses.concat(realteds)
-    }
     res.json(courses)
 }
-

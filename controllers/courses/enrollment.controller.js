@@ -1,20 +1,20 @@
 var {
-    Enrollment
-    , Op
-    , Module
-    , Evaluation,
+    Enrollment,
+    Op,
+    Module,
+    Evaluation,
     User,
     Enrollment,
-    updateOrCreate,
     Course,
     Activity
 } = require('../../models/models');
 const fs = require("fs");
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
 
     req.body.courseId = req.body.course.id;
-    req.body.course=null;
+    req.body.course = null;
     req.body.userId = req.user.id;
     let enrollment = await Enrollment.create(req.body).catch((e, enrollment) => {
         res.status(400).json(e || enrollment)
@@ -27,7 +27,9 @@ exports.update = async (req, res) => {
     req.body.activityId = req.body.lastActivity.id
 
     await Enrollment.update(req.body, {
-        where: { id: req.body.id }
+        where: {
+            id: req.body.id
+        }
     })
     let enrollment = await Enrollment.findByPk(req.body.id);
 
@@ -35,21 +37,18 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let enrollment = Enrollment.destroy(
-        {
-            where: {
-                id: req.params.id
-            }
+    let enrollment = Enrollment.destroy({
+        where: {
+            id: req.params.id
         }
-    )
+    })
     res.json(enrollment);
 }
 
 exports.one = async (req, res) => {
 
     let enrollment = await Enrollment.findByPk(req.params.id, {
-        include: [
-            {
+        include: [{
                 model: Course,
                 as: 'course'
             },
@@ -73,38 +72,35 @@ exports.allBy = async (req, res) => {
 
     if (req.query['$filter']) {
         filter = {
-            [Op.or]: [
-                {
-                    email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+            [Op.or]: [{
+                    email: {
+                        [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%'
+                    }
                 },
                 {
-                    telePhone: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+                    telePhone: {
+                        [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%'
+                    }
                 }
             ]
         }
     }
 
-
-    let enrollments = await Enrollment.findAll({
-        where: filter,
-        include: [
-            {
+    const where = filter,
+        include = [{
                 model: Course,
                 as: 'course',
-                include: [
-                    {
+                include: [{
                         model: Evaluation,
                         as: 'evaluations'
                     },
                     {
                         model: Module,
                         as: 'modules',
-                        include: [
-                            {
-                                model: Activity,
-                                as: 'activities'
-                            }
-                        ]
+                        include: [{
+                            model: Activity,
+                            as: 'activities'
+                        }]
                     }
                 ]
             },
@@ -113,10 +109,13 @@ exports.allBy = async (req, res) => {
                 as: 'user'
             }
         ]
-    }).catch((e, r) => {
-        let u = e
-    });
+
+    const enrollments = await paginate({
+        Model: Enrollment,
+        where,
+        include,
+        ...req.query
+    })
 
     res.json(enrollments)
 }
-

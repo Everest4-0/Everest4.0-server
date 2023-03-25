@@ -1,8 +1,8 @@
 var {
-    Module
-    , Op
-    , Module
-    , Evaluation,
+    Module,
+    Op,
+    Module,
+    Evaluation,
     User,
     Module,
     updateOrCreate,
@@ -10,6 +10,7 @@ var {
     Activity
 } = require('../../models/models');
 const fs = require("fs");
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
 
@@ -22,32 +23,33 @@ exports.create = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-    
+
     await Module.update(req.body, {
-        where: { id: req.body.id }
+        where: {
+            id: req.body.id
+        }
     })
-    req.body.activities.forEach(activity=> updateOrCreate(Activity, { id: activity.id || null }, activity))
+    req.body.activities.forEach(activity => updateOrCreate(Activity, {
+        id: activity.id || null
+    }, activity))
     let module = await Module.findByPk(req.body.id);
 
     res.json(module)
 }
 
 exports.delete = async (req, res) => {
-    let module = Module.destroy(
-        {
-            where: {
-                id: req.params.id
-            }
+    let module = Module.destroy({
+        where: {
+            id: req.params.id
         }
-    )
+    })
     res.json(module);
 }
 
 exports.one = async (req, res) => {
 
     let module = await Module.findByPk(req.params.id, {
-        include: [
-            {
+        include: [{
                 model: Course,
                 as: 'course'
             },
@@ -67,40 +69,43 @@ exports.allBy = async (req, res) => {
 
     if (req.query['$filter']) {
         filter = {
-            [Op.or]: [
-                {
-                    email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+            [Op.or]: [{
+                    email: {
+                        [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%'
+                    }
                 },
                 {
-                    telePhone: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
+                    telePhone: {
+                        [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%'
+                    }
                 }
             ]
         }
     }
 
+    const where = filter,
+        include = [{
+            model: Course,
+            as: 'course',
+            include: [{
+                model: Evaluation,
+                as: 'evaluations'
+            }]
+        },
+        {
+            model: User,
+            as: 'user'
+        }
+    ]
 
-    let modules = await Module.findAll({
-        where: filter,
-        include: [
-            {
-                model: Course,
-                as: 'course',
-                include: [
-                    {
-                        model: Evaluation,
-                        as: 'evaluations'
-                    }
-                ]
-            },
-            {
-                model: User,
-                as: 'user'
-            }
-        ]
-    }).catch((e, r) => {
-        let u = e
-    });
+    const modules = await paginate({
+        Model: Module,
+        where,
+        include,
+        ...req.query
+    })
 
     res.json(modules)
-}
 
+
+}

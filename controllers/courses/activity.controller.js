@@ -12,6 +12,7 @@ var {
     Answer
 } = require('../../models/models');
 const fs = require("fs");
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
 
@@ -210,17 +211,20 @@ exports.allBy = async (req, res) => {
         }
     }
 
-    let activities = await Activity.findAll({
-        where: filter,
-        include: [
+    const where = filter,
+        include = [
             {
                 model: Module,
                 as: 'module'
             }
         ]
-    }).catch((e, r) => {
-        let u = e
-    });
+
+    const activities = await paginate({
+        Model: Activity,
+        where,
+        include,
+        ...req.query
+    })
 
     res.json(activities)
 }
