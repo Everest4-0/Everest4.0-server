@@ -9,7 +9,12 @@ var {
     WorkSituation,
     ProfessionalExperience
 } = require('../../models/models');
-const { paginate } = require('../global/paginator/paginator.controller');
+const {
+    paginate
+} = require('../global/paginator/paginator.controller');
+const {
+    deleteAvatar
+} = require('./avatar/avatar.controller');
 
 const queryData = {
     include: [{
@@ -83,7 +88,13 @@ exports.create = async (req, res, next) => {
 
 exports.update = async (req, res) => {
 
+    if (req.file)
+        req.body.photoUrl = req.file.filename
+
+    //caso dê um erro, é necessário que o avatar seja deletado, pra isso o controller do avatar está pronto para ser usado: await deleteAvatar(req)
+
     var base64Data = req.body.photoUrl.split('base64,')[1];
+
     if (base64Data !== undefined) {
         req.body.photoUrl = '/avatar/costum/avatar-' + req.body.email + '.' + req.body.photoUrl.split(';')[0].split('/')[1];
         require("fs").writeFile('public' + req.body.photoUrl, base64Data, 'base64', function (err) {
@@ -95,22 +106,27 @@ exports.update = async (req, res) => {
     req.body.datas.act_secId = req.body.datas.activitySector
     req.body.datas.work_sitId = req.body.datas.workSituation
     req.body.datas.acad_levelId = req.body.datas.academicLevel
+
     await PersonalData.update(req.body.datas, {
         where: {
             id: req.body.id
         }
     })
+
     await PersonalSettings.update(req.body.settings, {
         where: {
             id: req.body.id
         }
     })
+    
     req.body.isActive = true;
+ 
     await User.update(req.body, {
         where: {
             id: req.body.id
         }
     });
+
     let user = await User.findByPk(req.body.id, {
         include: [{
             model: Role,
@@ -120,7 +136,9 @@ exports.update = async (req, res) => {
 
         let i = e
     });
+
     res.json(user);
+
 }
 
 exports.delete = async (req, res) => {
