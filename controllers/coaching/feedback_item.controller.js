@@ -1,4 +1,5 @@
 var { User, FeedbackItem, FeedbackPoint } = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
@@ -60,11 +61,14 @@ exports.allBy = async (req, res) => {
 
     let filter = {...req.query,...{  }}
 
-    let feedbacks = await FeedbackItem.findAll({
-        where: filter
-    }).catch((e, r) => {
-        let u = e
-    });
+    const where = filter
+
+    const feedbacks = await paginate({
+        Model: FeedbackItem,
+        where,
+        include,
+        ...req.query
+    })
 
     res.json(feedbacks)
 }

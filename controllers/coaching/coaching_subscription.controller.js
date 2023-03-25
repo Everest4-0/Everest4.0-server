@@ -1,5 +1,18 @@
-
-var { CoachingSubscription, CoachingGoal, CoachingDuration, Chat, User, PersonalData, Note, ChatMessage, Enrollment, Course, ToDo, Charge } = require("../../models/models")
+var {
+    CoachingSubscription,
+    CoachingGoal,
+    CoachingDuration,
+    Chat,
+    User,
+    PersonalData,
+    Note,
+    ChatMessage,
+    Enrollment,
+    Course,
+    ToDo,
+    Charge
+} = require("../../models/models")
+const { paginate } = require("../global/paginator/paginator.controller")
 
 exports.create = async (req, res) => {
 
@@ -9,9 +22,9 @@ exports.create = async (req, res) => {
     //req.body.goalId = req.body.goal.id
 
     let coaching_subscription = await CoachingSubscription.create(req.body)
-    .catch((e, coaching_subscription) => {
-        res.status(400).json(e || coaching_subscription)
-    });
+        .catch((e, coaching_subscription) => {
+            res.status(400).json(e || coaching_subscription)
+        });
 
     res.json(coaching_subscription)
 }
@@ -49,8 +62,7 @@ exports.update = async (req, res) => {
     })
 
     let subscription = await CoachingSubscription.findByPk(req.body.id, {
-        include: [
-            {
+        include: [{
                 model: User,
                 as: 'user'
             },
@@ -74,16 +86,16 @@ exports.update = async (req, res) => {
                     {
                         model: User,
                         as: 'user'
-                    }]
+                    }
+                ]
             },
             {
                 model: Enrollment,
                 as: 'enrollment',
-                include: [
-                    {
-                        model: Course,
-                        as: 'course'
-                    }]
+                include: [{
+                    model: Course,
+                    as: 'course'
+                }]
             },
             {
                 model: CoachingGoal,
@@ -97,7 +109,7 @@ exports.update = async (req, res) => {
     }).catch(e => {
         let i = e
     })
-   
+
     if (req.body.coach && subscription.chat == null) {
         let chat = await Chat.create({
             from_user_id: subscription.coachId,
@@ -111,7 +123,11 @@ exports.update = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    let coaching_subscription = await CoachingSubscription.destroy({ where: { id: req.params.id } })
+    let coaching_subscription = await CoachingSubscription.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
     res.json({
         status: 200,
         message: "sucess",
@@ -123,8 +139,7 @@ exports.one = async (req, res) => {
 
 
     let subscription = await CoachingSubscription.findByPk(req.params.id, {
-        include: [
-            {
+        include: [{
                 model: User,
                 as: 'user'
             },
@@ -148,16 +163,16 @@ exports.one = async (req, res) => {
                     {
                         model: User,
                         as: 'user'
-                    }]
+                    }
+                ]
             },
             {
                 model: Enrollment,
                 as: 'enrollment',
-                include: [
-                    {
-                        model: Course,
-                        as: 'course'
-                    }]
+                include: [{
+                    model: Course,
+                    as: 'course'
+                }]
             },
             {
                 model: CoachingGoal,
@@ -175,9 +190,9 @@ exports.one = async (req, res) => {
 exports.allBy = async (req, res) => {
 
     let filter = req.query
-    let coaching_subscriptions = await CoachingSubscription.findAll({
-        where: filter,
-        include: [
+
+    const where = filter,
+        include = [
 
             {
                 model: User,
@@ -229,9 +244,13 @@ exports.allBy = async (req, res) => {
                 as: 'payment'
             }
         ]
-    }).catch((e, r) => {
-        let u = e
-    });
+
+    const coaching_subscriptions = await paginate({
+        Model: CoachingSubscription,
+        where,
+        include,
+        ...req.query
+    })
 
     res.json(coaching_subscriptions)
 }

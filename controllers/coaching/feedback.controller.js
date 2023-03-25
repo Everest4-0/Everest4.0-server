@@ -1,4 +1,10 @@
-var { User, Feedback, FeedbackPoint, FeedbackItem } = require('../../models/models');
+var {
+    User,
+    Feedback,
+    FeedbackPoint,
+    FeedbackItem
+} = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
@@ -17,21 +23,18 @@ exports.create = async (req, res) => {
         })
         points.push(p)
         if (points.length === req.body.points.length) {
-            feedback=await Feedback.findByPk(feedback.id,{
-                include: [
-                    {
+            feedback = await Feedback.findByPk(feedback.id, {
+                include: [{
                         model: User,
                         as: 'user'
                     },
                     {
                         model: FeedbackPoint,
                         as: 'points',
-                        include: [
-                            {
-                                model: FeedbackItem,
-                                as: 'item'
-                            }
-                        ]
+                        include: [{
+                            model: FeedbackItem,
+                            as: 'item'
+                        }]
                     }
                 ]
             })
@@ -49,15 +52,18 @@ exports.update = async (req, res) => {
             id: req.body.id
         }
     });
-    let feedback = await Feedback.findByPk(req.body.id, {
-    }).catch(e => {
+    let feedback = await Feedback.findByPk(req.body.id, {}).catch(e => {
         let i = e
     });
     res.json(feedback);
 }
 
 exports.delete = async (req, res) => {
-    let feedback = Feedback.destroy({ where: { id: req.params.id } })
+    let feedback = Feedback.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
     res.json({
         status: 200,
         message: "sucess",
@@ -68,20 +74,17 @@ exports.delete = async (req, res) => {
 exports.one = async (req, res) => {
 
     let feedback = await Feedback.findByPk(req.params.id, {
-        include: [
-            {
+        include: [{
                 model: User,
                 as: 'user'
             },
             {
                 model: FeedbackPoint,
                 as: 'points',
-                include: [
-                    {
-                        model: FeedbackItem,
-                        as: 'item'
-                    }
-                ]
+                include: [{
+                    model: FeedbackItem,
+                    as: 'item'
+                }]
             }
         ]
     });
@@ -90,33 +93,32 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let filter = { ...req.query, ...{} }
+    let filter = {
+        ...req.query,
+        ...{}
+    }
 
-    let feedbacks = await Feedback.findAll({
-        where: filter,
-        order: [
-            // Will escape title and validate DESC against a list of valid direction parameters
-            ['createdAt', 'ASC']
-        ],
-        include: [
-            {
-                model: User,
-                as: 'user'
-            },
-            {
-                model: FeedbackPoint,
-                as: 'points',
-                include: [
-                    {
-                        model: FeedbackItem,
-                        as: 'item'
-                    }
-                ]
-            }
-        ]
-    }).catch((e, r) => {
-        let u = e
-    });
+    const where = filter,
+        include = [{
+            model: User,
+            as: 'user'
+        },
+        {
+            model: FeedbackPoint,
+            as: 'points',
+            include: [{
+                model: FeedbackItem,
+                as: 'item'
+            }]
+        }
+    ]
+
+    const feedbacks = await paginate({
+        Model: Feedback,
+        where,
+        include,
+        ...req.query
+    })
 
     res.json(feedbacks)
 }

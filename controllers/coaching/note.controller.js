@@ -1,4 +1,5 @@
 var { User, Note } = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     //req.body.group = req.body.group.code
@@ -50,17 +51,20 @@ exports.allBy = async (req, res) => {
 
     let filter = {...req.query,...{ userId: req.user.id }}
 
-    let users = await Note.findAll({
-        where: filter,
-        include: [
+    const where = filter,
+        include = [
             {
                 model: User,
                 as: 'user'
             }
         ]
-    }).catch((e, r) => {
-        let u = e
-    });
 
-    res.json(users)
+    const notes = await paginate({
+        Model: Note,
+        where,
+        include,
+        ...req.query
+    })
+
+    res.json(notes)
 }

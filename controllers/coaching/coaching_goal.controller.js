@@ -1,4 +1,5 @@
-var {CoachingGoal} = require("../../models/models")
+var {CoachingGoal} = require("../../models/models");
+const { paginate } = require("../global/paginator/paginator.controller");
 
 exports.create = async(req, res) =>{
 
@@ -41,9 +42,10 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let coaching_goals = await CoachingGoal.findAll().catch((e, r) => {
-        let u = e
-    });
+    const coaching_goals = await paginate({
+        Model: CoachingGoal,
+        ...req.query
+    })
 
     res.json(coaching_goals)
 }
