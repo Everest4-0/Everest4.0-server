@@ -1,25 +1,38 @@
 const Email = require('../../application/mail/mail');
-var { EvaluationRequest, Evaluation, User,  UserEvaluation, PersonalData } = require('../../models/models');
+var {
+    EvaluationRequest,
+    Evaluation,
+    User,
+    UserEvaluation,
+    PersonalData
+} = require('../../models/models');
+const {
+    paginate
+} = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     req.body.requesterId = req.body.requester.id
     req.body.requestedId = req.body.requested.id
-    if(req.body.requestedId===undefined){
-//        let requested=await User.create({email:req.body.requested.email})
-        let requested=await User.findAll({where:{email:req.body.requested.email}})
-        req.body.requestedId=requested.id;
-        let email=new Email({
-            to:req.body.requested.email,
-            subject:'Evaluation Request',
-            template:'evaluation_request',
-            data:{
-                from:req.body.requester,
-                to:requested
+    if (req.body.requestedId === undefined) {
+        //        let requested=await User.create({email:req.body.requested.email})
+        let requested = await User.findAll({
+            where: {
+                email: req.body.requested.email
             }
         })
-        email.send((e,s)=>{
+        req.body.requestedId = requested.id;
+        let email = new Email({
+            to: req.body.requested.email,
+            subject: 'Evaluation Request',
+            template: 'evaluation_request',
+            data: {
+                from: req.body.requester,
+                to: requested
+            }
+        })
+        email.send((e, s) => {
 
-            let t=e
+            let t = e
         })
     }
 
@@ -33,7 +46,7 @@ exports.update = async (req, res) => {
 
     let evaluations = EvaluationRequest.update(req.body, {
         where: {
-            id:req.body.id
+            id: req.body.id
         }
     });
     res.json(evaluations);
@@ -61,21 +74,10 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    /*
-     let filter = {}
- 
-     if (req.query['$filter']) {
-         filter=[
-             {requestedId: req.query['$filter']},
-             {requesterId: req.query['$filter']}
-         ]
-     }*/
+    let filter = req.query['filter']
 
-
-    let evaluations = await EvaluationRequest.findAll({
-        where: req.query,
-        include: [
-            {
+    const where = filter,
+        include = [{
                 model: User,
                 as: 'requester',
                 include: [
@@ -83,7 +85,8 @@ exports.allBy = async (req, res) => {
                     {
                         model: PersonalData,
                         as: 'datas'
-                    }]
+                    }
+                ]
             },
             {
                 model: User,
@@ -93,7 +96,8 @@ exports.allBy = async (req, res) => {
                     {
                         model: PersonalData,
                         as: 'datas'
-                    }]
+                    }
+                ]
             },
             {
                 model: UserEvaluation,
@@ -111,8 +115,13 @@ exports.allBy = async (req, res) => {
                 ]
             }
         ]
-    }).catch((e, r) => {
-        let u = e
-    });
+
+    const evaluations = await paginate({
+        Model: EvaluationRequest,
+        where,
+        include,
+        ...req.query
+    })
+
     res.json(evaluations)
 }

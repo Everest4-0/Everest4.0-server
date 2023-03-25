@@ -1,4 +1,10 @@
-var { Evaluation, Course } = require('../../models/models');
+var {
+    Evaluation,
+    Course
+} = require('../../models/models');
+const {
+    paginate
+} = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     let evaluations = await Evaluation.create(req.body);
@@ -30,15 +36,12 @@ exports.delete = async (req, res) => {
 
 exports.one = async (req, res) => {
 
-    let evaluations = await Evaluation.findByPk(req.params.id,
-        {
-            include: [
-                {
-                    model: Course,
-                    as: 'courses'
-                }]
-        }
-    );
+    let evaluations = await Evaluation.findByPk(req.params.id, {
+        include: [{
+            model: Course,
+            as: 'courses'
+        }]
+    });
     res.json(evaluations)
 
 }
@@ -46,19 +49,21 @@ exports.one = async (req, res) => {
 exports.allBy = async (req, res) => {
 
     let filter = req.query;
-    filter.isActive = true
-    let evaluations = await Evaluation.findAll(
-        {
-            where: filter,
-            include: [
-                {
-                    model: Course,
-                    as: 'courses'
-                }
-            ]
-        }
-    )
 
+    filter.isActive = true
+
+    const where = filter,
+        include = [{
+            model: Course,
+            as: 'courses'
+        }]
+
+    const evaluations = await paginate({
+        Model: Evaluation,
+        where,
+        include,
+        ...req.query
+    })
 
     res.json(evaluations)
 }

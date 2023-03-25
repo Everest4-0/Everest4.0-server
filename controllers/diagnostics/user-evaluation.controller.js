@@ -1,4 +1,10 @@
-var { UserEvaluation, User, Evaluation, EvaluationRequest } = require('../../models/models');
+var {
+    UserEvaluation,
+    User,
+    Evaluation,
+    EvaluationRequest
+} = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
 
@@ -13,7 +19,9 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    let userEvaluations = UserEvaluation.update({ lastName: "Doe" }, {
+    let userEvaluations = UserEvaluation.update({
+        lastName: "Doe"
+    }, {
         where: {
             lastName: null
         }
@@ -30,7 +38,7 @@ exports.delete = async (req, res) => {
 
     let userEvaluations = await UserEvaluation.findAll({
         where: {
-            userId:req.user.id,
+            userId: req.user.id,
         },
         include: {
             model: Evaluation,
@@ -38,13 +46,13 @@ exports.delete = async (req, res) => {
             where: {
                 group: req.body.group
             }
-          }
+        }
     })
-    
+
     userEvaluations.forEach(e => {
         e.destroy()
     });
-    
+
     res.json({
         status: 200,
         message: "sucess",
@@ -65,16 +73,10 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let t;
-    /* UserEvaluation.consts.forEach(async element => {
-      t=   await UserEvaluation.create(element).catch(e=>{
-        let i=e;
-    })
-     });*/
-    let userEvaluations = await UserEvaluation.findAll({
-        where: req.query,
-        include: [
-            {
+    let filter = req.query
+
+    const where = filter,
+        include = [{
                 model: User,
                 as: 'requester'
             },
@@ -91,8 +93,13 @@ exports.allBy = async (req, res) => {
                 as: 'request'
             }
         ]
-    })
 
+    const userEvaluations = await paginate({
+        Model: UserEvaluation,
+        where,
+        include,
+        ...req.query
+    })
 
     res.json(userEvaluations)
 }
