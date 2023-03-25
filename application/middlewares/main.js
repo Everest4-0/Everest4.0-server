@@ -39,17 +39,17 @@ class Main {
     }
 
     static validateUserAuthToken = (req, res, next) => {
-        
+        //return next();
         if (
-            req.url.split('authenticate').length > 1 || 
-            req.url.split('signOn').length > 1
-            ) {
+            req.url.split('authenticate').length > 1 ||
+            req.url.split('signon').length > 1
+        ) {
             return next();
         }
 
         let token = req.headers['authorization']
         if (typeof token === 'string' && token.split(' ').length > 1)
-            jwt.verify(token.split(' ')[1], serverJWT_secret, async (err, decoded) => {
+            jwt.verify(token.split(' ')[1], serverJWT_secret, async(err, decoded) => {
                 if (err) {
                     res.sendStatus(403)
                 } else {

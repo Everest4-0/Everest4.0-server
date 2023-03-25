@@ -1,13 +1,14 @@
 var router = require('express').Router();
 let controller = require('../../controllers/diagnostics/evaluation.controller');
+const { asyncHandler } = require('../route');
 
 // Export API routes
 module.exports = router;
-router.get('/', controller.allBy);
-router.get('/:id', controller.one);
-router.post('/', controller.create);
-router.put('/', controller.update);
-router.delete('/', controller.delete);
+router.get('/',    asyncHandler(controller.allBy));
+router.get('/:id', asyncHandler(controller.one));
+router.post('/',   asyncHandler(controller.create));
+router.put('/',    asyncHandler(controller.update));
+router.delete('/', asyncHandler(controller.delete));
 
 // Export API routes
 module.exports = router;

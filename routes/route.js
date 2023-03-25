@@ -1,3 +1,10 @@
+
+module.exports.asyncHandler = (fn) => (req, res, next) =>
+    Promise.resolve(fn(req, res, next)).catch((err) => {
+        next(err);
+    });
+
+
 var router = require('express').Router();
 
 router.use('/datas', require('./datas/data.route'));

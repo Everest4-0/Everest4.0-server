@@ -14,9 +14,12 @@ module.exports = ({ sequelize, Sequelize }) => {
     descriptions: {
       type: Sequelize.STRING,
     },
-   /* requestId: {
+    requestId: {
       type: Sequelize.STRING,
-    },*/
+    },
+    requesterId: {
+      type: Sequelize.STRING,
+    },
     isActive: {
       type: Sequelize.BOOLEAN,
       default: true

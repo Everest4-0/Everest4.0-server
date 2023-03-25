@@ -1,14 +1,16 @@
 var router = require('express').Router();
+var {asyncHandler} = require('../route')
 let controller = require('../../controllers/mains/user.controller');
 let UserHelper = require('../../application/mains/user.helper')
 // Export API routes
 module.exports = router;
 router.get('/',  controller.allBy);
 router.get('/:id',  controller.one);
-router.post('/',  controller.create);
+router.post('/',  asyncHandler(controller.create));
+router.post('/signon',  asyncHandler(controller.create), UserHelper.setUserAuthToken);
 router.put('/',  controller.update);
 router.delete('/',  controller.delete);
-router.post('/authenticate', controller.authenticate, UserHelper.setUserAuthToken);
+router.post('/authenticate', asyncHandler(controller.authenticate), UserHelper.setUserAuthToken);
 
 // Export API routes
 module.exports = router;

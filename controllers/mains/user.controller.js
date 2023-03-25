@@ -1,71 +1,66 @@
 const Email = require('../../application/mail/mail');
 var {
-    User
-    , Role
-    , PersonalData
-    , Op
-    , PersonalSettings
-    , AcademicLevel
-    , WorkSituation
-    , ProfessionalExperience
+    User,
+    Role,
+    PersonalData,
+    Op,
+    PersonalSettings,
+    AcademicLevel,
+    WorkSituation,
+    ProfessionalExperience
 } = require('../../models/models');
 
 const queryData = {
-    include: [
-        {
-            model: Role,
-            as: 'role'
-        },
-        {
-            model: PersonalData,
-            as: 'datas',
-            include: [
+    include: [{
+        model: Role,
+        as: 'role'
+    },
+    {
+        model: PersonalData,
+        as: 'datas',
+        include: [
 
-                {
-                    model: AcademicLevel,
-                    as: 'academicLevel'
-                },
-                {
-                    model: ProfessionalExperience,
-                    as: 'professionalExperience'
-                },
-                {
-                    model: WorkSituation,
-                    as: 'workSituation'
-                }
-            ]
-        },
-        {
-            model: PersonalSettings,
-            as: 'settings'
-        }
+            {
+                model: AcademicLevel,
+                as: 'academicLevel'
+            },
+            {
+                model: ProfessionalExperience,
+                as: 'professionalExperience'
+            },
+            {
+                model: WorkSituation,
+                as: 'workSituation'
+            }
+        ]
+    },
+    {
+        model: PersonalSettings,
+        as: 'settings'
+    }
     ]
 }
 
-exports.create = async (req, res) => {
+exports.create = async (req, res, next) => {
 
     try {
         let user = await User.create(req.body)
 
-        req.body.datas = { ...{ id: user.id }, ...req.body.datas }
+        req.body.datas = { ... { id: user.id }, ...req.body.datas }
         user.settings = await PersonalSettings.create(req.body.datas);
         user.datas = await PersonalData.create(req.body.datas);
         let y = await User.update({ dataId: user.id, settingId: user.id }, { where: { id: user.id } })
         /*let email = new Email({
-            template: 'mains/create_new_user'
-        })
-    
-        email.send()*/
-        res.json(
-            {
-                success: true,
-                user
-            })
+        template: 'mains/create_new_user'
+    })
+ 
+    email.send()*/
+        req.user = user
+
+        next()
     } catch (errors) {
-        res.json({
-            success: false,
-            errors
-        })
+        throw { code: 400, data: errors }
+
     }
 
 }
@@ -97,12 +92,10 @@ exports.update = async (req, res) => {
         }
     });
     let user = await User.findByPk(req.body.id, {
-        include: [
-            {
-                model: Role,
-                as: 'role'
-            }
-        ]
+        include: [{
+            model: Role,
+            as: 'role'
+        }]
     }).catch(e => {
 
         let i = e
@@ -129,8 +122,10 @@ exports.authenticate = async (req, res, next) => {
 
     let user = await User.findOne({ where: { email: req.body.email } }, queryData);
 
-
-    if (!user && req.body.provider !== 'LOCAL') {
+    if (!user) {
+        throw { code: 401, message: "Forbiden" }
+    }
+    if (!user && req.body.provider === 'GOOGLE') {
         user = await User.create(req.body, (user) => {
             let o = user;
         });
@@ -139,24 +134,21 @@ exports.authenticate = async (req, res, next) => {
         user.settings = await PersonalSettings.create(req.body.datas);
         user.datas = await PersonalData.create(req.body.datas);
         let y = await User.update({ dataId: user.id, settingId: user.id }, { where: { id: user.id } })
-    }
-    else if (user && req.body.provider !== 'LOCAL') {
+    } else if (user && req.body.provider !== 'GOOGLE') {
         if (!user.isActive)
             user = await User.update(req.body, {
                 where: { email: req.body.email }
             }, (e, r) => {
                 let u = e;
-            })/*.catch(e){
-                let r=e
-            }*/
+            })
+        /*.catch(e){
+                        let r=e
+                    }*/
         user = await User.findOne({ where: { email: req.body.email } }, queryData);
         res.status(200)
-    }
-    else if (!user)
+    } else if (!user)
         user = { code: 404 }
-    else if (req.body.id || User.validatePassword(user, req.body.password)) {
-    }
-    else
+    else if (req.body.id || User.validatePassword(user, req.body.password)) { } else
         user.code = 401
 
     //res.json(user)
@@ -170,16 +162,21 @@ exports.allBy = async (req, res) => {
 
     if (req.query['$filter']) {
         filter = {
-            [Op.or]: [
-                {
-                    email: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
-                },
-                {
-                    telePhone: { [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%' }
-                },
-                {
-                    roles: { [Op.like]: '%' + req.query['$filter'] + '%' }
+            [Op.or]: [{
+                email: {
+                    [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%'
                 }
+            },
+            {
+                telePhone: {
+                    [Op.like]: '%' + req.query['$filter'].toLowerCase() + '%'
+                }
+            },
+            {
+                roles: {
+                    [Op.like]: '%' + req.query['$filter'] + '%'
+                }
+            }
             ]
         }
     }
@@ -187,15 +184,14 @@ exports.allBy = async (req, res) => {
 
     let users = await User.findAll({
         where: filter,
-        include: [
-            {
-                model: Role,
-                as: 'role'
-            },
-            {
-                model: PersonalData,
-                as: 'datas'
-            }
+        include: [{
+            model: Role,
+            as: 'role'
+        },
+        {
+            model: PersonalData,
+            as: 'datas'
+        }
         ]
     }).catch((e, r) => {
         let u = e
@@ -203,4 +199,3 @@ exports.allBy = async (req, res) => {
     //res.statusCode = 401
     res.json(users)
 }
-

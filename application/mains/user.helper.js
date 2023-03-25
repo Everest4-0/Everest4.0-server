@@ -27,7 +27,9 @@ class UserHelper {
     static setUserAuthToken = (req, res) => {
         let user = req.user
         user.apikey = UserHelper.generateUserAuthToken(user)
-        res.send(req.user)
+        res.send(
+            req.user
+        )
     }
 
 }
