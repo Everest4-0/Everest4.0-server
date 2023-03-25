@@ -1,4 +1,7 @@
-var {ACL} = require('../../models/models');
+var {
+    ACL
+} = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     let acl = await ACL.create(req.body);
@@ -11,7 +14,9 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
 
-    let acl = ACL.update({ lastName: "Doe" }, {
+    let acl = ACL.update({
+        lastName: "Doe"
+    }, {
         where: {
             lastName: null
         }
@@ -45,7 +50,10 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let acls = await ACL.findAll({});
-    //res.statusCode = 401
+    const acls = await paginate({
+        Model: ACL,
+        ...req.query
+    })
+
     res.json(acls)
 }

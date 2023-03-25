@@ -1,5 +1,6 @@
 const chat = require('../../models/main/chat');
 var {ChatMessage, User, Chat} = require('../../models/models');
+const { paginate } = require('../global/paginator/paginator.controller');
 
 exports.create = async (req, res) => {
     req.body.to_user_id=req.body.to.id
@@ -61,7 +62,10 @@ exports.one = async (req, res) => {
 
 exports.allBy = async (req, res) => {
 
-    let chatMessages = await ChatMessage.findAll({});
-    //res.statusCode = 401
+    const chatMessages = await paginate({
+        Model: ChatMessage,
+        ...req.query
+    })
+
     res.json(chatMessages)
 }
