@@ -1,7 +1,8 @@
 var router = require('express').Router();
 var {asyncHandler} = require('../route')
 let controller = require('../../controllers/mains/user.controller');
-let UserHelper = require('../../application/mains/user.helper')
+let UserHelper = require('../../application/mains/user.helper');
+
 // Export API routes
 module.exports = router;
 router.get('/',  controller.allBy);
