@@ -6,11 +6,12 @@ exports.paginate = async ({
     pageSize: size,
     include = [],
     where = {},
-    order = {}
+    order = []
 }) => {
-    const pageSize = parseInt(size) ?? parseInt(process.env.PAGE_SIZE);
 
-    let ofs = parseInt((page - 1) * pageSize)
+    const pageSize = parseInt(size) || parseInt(process.env.PAGE_SIZE);
+
+    let ofs = Math.abs((parseInt(page || 1) - 1)) * pageSize
 
     let lim = parseInt(pageSize)
 
@@ -30,7 +31,7 @@ exports.paginate = async ({
 
     return {
         data: data,
-        page,
+        page: page || 1,
         pages: Math.round(totalUser / pageSize),
         pageSize,
         total: totalUser
