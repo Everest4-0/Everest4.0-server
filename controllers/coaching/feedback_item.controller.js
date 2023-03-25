@@ -66,7 +66,6 @@ exports.allBy = async (req, res) => {
     const feedbacks = await paginate({
         Model: FeedbackItem,
         where,
-        include,
         ...req.query
     })
 
