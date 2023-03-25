@@ -5,7 +5,8 @@ exports.paginate = async ({
     page,
     pageSize: size,
     include = [],
-    where = {}
+    where = {},
+    order = {}
 }) => {
     const pageSize = parseInt(size) ?? parseInt(process.env.PAGE_SIZE);
 
@@ -20,6 +21,7 @@ exports.paginate = async ({
     let data = await Model.findAll({
         include,
         where,
+        order,
         offset: ofs,
         limit: lim,
     }).catch((e, r) => {
